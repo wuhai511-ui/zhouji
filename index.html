@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>洲际酒店资金管理需求阶段性回复｜V0.4</title>
+  <style>
+    :root {
+      --paper: #f5f9fc;
+      --ink: #102a43;
+      --muted: #55718a;
+      --line: #d5e3ee;
+      --red: #00a7e1;
+      --red-deep: #0066ae;
+      --gold: #7bcbed;
+      --sage: #4e91b3;
+      --dark: #0b2943;
+      --display: Georgia, "Noto Serif SC", "Source Han Serif SC", STSong, serif;
+      --body: "Noto Sans CJK SC", "Microsoft YaHei", "PingFang SC", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+    body { background: #071f35; color: var(--ink); font-family: var(--body); }
+    button { font: inherit; }
+
+    #shell { position: relative; width: 100vw; height: 100vh; overflow: hidden; }
+    #stage {
+      position: absolute; left: 50%; top: 50%; width: 1600px; height: 900px;
+      transform-origin: center center; background: var(--paper); overflow: hidden;
+      box-shadow: 0 28px 90px rgba(0,0,0,.42);
+    }
+    .grain { position: absolute; inset: 0; opacity: .16; pointer-events: none; background-image: radial-gradient(rgba(35,28,19,.18) .7px, transparent .8px); background-size: 7px 7px; mix-blend-mode: multiply; }
+    .slide {
+      position: absolute; inset: 0; display: none; overflow: hidden; padding: 62px 92px 54px;
+      background: var(--paper); isolation: isolate;
+    }
+    .slide.active { display: block; animation: appear .42s ease both; }
+    .slide::before { content: ""; position: absolute; width: 660px; height: 660px; right: -360px; top: -420px; border: 1px solid rgba(0,167,225,.10); border-radius: 50%; z-index: -1; }
+    .slide::after { content: ""; position: absolute; width: 440px; height: 440px; right: -250px; top: -310px; border: 1px solid rgba(123,203,237,.24); border-radius: 50%; z-index: -1; }
+    @keyframes appear { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+
+    .mast { display: flex; align-items: center; justify-content: space-between; height: 24px; margin-bottom: 30px; color: var(--muted); font-size: 15px; letter-spacing: .08em; }
+    .mast .brand { color: var(--red); font-weight: 700; letter-spacing: .15em; }
+    .page-no { font-family: var(--display); font-size: 18px; color: var(--red); }
+    .eyebrow { color: var(--red); font-size: 17px; font-weight: 700; letter-spacing: .16em; margin-bottom: 16px; }
+    h1, h2, h3, p { margin: 0; }
+    h1 { font: 700 70px/1.12 var(--display); letter-spacing: -.04em; }
+    h2 { max-width: 1220px; font: 700 47px/1.18 var(--display); letter-spacing: -.035em; }
+    h3 { font-size: 22px; line-height: 1.3; }
+    .takeaway { margin-top: 20px; max-width: 1080px; color: var(--muted); font-size: 23px; line-height: 1.55; }
+    .rule { width: 72px; height: 5px; margin: 27px 0 35px; background: var(--red); }
+    .caption { font-size: 17px; line-height: 1.55; color: var(--muted); }
+    .small { font-size: 16px; line-height: 1.55; color: var(--muted); }
+    .accent { color: var(--red); }
+    .gold { color: var(--gold); }
+    .lower { position: absolute; bottom: 47px; left: 92px; right: 92px; display: flex; justify-content: space-between; align-items: flex-end; }
+    .lower .source { max-width: 1050px; font-size: 14px; line-height: 1.45; color: #918b82; }
+    .lower .mark { color: var(--red); font: 700 16px var(--display); letter-spacing: .12em; }
+
+    /* Cover */
+    .cover { padding: 0; color: #f5fbff; background: var(--red-deep); }
+    .cover::before { width: 940px; height: 940px; right: -220px; top: -400px; border-color: rgba(255,255,255,.17); }
+    .cover::after { width: 620px; height: 620px; right: -60px; top: -250px; border-color: rgba(123,203,237,.72); }
+    .cover .cover-grid { position: absolute; inset: 0; padding: 88px 100px 72px; display: grid; grid-template-columns: 1.22fr .78fr; }
+    .cover .identity { color: #cceeff; font-size: 17px; letter-spacing: .22em; font-weight: 700; }
+    .cover .brand-logo { display: block; width: 220px; height: auto; margin-bottom: 42px; }
+    .cover .cover-body { align-self: center; padding-bottom: 45px; }
+    .cover h1 { max-width: 770px; font-size: 76px; }
+    .cover .sub { width: 690px; margin-top: 27px; font-size: 27px; line-height: 1.55; color: #e0f4ff; }
+    .cover .date { margin-top: 55px; font-size: 18px; letter-spacing: .12em; color: #b8e7fb; }
+    .cover .cover-side { align-self: stretch; border-left: 1px solid rgba(255,255,255,.26); padding: 12px 0 0 50px; display: flex; flex-direction: column; justify-content: space-between; }
+    .cover .side-number { font: 700 210px/.8 var(--display); color: rgba(255,255,255,.11); letter-spacing: -.10em; }
+    .cover .side-note { width: 270px; padding-bottom: 20px; font-size: 18px; line-height: 1.65; color: #cceeff; }
+    .cover .bottomline { position: absolute; left: 100px; right: 100px; bottom: 53px; height: 1px; background: rgba(255,255,255,.36); }
+
+    /* Common compositions */
+    .three-step { display: grid; grid-template-columns: 1fr 70px 1fr 70px 1fr; align-items: center; margin-top: 76px; }
+    .step { min-height: 215px; padding: 31px 30px; border-top: 4px solid var(--red); background: rgba(255,255,255,.42); }
+    .step .num { font: 700 18px var(--display); color: var(--red); letter-spacing: .1em; }
+    .step h3 { margin-top: 22px; font: 700 29px var(--display); }
+    .step p { margin-top: 15px; font-size: 18px; color: var(--muted); line-height: 1.55; }
+    .arrow { height: 1px; background: var(--gold); position: relative; }
+    .arrow::after { content: ""; position: absolute; right: 0; top: -5px; width: 10px; height: 10px; border-right: 2px solid var(--gold); border-top: 2px solid var(--gold); transform: rotate(45deg); }
+
+    .four-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; margin-top: 54px; }
+    .pillar { min-height: 290px; padding: 27px 24px 25px; border-top: 4px solid var(--red); background: rgba(255,255,255,.44); }
+    .pillar .index { font: 700 17px var(--display); color: var(--gold); letter-spacing: .1em; }
+    .pillar h3 { margin-top: 18px; font: 700 31px var(--display); color: var(--ink); }
+    .pillar p { margin-top: 20px; font-size: 18px; color: var(--muted); line-height: 1.55; }
+
+    .boundary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; margin-top: 42px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .boundary section { min-height: 346px; padding: 30px 30px 25px; border-right: 1px solid var(--line); }
+    .boundary section:last-child { border-right: 0; }
+    .boundary .label { font-size: 15px; font-weight: 700; color: var(--red); letter-spacing: .13em; }
+    .boundary h3 { margin: 18px 0 22px; font: 700 28px/1.25 var(--display); }
+    .boundary ul, .line-list { padding: 0; margin: 0; list-style: none; }
+    .boundary li, .line-list li { position: relative; padding: 12px 0 12px 19px; color: var(--muted); font-size: 17px; line-height: 1.42; border-top: 1px solid rgba(217,211,201,.65); }
+    .boundary li::before, .line-list li::before { content: ""; position: absolute; left: 0; top: 21px; width: 7px; height: 7px; background: var(--red); border-radius: 50%; }
+    .boundary section:nth-child(2) { background: rgba(0,167,225,.045); }
+
+    .vertical-flow { position: relative; width: 980px; margin: 32px auto 0; padding-left: 56px; }
+    .vertical-flow::before { content: ""; position: absolute; left: 17px; top: 18px; bottom: 18px; width: 1px; background: var(--gold); }
+    .flow-item { position: relative; display: grid; grid-template-columns: 325px 1fr; align-items: center; min-height: 93px; border-bottom: 1px solid var(--line); }
+    .flow-item::before { content: ""; position: absolute; left: -45px; top: 38px; width: 12px; height: 12px; background: var(--red); border-radius: 50%; box-shadow: 0 0 0 6px var(--paper); }
+    .flow-item strong { font: 700 23px var(--display); }
+    .flow-item span { color: var(--muted); font-size: 17px; line-height: 1.45; }
+
+    .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; margin-top: 48px; }
+    .phase { position: relative; padding-left: 27px; }
+    .phase::before { content: ""; position: absolute; left: 0; top: 1px; width: 5px; height: 100%; background: var(--gold); }
+    .phase h3 { font: 700 31px var(--display); }
+    .phase .line-list { margin-top: 20px; }
+
+    .linear { display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 62px; border-top: 1px solid var(--line); }
+    .linear .node { position: relative; padding: 29px 24px 0 0; min-height: 182px; }
+    .linear .node::before { content: ""; position: absolute; left: 0; top: -8px; width: 15px; height: 15px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 5px var(--paper); }
+    .linear .node:not(:last-child)::after { content: ""; position: absolute; top: -1px; right: 13px; width: 10px; height: 10px; border-right: 1px solid var(--gold); border-top: 1px solid var(--gold); transform: rotate(45deg); }
+    .linear .node .n { color: var(--red); font-size: 15px; letter-spacing: .1em; font-weight: 700; }
+    .linear .node h3 { margin-top: 13px; font: 700 23px/1.25 var(--display); }
+    .linear .node p { margin-top: 12px; color: var(--muted); font-size: 16px; line-height: 1.45; }
+
+    .formula { display: flex; align-items: center; justify-content: center; min-height: 132px; margin-top: 34px; color: var(--red-deep); font: 700 37px/1.35 var(--display); letter-spacing: -.025em; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.34); }
+
+    .voucher-flow { display: grid; grid-template-columns: 1fr 56px 1fr 56px 1fr 56px 1fr; align-items: stretch; margin-top: 46px; }
+    .voucher-box { min-height: 305px; padding: 25px 22px; border-top: 4px solid var(--red); background: rgba(255,255,255,.46); }
+    .voucher-box h3 { margin-top: 14px; font: 700 25px/1.26 var(--display); }
+    .voucher-box p { margin-top: 15px; color: var(--muted); font-size: 16px; line-height: 1.48; }
+    .voucher-box .tiny-rule { width: 42px; height: 3px; margin-top: 15px; background: var(--gold); }
+    .voucher-arrow { position: relative; align-self: center; height: 1px; background: var(--gold); }
+    .voucher-arrow::after { content: ""; position: absolute; top: -5px; right: 0; width: 10px; height: 10px; border-right: 2px solid var(--gold); border-top: 2px solid var(--gold); transform: rotate(45deg); }
+    .control-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 34px; }
+    .control-strip div { padding-top: 14px; border-top: 1px solid var(--line); }
+    .control-strip strong { display: block; color: var(--red); font-size: 17px; margin-bottom: 7px; }
+    .control-strip span { color: var(--muted); font-size: 15px; line-height: 1.42; }
+
+    .stack { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; margin-top: 50px; }
+    .stack .layer { position: relative; min-height: 170px; padding: 26px 28px; border: 1px solid var(--line); background: rgba(255,255,255,.40); }
+    .stack .layer:nth-child(2) { margin: 28px -28px; z-index: 2; border-color: rgba(0,167,225,.28); background: #fff; box-shadow: 0 15px 30px rgba(15,65,95,.09); }
+    .stack .layer h3 { font: 700 27px var(--display); }
+    .stack .layer p { margin-top: 15px; color: var(--muted); font-size: 17px; line-height: 1.45; }
+    .routes { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 19px; }
+    .routes span { padding: 8px 11px; border: 1px solid rgba(0,167,225,.22); color: var(--red-deep); font-size: 15px; background: rgba(0,167,225,.035); }
+
+    .roles { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 54px; }
+    .role { padding: 0 38px; min-height: 274px; border-right: 1px solid var(--line); }
+    .role:first-child { padding-left: 0; }
+    .role:last-child { border-right: 0; }
+    .role .monogram { font: 700 76px/.9 var(--display); color: rgba(0,167,225,.22); }
+    .role h3 { margin-top: 17px; font: 700 31px var(--display); }
+    .role p { margin-top: 16px; color: var(--muted); font-size: 18px; line-height: 1.56; }
+
+    .workshop { display: grid; grid-template-columns: 1.08fr .92fr; gap: 80px; margin-top: 48px; }
+    .checklist { columns: 2; column-gap: 35px; padding: 0; margin: 0; list-style: none; }
+    .checklist li { break-inside: avoid; position: relative; padding: 0 0 17px 30px; margin-bottom: 14px; border-bottom: 1px solid rgba(217,211,201,.72); color: var(--muted); font-size: 17px; line-height: 1.42; }
+    .checklist li::before { content: counter(item, decimal-leading-zero); counter-increment: item; position: absolute; left: 0; top: 0; color: var(--red); font: 700 16px var(--display); }
+    .checklist { counter-reset: item; }
+    .action { align-self: center; padding: 37px 39px; border-left: 6px solid var(--red); background: #eaf4fa; }
+    .action h3 { font: 700 34px/1.25 var(--display); }
+    .action p { margin-top: 21px; font-size: 20px; line-height: 1.55; color: var(--muted); }
+    .action .action-line { display: block; margin-top: 28px; color: var(--red); font-size: 18px; font-weight: 700; letter-spacing: .04em; }
+
+    /* UI */
+    #controls { position: fixed; z-index: 20; right: 22px; bottom: 18px; display: flex; align-items: center; gap: 8px; opacity: .82; transition: opacity .2s; }
+    #controls:hover { opacity: 1; }
+    .nav-btn { width: 40px; height: 40px; border: 1px solid rgba(255,255,255,.27); border-radius: 50%; background: rgba(28,28,28,.75); color: #fff; cursor: pointer; font-size: 19px; }
+    .nav-btn:hover { background: var(--red); border-color: var(--red); }
+    #counter { min-width: 72px; text-align: center; color: rgba(255,255,255,.82); font-size: 13px; letter-spacing: .08em; }
+    #progress { position: fixed; z-index: 21; left: 0; bottom: 0; height: 3px; width: 100%; background: rgba(255,255,255,.2); }
+    #progress > i { display: block; width: 7.69%; height: 100%; background: var(--red); transition: width .3s ease; }
+    #hint { position: fixed; z-index: 19; left: 22px; bottom: 19px; color: rgba(255,255,255,.56); font-size: 12px; letter-spacing: .05em; }
+
+    @media (max-width: 760px) { #hint { display: none; } #controls { right: 10px; bottom: 12px; } }
+    @media print {
+      html, body { width: auto; height: auto; overflow: visible; background: #fff; }
+      #shell { width: auto; height: auto; overflow: visible; }
+      #stage { position: static; width: 1600px; height: auto; transform: none !important; box-shadow: none; overflow: visible; }
+      .slide { position: relative; display: block !important; width: 1600px; height: 900px; page-break-after: always; break-after: page; }
+      #controls, #progress, #hint { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <main id="shell" aria-label="洲际酒店资金管理需求阶段性回复演示稿">
+    <section id="stage" aria-live="polite">
+      <div class="grain"></div>
+
+      <article class="slide cover active" aria-label="第1页：封面">
+        <div class="cover-grid">
+          <div>
+            <img class="brand-logo" src="data:image/png;base64,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" alt="拉卡拉">
+            <div class="identity">小冲店务通</div>
+            <div class="cover-body">
+              <h1>洲际酒店<br>资金管理需求<br>阶段性回复</h1>
+              <p class="sub">围绕OTA对账、资金分账、待扣款管理与通用财务凭证的试点建议</p>
+              <p class="date">2026 / 08　阶段性沟通材料 V0.4</p>
+            </div>
+          </div>
+          <div class="cover-side">
+            <div class="side-number">01</div>
+            <p class="side-note">以真实业务规则和数据样本为依据，逐步形成可验证的试点方案。</p>
+          </div>
+        </div>
+        <div class="bottomline"></div>
+      </article>
+
+      <article class="slide" aria-label="第2页：确认方向与试点">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">02</span></div>
+        <div class="eyebrow">STAGE-BASED APPROACH</div>
+        <h2>本次先确认方向，<br>再共同定义试点。</h2>
+        <p class="takeaway">现阶段最重要的是把业务规则和外部条件确认清楚，再确定试点范围与实施方式。</p>
+        <div class="three-step">
+          <div class="step"><div class="num">01 / 当前信息</div><h3>理解四项初步需求</h3><p>基于现阶段需求形成阶段性回复，明确需要共同确认的边界。</p></div>
+          <div class="arrow"></div>
+          <div class="step"><div class="num">02 / 联合确认</div><h3>核实业务与数据条件</h3><p>结合OTA授权、PMS数据、账户方案及财务制度进一步校准。</p></div>
+          <div class="arrow"></div>
+          <div class="step"><div class="num">03 / 试点定版</div><h3>形成可执行试点方案</h3><p>以双方工作坊与试点验证结果确定最终范围、分工与验收口径。</p></div>
+        </div>
+        <div class="lower"><p class="source">本材料用于确认方案方向和试点思路，不构成最终产品规格、报价或交付时间承诺。</p><span class="mark">V0.4</span></div>
+      </article>
+
+      <article class="slide" aria-label="第3页：四项诉求">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">03</span></div>
+        <div class="eyebrow">THE SHARED OBJECTIVE</div>
+        <h2>四项诉求共同指向<br>一套资金管理闭环。</h2>
+        <p class="takeaway">洲际需要的不是单一分账工具，而是业务、资金和财务记录之间的贯通。</p>
+        <div class="four-grid">
+          <div class="pillar"><div class="index">01</div><h3>对得清</h3><p>携程、美团、飞猪账单与酒店订单核对，集中处理差异项。</p></div>
+          <div class="pillar"><div class="index">02</div><h3>分得准</h3><p>上传确认金额，按统一规则完成资金分配并保留执行结果。</p></div>
+          <div class="pillar"><div class="index">03</div><h3>扣得明</h3><p>已确认待扣款可在后续收入中按规则抵扣，过程可追溯。</p></div>
+          <div class="pillar"><div class="index">04</div><h3>记得清</h3><p>结算、分账、提现及抵扣形成可校验的通用财务凭证数据。</p></div>
+        </div>
+        <div class="lower"><p class="source">四项诉求应在试点工作坊中进一步确认优先级、业务定义及财务处理口径。</p><span class="mark">CLOSED LOOP</span></div>
+      </article>
+
+      <article class="slide" aria-label="第4页：能力边界">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">04</span></div>
+        <div class="eyebrow">CLEAR BOUNDARIES</div>
+        <h2>方案不是从零开始，<br>也不按全部现成功能理解。</h2>
+        <p class="takeaway">以可复用能力为起点，以专项共建和外部条件确认控制项目预期。</p>
+        <div class="boundary">
+          <section><div class="label">可复用的现有基础</div><h3>从已有资金管理能力起步</h3><ul><li>账户与余额管理</li><li>分账、提现及银行回单</li><li>表格导入、批量操作及中信银行账户方案（已通过生产验证）</li><li>通用对账与差异识别框架</li></ul></section>
+          <section><div class="label">本项目拟联合建设</div><h3>围绕酒店业务规则专项适配</h3><ul><li>酒店OTA账单适配</li><li>集团与酒店对账确认流程</li><li>待扣款台账及后续抵扣</li><li>凭证规则、异常处理与系统衔接</li></ul></section>
+          <section><div class="label">仍需确认的条件</div><h3>以真实环境决定最终方案</h3><ul><li>OTA数据权限与获取方式</li><li>PMS数据及订单字段</li><li>财务制度、科目体系及现有系统</li><li>各方在试点中的业务分工与操作边界</li></ul></section>
+        </div>
+        <div class="lower"><p class="source">中信银行账户方案已通过生产验证，可作为本项目基础复用；具体自动化程度与实施安排，以试点数据和外部系统条件为准。</p><span class="mark">FOUNDATION / CO-BUILD / CONFIRM</span></div>
+      </article>
+
+      <article class="slide" aria-label="第5页：账单到凭证闭环">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">05</span></div>
+        <div class="eyebrow">ONE VERIFIABLE CHAIN</div>
+        <h2>建议围绕“账单到凭证”<br>建立完整闭环。</h2>
+        <p class="takeaway">差异确认后再进行扣款与分账，凭证从已确认的资金结果生成。</p>
+        <div class="vertical-flow">
+          <div class="flow-item"><strong>OTA账单与酒店订单汇集</strong><span>统一进入对账范围，保留来源信息。</span></div>
+          <div class="flow-item"><strong>系统匹配，人工处理差异项</strong><span>差异确认是后续资金处理的前提。</span></div>
+          <div class="flow-item"><strong>确认本期结算及待扣款</strong><span>明确结算结果、抵扣依据和可分配金额。</span></div>
+          <div class="flow-item"><strong>完成分账与提现</strong><span>按确认结果提交执行，并获取银行结果与回单。</span></div>
+          <div class="flow-item"><strong>生成凭证草稿并形成回执</strong><span>客户确认后输出或同步，记录接收结果。</span></div>
+        </div>
+        <div class="lower"><p class="source">每张凭证可关联业务单据、对账结果、资金批次及银行结果；正式记账和最终审核由洲际现有财务系统承接。</p><span class="mark">TRACEABLE</span></div>
+      </article>
+
+      <article class="slide" aria-label="第6页：OTA对账">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">06</span></div>
+        <div class="eyebrow">OTA RECONCILIATION</div>
+        <h2>先用真实账单验证规则，<br>再逐步提升自动化。</h2>
+        <p class="takeaway">先把数据结构与业务规则跑通，再根据OTA开放条件确定自动获取方式。</p>
+        <div class="two-column">
+          <section class="phase"><div class="eyebrow">试点起步</div><h3>以账单与订单样本验证匹配规则</h3><ul class="line-list"><li>导入OTA账单与洲际PMS订单。</li><li>核验酒店、订单、日期、金额、佣金和退款等字段。</li><li>系统完成基础匹配，财务人员集中处理差异项。</li></ul></section>
+          <section class="phase"><div class="eyebrow">稳定后评估</div><h3>按平台条件确定数据获取方式</h3><ul class="line-list"><li>根据携程、美团、飞猪的授权和开放条件评估接口或自动文件方式。</li><li>持续沉淀差异处理规则和核对口径。</li><li>实际自动化程度和效率提升以试点数据为准。</li></ul></section>
+        </div>
+        <div class="lower"><p class="source">不预设三家OTA均已完成酒店渠道对接；数据授权及平台开放条件需在试点中确认。</p><span class="mark">VERIFY FIRST</span></div>
+      </article>
+
+      <article class="slide" aria-label="第7页：批量分账">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">07</span></div>
+        <div class="eyebrow">BATCH SETTLEMENT</div>
+        <h2>批量按金额分账，<br>以现有操作基础为起点。</h2>
+        <p class="takeaway">洲际可通过统一模板提交分账数据，并复用已通过生产验证的中信银行账户能力。</p>
+        <div class="linear">
+          <div class="node"><div class="n">STEP 01</div><h3>上传确认模板</h3><p>酒店、收款方、金额、费用类型、账期和原始单据等。</p></div>
+          <div class="node"><div class="n">STEP 02</div><h3>数据与金额校验</h3><p>检查格式、金额、必填项和来源依据。</p></div>
+          <div class="node"><div class="n">STEP 03</div><h3>业务审批</h3><p>按洲际确认的流程完成业务确认。</p></div>
+          <div class="node"><div class="n">STEP 04</div><h3>提交银行执行</h3><p>复用已通过生产验证的能力，按洲际业务分工执行。</p></div>
+          <div class="node"><div class="n">STEP 05</div><h3>查询结果与回单</h3><p>记录成功、失败与回单，支撑后续凭证及追溯。</p></div>
+        </div>
+        <div class="lower"><p class="source">中信银行账户方案、接口能力和实际资金测试均已通过生产验证，可作为本项目执行基础。</p><span class="mark">CONTROLLED EXECUTION</span></div>
+      </article>
+
+      <article class="slide" aria-label="第8页：待扣款抵扣">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">08</span></div>
+        <div class="eyebrow">PENDING DEDUCTION</div>
+        <h2>待扣款抵扣是本项目的<br>重要联合建设内容。</h2>
+        <p class="takeaway">为每家酒店建立独立待扣款台账，后续收入按确认规则抵扣。</p>
+        <div class="two-column">
+          <section class="phase"><div class="eyebrow">台账记录</div><h3>每笔待扣款均有来源和依据</h3><ul class="line-list"><li>记录待扣款来源、审批依据和确认金额。</li><li>持续展示已抵扣金额及剩余金额。</li><li>支持部分抵扣、争议暂停、撤销及冲销处理。</li></ul></section>
+          <section class="phase"><div class="eyebrow">后续收入处理</div><h3>先算抵扣，再确定可分配金额</h3><ul class="line-list"><li>下一笔收入到账后，计算本次确认抵扣金额。</li><li>不形成银行账户负余额，不跨酒店调拨资金。</li><li>是否分别形成会计处理，由洲际财务确认。</li></ul></section>
+        </div>
+        <div class="formula">本次可分配金额　=　本次可用收入　−　本次确认抵扣金额</div>
+        <div class="lower"><p class="source">所有待扣款应有合同、账单、审批或其他可追溯依据；相关规则将在试点阶段共同验证。</p><span class="mark">CLEAR &amp; GOVERNED</span></div>
+      </article>
+
+      <article class="slide" aria-label="第9页：凭证生成">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">09</span></div>
+        <div class="eyebrow">VOUCHER GENERATION</div>
+        <h2>凭证从已确认的业务结果生成，<br>并保留完整依据。</h2>
+        <p class="takeaway">先形成可校验、可确认、可追溯的凭证草稿，再进入正式财务系统。</p>
+        <div class="voucher-flow">
+          <div class="voucher-box"><div class="index">01 / 已确认结果</div><h3>结算、分账、提现、抵扣</h3><div class="tiny-rule"></div><p>以已确认的业务与资金结果作为凭证来源，而不是直接由原始交易流水入账。</p></div>
+          <div class="voucher-arrow"></div>
+          <div class="voucher-box"><div class="index">02 / 规则与映射</div><h3>匹配凭证规则与科目</h3><div class="tiny-rule"></div><p>按会计主体、业务类型、渠道、费用类型及辅助核算要求生成分录。</p></div>
+          <div class="voucher-arrow"></div>
+          <div class="voucher-box"><div class="index">03 / 草稿与校验</div><h3>形成可确认凭证草稿</h3><div class="tiny-rule"></div><p>检查借贷平衡、科目与辅助核算、会计期间及来源完整性。</p></div>
+          <div class="voucher-arrow"></div>
+          <div class="voucher-box"><div class="index">04 / 输出与回执</div><h3>客户确认后输出或同步</h3><div class="tiny-rule"></div><p>记录接收状态、目标凭证标识和失败原因，形成处理闭环。</p></div>
+        </div>
+        <div class="control-strip"><div><strong>规则可配置</strong><span>模板与科目映射可按洲际财务口径配置。</span></div><div><strong>异常可处理</strong><span>未匹配或校验失败进入待处理列表。</span></div><div><strong>来源可追溯</strong><span>关联对账结果、资金批次和银行回单。</span></div><div><strong>正式账务有边界</strong><span>最终审核与记账由洲际财务系统承接。</span></div></div>
+        <div class="lower"><p class="source">自动生成的是“待入账通用凭证数据/凭证草稿”，不替代洲际现有财务系统的正式记账职责。</p><span class="mark">CONTROL BEFORE POSTING</span></div>
+      </article>
+
+      <article class="slide" aria-label="第10页：系统衔接">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">10</span></div>
+        <div class="eyebrow">SYSTEM INTEGRATION</div>
+        <h2>通用凭证模型不预设厂商，<br>按洲际条件选择衔接方式。</h2>
+        <p class="takeaway">先统一凭证口径，再根据洲际现有系统和集成规范确定打通方式。</p>
+        <div class="stack">
+          <section class="layer"><div class="eyebrow">业务与资金结果</div><h3>已确认的业务依据</h3><p>结算、分账、提现、抵扣及其来源单据和银行结果。</p></section>
+          <section class="layer"><div class="eyebrow">通用财务凭证</div><h3>稳定核心字段，可配置映射</h3><p>会计主体、日期期间、科目、借贷金额、辅助核算及来源依据。</p></section>
+          <section class="layer"><div class="eyebrow">洲际现有财务系统或集成平台</div><h3>分阶段选择衔接路径</h3><div class="routes"><span>标准文件交换</span><span>官方接口衔接</span><span>客户集成平台衔接</span></div></section>
+        </div>
+        <div class="control-strip"><div><strong>试点先验证口径</strong><span>可先通过双方确认的标准文件完成凭证与科目映射验证。</span></div><div><strong>接口以条件为准</strong><span>系统版本、权限、网络与安全条件明确后，再评估自动化。</span></div><div><strong>遵循集团规范</strong><span>集成方式以洲际集团现有治理和信息安全要求为准。</span></div><div><strong>回执形成闭环</strong><span>接收状态、目标标识及失败原因可回写。</span></div></div>
+        <div class="lower"><p class="source">不预设任何具体财务软件或既有适配器；实际衔接方式需在系统信息明确后共同确认。</p><span class="mark">SYSTEM-NEUTRAL</span></div>
+      </article>
+
+      <article class="slide" aria-label="第11页：试点推进">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">11</span></div>
+        <div class="eyebrow">PILOT ROADMAP</div>
+        <h2>先验证业务闭环和凭证口径，<br>再逐步提升自动化。</h2>
+        <p class="takeaway">以阶段成果控制风险，不在外部条件未明确前承诺固定周期。</p>
+        <div class="linear">
+          <div class="node"><div class="n">01</div><h3>需求与条件确认</h3><p>试点酒店、数据样本、已验证账户能力的业务分工、财务规则和现有系统。</p></div>
+          <div class="node"><div class="n">02</div><h3>试点方案定版</h3><p>流程、范围、凭证模板、科目映射、分工与验收口径。</p></div>
+          <div class="node"><div class="n">03</div><h3>业务闭环验证</h3><p>以真实账单和可控资金范围验证关键流程及凭证输出。</p></div>
+          <div class="node"><div class="n">04</div><h3>系统衔接评估</h3><p>基于版本、接口、安全条件和试点效果决定自动化方式。</p></div>
+          <div class="node"><div class="n">05</div><h3>评估推广</h3><p>根据试点结果确定优化方向和后续推广范围。</p></div>
+        </div>
+        <div class="lower"><p class="source">具体计划在资料、授权、银行开户及第三方条件明确后，由双方共同确认。</p><span class="mark">MILESTONE-LED</span></div>
+      </article>
+
+      <article class="slide" aria-label="第12页：试点价值">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">12</span></div>
+        <div class="eyebrow">PILOT VALUE</div>
+        <h2>试点将验证一套可管理、<br>可追溯、可复制的机制。</h2>
+        <p class="takeaway">价值不止于系统上线，而在于形成适用于洲际的资金与财务衔接机制。</p>
+        <div class="roles">
+          <section class="role"><div class="monogram">G</div><h3>集团财务</h3><p>统一查看账单、差异、分账、提现及凭证处理情况，将工作重点转向差异处理和资金管理。</p></section>
+          <section class="role"><div class="monogram">H</div><h3>酒店财务</h3><p>清晰查看本酒店的扣款、分账、资金和凭证依据，减少表格往返和重复沟通。</p></section>
+          <section class="role"><div class="monogram">A</div><h3>管理与审计</h3><p>建立业务单据、银行结果与财务记录之间的关联，为经营分析和审计检查提供数据基础。</p></section>
+        </div>
+        <div class="lower"><p class="source">以上为预期方向，具体效果以试点运行和双方验收结果为准。</p><span class="mark">VERIFY THE VALUE</span></div>
+      </article>
+
+      <article class="slide" aria-label="第13页：下一步">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">13</span></div>
+        <div class="eyebrow">NEXT STEP</div>
+        <h2>获得真实样本和系统条件后，<br>共同定版凭证和试点方案。</h2>
+        <div class="workshop">
+          <section><div class="eyebrow">建议在工作坊确认</div><ol class="checklist"><li>四项需求理解及首期优先级</li><li>试点酒店选择原则和初步范围</li><li>OTA账单、PMS订单及分账文件样本</li><li>待扣款类型、审批依据和抵扣规则</li><li>中信银行账户方案在试点中的业务分工、操作边界及相应负责人</li><li>洲际现有财务系统、产品版本及集团集成规范</li><li>会计主体、账簿、科目表、辅助核算及典型凭证样本</li><li>凭证审核、记账、退回及更正流程</li><li>双方业务、财务、技术及项目负责人</li></ol></section>
+          <aside class="action"><div class="eyebrow">建议行动</div><h3>组织需求与数据工作坊</h3><p>确认试点边界和凭证口径，形成双方认可的正式试点方案。</p><span class="action-line">工作坊 → 试点定版 → 正式方案</span></aside>
+        </div>
+        <div class="lower"><p class="source">本次沟通的目标是确认方向、资料准备和工作坊安排，而非当场确认全部功能、接口方式或交付日期。</p><span class="mark">LET'S DEFINE THE PILOT</span></div>
+      </article>
+    </section>
+
+    <div id="hint">← → 翻页　·　F 全屏　·　Home / End 跳转　·　P 打印</div>
+    <div id="controls" aria-label="演示控制">
+      <button class="nav-btn" id="prev" aria-label="上一页">←</button>
+      <span id="counter">01 / 13</span>
+      <button class="nav-btn" id="next" aria-label="下一页">→</button>
+      <button class="nav-btn" id="full" aria-label="全屏">⛶</button>
+    </div>
+    <div id="progress" aria-hidden="true"><i></i></div>
+  </main>
+  <script>
+    (() => {
+      const stage = document.getElementById('stage');
+      const slides = [...document.querySelectorAll('.slide')];
+      const counter = document.getElementById('counter');
+      const bar = document.querySelector('#progress i');
+      let current = 0;
+
+      function fit() {
+        const scale = Math.min(window.innerWidth / 1600, window.innerHeight / 900);
+        stage.style.transform = `translate(-50%, -50%) scale(${scale})`;
+      }
+      function show(index) {
+        current = Math.max(0, Math.min(slides.length - 1, index));
+        slides.forEach((slide, i) => slide.classList.toggle('active', i === current));
+        counter.textContent = `${String(current + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
+        bar.style.width = `${((current + 1) / slides.length) * 100}%`;
+        window.location.hash = `slide-${current + 1}`;
+      }
+      function toggleFull() {
+        if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+        else document.exitFullscreen?.();
+      }
+      document.getElementById('prev').addEventListener('click', () => show(current - 1));
+      document.getElementById('next').addEventListener('click', () => show(current + 1));
+      document.getElementById('full').addEventListener('click', toggleFull);
+      window.addEventListener('resize', fit);
+      window.addEventListener('keydown', (event) => {
+        if (['ArrowRight', 'ArrowDown', 'PageDown', ' '].includes(event.key)) { event.preventDefault(); show(current + 1); }
+        if (['ArrowLeft', 'ArrowUp', 'PageUp'].includes(event.key)) { event.preventDefault(); show(current - 1); }
+        if (event.key === 'Home') { event.preventDefault(); show(0); }
+        if (event.key === 'End') { event.preventDefault(); show(slides.length - 1); }
+        if (event.key.toLowerCase() === 'f') toggleFull();
+        if (event.key.toLowerCase() === 'p') window.print();
+      });
+      let startX = null;
+      document.addEventListener('touchstart', e => { startX = e.changedTouches[0].screenX; }, {passive:true});
+      document.addEventListener('touchend', e => { if (startX === null) return; const delta = e.changedTouches[0].screenX - startX; if (Math.abs(delta) > 55) show(current + (delta < 0 ? 1 : -1)); startX = null; }, {passive:true});
+      const match = window.location.hash.match(/slide-(\d+)/);
+      fit();
+      show(match ? Number(match[1]) - 1 : 0);
+    })();
+  </script>
+</body>
+</html>
