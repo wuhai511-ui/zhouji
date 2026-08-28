@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>行业阶段性梳理概览｜图表增强版（2026-08-28）</title>
+<style>
+  :root{
+    --bg:#F4F7FB;
+    --card:#FFFFFF;
+    --ink:#172033;
+    --sub:#667085;
+    --muted:#98A2B3;
+    --brand:#2F6BFF;
+    --brand2:#5B8DFF;
+    --brand-weak:#EAF1FF;
+    --green:#129B75;
+    --green-weak:#E8F7F1;
+    --teal:#0F8E9D;
+    --teal-weak:#E8F7F8;
+    --amber:#B7791F;
+    --amber-weak:#FFF6E7;
+    --purple:#7658D8;
+    --purple-weak:#F0ECFF;
+    --red:#D04E4E;
+    --red-weak:#FCECEC;
+    --line:#E4E9F2;
+    --gray-weak:#F2F5F9;
+    --shadow:0 6px 24px rgba(28,42,70,.06);
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    background:linear-gradient(180deg,#F7F9FC 0,#F3F6FA 100%);
+    color:var(--ink);
+    font-family:"Inter","IBM Plex Sans","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,sans-serif;
+    font-size:14px;
+    line-height:1.6;
+    font-variant-numeric:tabular-nums;
+  }
+  .page{max-width:1600px;margin:0 auto;padding:24px 24px 44px}
+  .card,.panel,.doc-header,.conclusions,.data-source{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow)}
+
+  /* Header */
+  .doc-header{padding:22px 26px 20px;margin-bottom:16px;display:flex;justify-content:space-between;gap:24px;align-items:flex-end}
+  .doc-header h1{font-size:26px;line-height:1.2;letter-spacing:.4px}
+  .subtitle{display:flex;gap:8px 14px;flex-wrap:wrap;margin-top:8px;color:var(--sub);font-size:13px}
+  .subtitle strong{color:var(--amber);font-weight:650}
+  .edition{font-size:12px;color:var(--sub);white-space:nowrap;background:var(--gray-weak);padding:6px 10px;border-radius:999px}
+
+  /* KPI strip */
+  .kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+  .kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 15px;box-shadow:var(--shadow)}
+  .kpi .label{font-size:11.5px;color:var(--sub);margin-bottom:4px}
+  .kpi .value{font-size:23px;font-weight:800;line-height:1.15;color:var(--ink)}
+  .kpi .unit{font-size:11px;color:var(--sub);margin-left:4px;font-weight:500}
+  .kpi .desc{font-size:11px;color:var(--muted);margin-top:5px}
+
+  /* overview */
+  .overview{display:grid;grid-template-columns:1.5fr 1fr;gap:16px;margin-bottom:18px}
+  .panel{padding:18px 20px}
+  .panel h2,.section-title{font-size:15px;font-weight:750;display:flex;align-items:center;gap:8px;margin-bottom:14px}
+  .panel h2::before,.section-title::before{content:"";width:4px;height:16px;border-radius:2px;background:var(--brand)}
+  .panel .note{font-size:11.5px;color:var(--sub);margin-top:10px}
+  .maturity-track{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+  .maturity-track .m{min-height:72px;border-radius:10px;padding:10px 8px;display:flex;flex-direction:column;justify-content:space-between;text-align:center;font-weight:700;font-size:12.5px;border:1px solid rgba(47,107,255,.08)}
+  .m small{display:block;font-weight:500;font-size:10.5px;line-height:1.25;margin-top:4px}
+  .m:nth-child(1){background:#2F6BFF;color:#fff}.m:nth-child(1) small{color:#DCE7FF}
+  .m:nth-child(2){background:#4F83FF;color:#fff}.m:nth-child(2) small{color:#E1E9FF}
+  .m:nth-child(3){background:#7BA1FF;color:#10234A}
+  .m:nth-child(4){background:#A8C0FF;color:#10234A}
+  .m:nth-child(5){background:#CAD9FF;color:#1F335F}
+  .m:nth-child(6){background:#DEE8FF;color:#31415F}
+  .m:nth-child(7){background:#EEF3FF;color:#41506B}
+  .arrowline{height:2px;background:linear-gradient(90deg,var(--brand),#AFC5FF);margin:10px 8px 0;position:relative}
+  .arrowline:after{content:"";position:absolute;right:-2px;top:-4px;border-left:8px solid #AFC5FF;border-top:5px solid transparent;border-bottom:5px solid transparent}
+  .arrowlabel{text-align:center;font-size:11px;color:var(--sub);margin-top:5px}
+  .path-step{display:flex;gap:11px;padding:9px 0;border-bottom:1px dashed var(--line)}
+  .path-step:last-child{border-bottom:none}
+  .path-step .num{flex:0 0 24px;width:24px;height:24px;border-radius:50%;background:var(--brand);color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:2px}
+  .path-step h3{font-size:13px;margin-bottom:1px}
+  .path-step p{font-size:11.7px;color:var(--sub)}
+
+  /* cards */
+  .section-title{margin:4px 0 12px}
+  .cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+  .industry-card{padding:15px 15px 14px;display:flex;flex-direction:column;min-height:520px}
+  .industry-card > header{display:flex;align-items:center;gap:9px;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:10px}
+  .idx{width:30px;height:30px;border-radius:8px;background:var(--brand-weak);color:var(--brand);display:flex;align-items:center;justify-content:center;font-weight:850;font-size:16px}
+  .industry-card h2{font-size:16px;line-height:1.25}
+  .rank{margin-left:auto;font-size:10.5px;color:var(--sub);background:var(--gray-weak);padding:4px 7px;border-radius:999px;white-space:nowrap}
+  .source-tag{font-size:10px;color:var(--sub);margin-top:5px}
+  .blk{padding:9px 10px;border-radius:9px;margin-bottom:8px}
+  .blk h3{font-size:11.5px;letter-spacing:.5px;margin-bottom:5px;display:flex;align-items:center;gap:6px}
+  .blk h3:before{content:"";width:3px;height:11px;border-radius:2px}
+  .blk p{font-size:12.1px;color:#334155}
+  .blk p+p{margin-top:3px}
+  .blk strong{color:var(--ink)}
+  .base{background:var(--gray-weak)}.base h3{color:#42526A}.base h3:before{background:#9AA7BC}
+  .judge{background:var(--brand-weak)}.judge h3{color:var(--brand)}.judge h3:before{background:var(--brand)}
+  .next{background:var(--green-weak)}.next h3{color:var(--green)}.next h3:before{background:var(--green)}
+  .hl{color:var(--brand);font-weight:750}
+
+  /* chart primitives */
+  .viz{border:1px solid var(--line);border-radius:10px;padding:10px 10px 9px;background:#fff;margin-bottom:8px}
+  .viz-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:8px}
+  .viz-title h4{font-size:11.5px}
+  .viz-title span{font-size:9.8px;color:var(--muted)}
+  .hbar-row{display:grid;grid-template-columns:72px 1fr 52px;gap:7px;align-items:center;margin:6px 0}
+  .hbar-row .name{font-size:10.5px;color:#4A5872;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .bar-track{height:9px;background:#EDF1F6;border-radius:99px;overflow:hidden}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--brand),var(--brand2));border-radius:99px}
+  .bar-val{text-align:right;font-size:10.5px;font-weight:700;color:#344054}
+  .bar-fill.green{background:linear-gradient(90deg,#15A27A,#58C6A6)}
+  .bar-fill.teal{background:linear-gradient(90deg,#138D9D,#59B7C2)}
+  .bar-fill.purple{background:linear-gradient(90deg,#7658D8,#9B87EA)}
+  .bar-fill.amber{background:linear-gradient(90deg,#B7791F,#D7A553)}
+  .viz-foot{font-size:9.6px;color:var(--muted);margin-top:7px;padding-top:6px;border-top:1px dashed var(--line)}
+
+  .donut-row{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+  .donut-box{display:flex;align-items:center;gap:9px;background:#FBFCFE;border:1px solid var(--line);border-radius:9px;padding:9px}
+  .donut{--p:50;--c:var(--brand);width:58px;height:58px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),#E9EEF5 0);position:relative;flex:0 0 auto}
+  .donut:after{content:"";position:absolute;inset:8px;background:#fff;border-radius:50%}
+  .donut strong{position:absolute;inset:0;z-index:1;display:flex;align-items:center;justify-content:center;font-size:11px}
+  .donut-copy b{display:block;font-size:11.5px;margin-bottom:2px}.donut-copy span{font-size:9.8px;color:var(--sub)}
+
+  .stat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+  .stat{border:1px solid var(--line);border-radius:9px;padding:8px 9px;background:#FBFCFE}
+  .stat b{display:block;font-size:16px;line-height:1.15;color:var(--brand)}
+  .stat span{display:block;font-size:9.8px;color:var(--sub);margin-top:3px}
+  .stat.green b{color:var(--green)}.stat.teal b{color:var(--teal)}.stat.amber b{color:var(--amber)}
+
+  .flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:6px;align-items:center}
+  .flow .node{background:#F5F7FB;border:1px solid var(--line);border-radius:8px;padding:9px 7px;text-align:center;font-size:10.5px;font-weight:650}
+  .flow .arrow{color:var(--brand);font-weight:800}
+  .mode-list{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:8px}
+  .mode{border:1px solid var(--line);border-radius:8px;padding:7px;background:#FBFCFE;text-align:center}
+  .mode b{display:block;font-size:10.5px}.mode span{font-size:9.2px;color:var(--sub)}
+
+  .window{position:relative;height:52px;margin:5px 4px 0}
+  .window-line{position:absolute;left:8%;right:8%;top:22px;height:4px;background:#E8ECF3;border-radius:99px}
+  .window-active{position:absolute;left:25%;right:18%;top:22px;height:4px;background:linear-gradient(90deg,var(--purple),#B09CF2);border-radius:99px}
+  .window-dot{position:absolute;top:16px;width:16px;height:16px;border-radius:50%;background:#fff;border:4px solid var(--purple)}
+  .window-dot.d1{left:24%}.window-dot.d2{right:17%}
+  .window-label{position:absolute;top:34px;font-size:9.5px;color:var(--sub);transform:translateX(-50%)}
+  .window-label.l1{left:26%}.window-label.l2{left:82%}
+  .window-caption{text-align:center;font-size:10.5px;font-weight:700;color:var(--purple);margin-top:1px}
+
+  .mini-stack{height:12px;background:#EEF2F6;border-radius:99px;overflow:hidden;display:flex;margin-top:4px}
+  .mini-stack .part{height:100%}.mini-stack .a{background:var(--brand)}.mini-stack .b{background:#C9D8FF}
+  .stack-legend{display:flex;justify-content:space-between;font-size:9.5px;color:var(--sub);margin-top:5px}
+
+  /* conclusions */
+  .conclusions{padding:18px 20px;margin-top:16px}
+  .concl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .concl{border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:9px;padding:12px 13px;background:#FBFCFE}
+  .concl h3{font-size:13px;color:var(--brand);margin-bottom:4px}.concl p{font-size:11.8px;color:#344054}
+  .data-source{margin-top:14px;padding:12px 16px;background:var(--amber-weak);font-size:11px;color:#665835;line-height:1.65}
+  .data-source strong{color:#8A6D1F}
+
+  @media(max-width:1250px){.kpis{grid-template-columns:repeat(3,1fr)}.overview{grid-template-columns:1fr}.cards{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:720px){.page{padding:14px}.doc-header{align-items:flex-start;flex-direction:column}.kpis{grid-template-columns:repeat(2,1fr)}.cards,.concl-grid{grid-template-columns:1fr}.maturity-track{grid-template-columns:repeat(2,1fr)}.industry-card{min-height:auto}}
+  @media print{
+    body{background:#fff}.page{max-width:none;padding:8mm}.doc-header,.kpi,.panel,.card,.conclusions,.data-source{box-shadow:none}.cards{grid-template-columns:repeat(2,1fr)}.overview{grid-template-columns:1.5fr 1fr}.kpis{grid-template-columns:repeat(6,1fr)}.industry-card{break-inside:avoid}.conclusions,.data-source{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="doc-header">
+    <div>
+      <h1>行业阶段性梳理概览</h1>
+      <div class="subtitle">
+        <span>用于内部沟通和工作对齐</span>
+        <strong>不作为最终行业优先级排序，不代表总部单方面确定推进方向</strong>
+      </div>
+    </div>
+    <div class="edition">图表增强版 · 2026-08-28</div>
+  </header>
+
+  <section class="kpis" aria-label="核心数字概览">
+    <div class="kpi"><div class="label">加油站 / SaaS项目</div><div class="value">53<span class="unit">个</span></div><div class="desc">2025通道交易244.69亿元</div></div>
+    <div class="kpi"><div class="label">医美 / 已服务客户</div><div class="value">≈4,000<span class="unit">家</span></div><div class="desc">已有综合资金与单体机构方案</div></div>
+    <div class="kpi"><div class="label">文旅 / SaaS项目覆盖</div><div class="value">2,000+<span class="unit">个</span></div><div class="desc">小游“联营通”项目覆盖</div></div>
+    <div class="kpi"><div class="label">教培 / 项目存量</div><div class="value">174<span class="unit">个</span></div><div class="desc">其中119个项目零交易</div></div>
+    <div class="kpi"><div class="label">回收 / 行业规模</div><div class="value">1.39<span class="unit">万亿元</span></div><div class="desc">公开资料 / 行业调研底稿</div></div>
+    <div class="kpi"><div class="label">行业方向</div><div class="value">7<span class="unit">个</span></div><div class="desc">均为阶段性梳理，不代表资源排序</div></div>
+  </section>
+
+  <section class="overview">
+    <div class="panel">
+      <h2>阶段性成熟度排序（由高到低）</h2>
+      <div class="maturity-track">
+        <div class="m">加油站 / 能源交通<small>有完整底稿</small></div>
+        <div class="m">医美<small>有客户与方案</small></div>
+        <div class="m">文旅 / 酒店<small>有落地案例</small></div>
+        <div class="m">教培<small>有存量项目</small></div>
+        <div class="m">物业<small>机会判断形成</small></div>
+        <div class="m">网货<small>方案验证中</small></div>
+        <div class="m">回收<small>Demo验证中</small></div>
+      </div>
+      <div class="arrowline"></div><div class="arrowlabel">阶段性基础由高到低；仅反映当前材料与验证基础，不等同于投入优先级</div>
+      <p class="note">来源：内部统计 / 项目台账（阶段性成熟度排序）。</p>
+    </div>
+    <div class="panel">
+      <h2>分公司共创推进路径</h2>
+      <div class="path-step"><span class="num">1</span><div><h3>总部提供框架与候选池</h3><p>已有调研成果用于参考，不构成推进指令，不预设先后顺序。</p></div></div>
+      <div class="path-step"><span class="num">2</span><div><h3>分公司自主盘点与反馈</h3><p>结合属地客户基础、行业资源与推进意愿；新增方向需有客户案例与数据支撑。</p></div></div>
+      <div class="path-step"><span class="num">3</span><div><h3>四项匹配度确定试点</h3><p>客户基础 × 推进意愿 × 总部产品资源 × 样板可复制性，四者兼备者优先共创。</p></div></div>
+    </div>
+  </section>
+
+  <h2 class="section-title">七大行业概览卡</h2>
+  <main class="cards">
+    <!-- 1 加油站 -->
+    <article class="card industry-card">
+      <header><span class="idx">1</span><h2>加油站 / 能源交通</h2><span class="rank">成熟度 1/7</span></header>
+      <div class="viz">
+        <div class="viz-title"><h4>2025年头部项目交易规模</h4><span>亿元</span></div>
+        <div class="hbar-row"><span class="name">惠油吧</span><div class="bar-track"><div class="bar-fill" style="width:100%"></div></div><span class="bar-val">43.92</span></div>
+        <div class="hbar-row"><span class="name">智慧U站</span><div class="bar-track"><div class="bar-fill" style="width:74.8%"></div></div><span class="bar-val">32.86</span></div>
+        <div class="hbar-row"><span class="name">中海付</span><div class="bar-track"><div class="bar-fill" style="width:68.7%"></div></div><span class="bar-val">30.18</span></div>
+        <div class="donut-row" style="margin-top:8px">
+          <div class="donut-box"><div class="donut" style="--p:82.4;--c:var(--brand)"><strong>82.4%</strong></div><div class="donut-copy"><b>Top10集中度</b><span>53个项目呈明显长尾</span></div></div>
+          <div class="donut-box"><div class="donut" style="--p:5;--c:var(--amber)"><strong>≈5%</strong></div><div class="donut-copy"><b>智慧油客渗透率</b><span>通道渗透仍低</span></div></div>
+        </div>
+        <div class="viz-foot">来源：内部统计 / 项目台账。</div>
+      </div>
+      <div class="blk base"><h3>基础</h3><p>53个加油SaaS项目，2025年通道交易<strong>244.69亿元</strong>；2026年1-7月活跃ISV 6个，合计约<strong>83亿元</strong>；“油站通”方案已就位。</p></div>
+      <div class="blk judge"><h3>判断</h3><p>交易即开票（2026/11/1全面推广）推动SaaS从支付通道升级为<span class="hl">“交易-支付-开票”闭环</span>。存量合作渗透仍低，头部SaaS合作情况待内部确认。</p></div>
+      <div class="blk next"><h3>下一步</h3><p>推动已合作SaaS完成<strong>开票能力对接</strong>、提升渗透率；核实并推进喂车车、能链等头部SaaS；接入充电SaaS，关注油电一体化。</p></div>
+    </article>
+
+    <!-- 2 医美 -->
+    <article class="card industry-card">
+      <header><span class="idx">2</span><h2>医美</h2><span class="rank">成熟度 2/7</span></header>
+      <div class="viz">
+        <div class="viz-title"><h4>现阶段已形成的客户与方案基础</h4><span>内部口径</span></div>
+        <div class="stat-grid">
+          <div class="stat"><b>≈4,000家</b><span>已服务医美客户</span></div>
+          <div class="stat green"><b>2类</b><span>综合资金 / 单体机构方案</span></div>
+          <div class="stat teal"><b>3类能力</b><span>支付 / 分账 / 账户对账</span></div>
+          <div class="stat amber"><b>窗口收窄</b><span>头部SaaS合作方加速固化</span></div>
+        </div>
+        <div class="viz-foot">来源：内部统计 / 项目台账；竞争与SaaS信息来自公开资料 / 行业调研底稿。</div>
+      </div>
+      <div class="blk base"><h3>基础</h3><p>已服务约<strong>4000家</strong>医美客户；已有医美综合资金解决方案、医美单体机构解决方案；候选ISV包括伍漾云智付、企雀。</p></div>
+      <div class="blk judge"><h3>判断</h3><p>有客户基础和分账能力，但核心大客户少、外部头部SaaS均未建联。渠道销售模式是行业根因，支付+分账主要解决资金合规留痕。</p><p>易宝、汇付已有较强布局，<span class="hl">合作窗口在收窄</span>。</p></div>
+      <div class="blk next"><h3>下一步</h3><p>验证“支付/账户能力+医美SaaS+合规经营支持”样板；触达岚时云、领健悦容；跟踪2027年后合规拐点。</p></div>
+    </article>
+
+    <!-- 3 文旅 -->
+    <article class="card industry-card">
+      <header><span class="idx">3</span><h2>文旅 / 酒店</h2><span class="rank">成熟度 3/7</span></header>
+      <div class="viz">
+        <div class="viz-title"><h4>外卡业务增长表现</h4><span>同比增幅</span></div>
+        <div class="hbar-row"><span class="name">2025受理规模</span><div class="bar-track"><div class="bar-fill green" style="width:100%"></div></div><span class="bar-val">+117%</span></div>
+        <div class="hbar-row"><span class="name">2026Q1交易额</span><div class="bar-track"><div class="bar-fill green" style="width:83.8%"></div></div><span class="bar-val">+98%</span></div>
+        <div class="stat-grid" style="margin-top:8px"><div class="stat"><b>2,000+</b><span>小游联营通文旅项目覆盖</span></div><div class="stat teal"><b>6大卡组织</b><span>全品牌外卡收单资质</span></div></div>
+        <div class="viz-foot">来源：内部统计 / 项目台账。</div>
+      </div>
+      <div class="blk base"><h3>基础</h3><p>小游“联营通”已接入持牌资金通道，服务全国超<strong>2000个</strong>文旅项目；酒店收单方案可覆盖多渠道资金归集。</p></div>
+      <div class="blk judge"><h3>判断</h3><p>文旅是“SaaS+支付”<strong>已实际落地</strong>的基础行业，外卡收单是差异化优势；但<span class="hl">项目覆盖不等于交易活跃和分账规模</span>，外卡与文旅方案尚未系统级集成。</p></div>
+      <div class="blk next"><h3>下一步</h3><p>推动小游联营通+外卡收单打通；推进酒店集团标杆打样；探索退税代理合作。</p></div>
+    </article>
+
+    <!-- 4 教培 -->
+    <article class="card industry-card">
+      <header><span class="idx">4</span><h2>教培</h2><span class="rank">成熟度 4/7</span></header>
+      <div class="viz">
+        <div class="viz-title"><h4>项目活跃与SaaS贡献</h4><span>2025年</span></div>
+        <div class="donut-row">
+          <div class="donut-box"><div class="donut" style="--p:68.4;--c:var(--red)"><strong>68.4%</strong></div><div class="donut-copy"><b>零交易项目</b><span>119 / 174个</span></div></div>
+          <div class="donut-box"><div class="donut" style="--p:25.5;--c:var(--brand)"><strong>25.5%</strong></div><div class="donut-copy"><b>SaaS交易贡献</b><span>9.97 / 39.11亿元</span></div></div>
+        </div>
+        <div style="margin-top:9px"><div class="viz-title" style="margin-bottom:4px"><h4>SaaS项目占比 vs 交易贡献</h4><span>项目占比约8.0%</span></div><div class="mini-stack"><div class="part a" style="width:25.5%"></div><div class="part b" style="width:74.5%"></div></div><div class="stack-legend"><span>SaaS贡献 25.5%</span><span>其他 74.5%</span></div></div>
+        <div class="viz-foot">来源：内部项目台账。14个SaaS项目约占174个项目的8.0%，单项目平均交易规模约为普通商户4倍。</div>
+      </div>
+      <div class="blk base"><h3>基础</h3><p>174个项目，2025年交易<strong>39.11亿元</strong>、577.03万笔；119个项目零交易；14个SaaS项目贡献9.97亿元。</p></div>
+      <div class="blk judge"><h3>判断</h3><p>不是缺立项，而是<span class="hl">缺激活运营</span>；SaaS入口方向经数据验证，但占比低。头部依赖明显，数据质量仍需清理。</p></div>
+      <div class="blk next"><h3>下一步</h3><p>项目分层盘活，追119个零交易原因；深挖14个SaaS项目可复制性；评估校宝在线、校管家合作可能性。</p></div>
+    </article>
+
+    <!-- 5 物业 -->
+    <article class="card industry-card">
+      <header><span class="idx">5</span><h2>物业</h2><span class="rank">成熟度 5/7</span></header>
+      <div class="viz">
+        <div class="viz-title"><h4>外部SaaS样本规模（极致科技）</h4><span>公开资料</span></div>
+        <div class="stat-grid">
+          <div class="stat"><b>5,000+</b><span>企业客户</span></div>
+          <div class="stat green"><b>28,600+</b><span>物业项目</span></div>
+          <div class="stat teal"><b>60+</b><span>物业百强客户</span></div>
+          <div class="stat amber"><b>待盘点</b><span>拉卡拉内部存量与交易数据</span></div>
+        </div>
+        <div class="viz-foot">来源：公开资料 / 行业调研底稿。该数据用于反映外部SaaS覆盖能力，不代表拉卡拉现有合作规模。</div>
+      </div>
+      <div class="blk base"><h3>基础</h3><p>内部行业调研已完成，方向成立；外部SaaS包括极致科技、一应云/一应账房、千丁，公开资料未见与拉卡拉明确合作。</p></div>
+      <div class="blk judge"><h3>判断</h3><p>核心痛点（收缴率、对账、公共收益）与拉卡拉支付+分账+对账能力<strong>高度匹配</strong>；但内部存量客户与交易数据不足，<span class="hl">公共收益合规风险高</span>。</p></div>
+      <div class="blk next"><h3>下一步</h3><p>盘点内部物业商户与交易；核实头部SaaS合作可能性；明确MVP能力边界；公共收益单独做合规校验。</p></div>
+    </article>
+
+    <!-- 6 网货 -->
+    <article class="card industry-card">
+      <header><span class="idx">6</span><h2>网货（网络货运）</h2><span class="rank">成熟度 6/7</span></header>
+      <div class="viz">
+        <div class="viz-title"><h4>三类资金流模式</h4><span>决定方案边界</span></div>
+        <div class="mode-list">
+          <div class="mode"><b>承运型</b><span>货主 → 平台 → 司机</span></div>
+          <div class="mode"><b>直联型</b><span>货主 → 司机 + 平台</span></div>
+          <div class="mode"><b>混合型</b><span>两种模式并存</span></div>
+        </div>
+        <div class="flow" style="margin-top:10px"><div class="node">运单/业务</div><span class="arrow">→</span><div class="node">资金支付</div><span class="arrow">→</span><div class="node">票据/追溯</div></div>
+        <div class="viz-foot">来源：内部调研 / 方案底稿。当前核心卡点为自然人进件与开票链路。</div>
+      </div>
+      <div class="blk base"><h3>基础</h3><p>券付通/移企付方案已形成；航旗&amp;科顺测试通过、待客户签字，上线验证待推进。</p></div>
+      <div class="blk judge"><h3>判断</h3><p>已进入方案验证和优化阶段。核心不是“怎么把钱付出去”，而是业务流、资金流、票据流等可追溯；三类资金流模式决定可切客户。</p></div>
+      <div class="blk next"><h3>下一步</h3><p>推动航旗&amp;科顺签约落地；验证不同资金流模式适用性；摸排头部网货SaaS。</p></div>
+    </article>
+
+    <!-- 7 回收 -->
+    <article class="card industry-card">
+      <header><span class="idx">7</span><h2>回收（再生资源）</h2><span class="rank">成熟度 7/7</span></header>
+      <div class="viz">
+        <div class="viz-title"><h4>行业结构与政策窗口</h4><span>公开资料 / 行业调研</span></div>
+        <div class="donut-row">
+          <div class="donut-box"><div class="donut" style="--p:68;--c:var(--teal)"><strong>68%</strong></div><div class="donut-copy"><b>个体回收者贡献</b><span>约1200万人</span></div></div>
+          <div class="donut-box"><div class="stat" style="width:100%;border:0;background:transparent;padding:0"><b style="font-size:18px;color:var(--purple)">1.39万亿</b><span>行业交易规模（非占比指标）</span></div></div>
+        </div>
+        <div class="stat-grid" style="margin-top:8px"><div class="stat"><b>1.48万户</b><span>公开资料：已开展反向开票企业</span></div><div class="stat green"><b>近9000亿</b><span>公开资料：相关开票金额</span></div></div>
+        <div class="window"><div class="window-line"></div><div class="window-active"></div><div class="window-dot d1"></div><div class="window-dot d2"></div><div class="window-label l1">6个月</div><div class="window-label l2">18个月</div></div><div class="window-caption">竞品占位窗口：约6–18个月（内部判断）</div>
+        <div class="viz-foot">来源：公开资料 / 行业调研底稿；“反向开票”仅用于回收行业政策现状表述。竞争窗口为内部分析判断。</div>
+      </div>
+      <div class="blk base"><h3>基础</h3><p>行业规模<strong>1.39万亿元</strong>；前端约1200万个体回收者贡献68%回收量；Demo已在测试环境部署。</p></div>
+      <div class="blk judge"><h3>判断</h3><p>七行业中唯一需从零建设行业SaaS应用工具的方向。三流合一能力缺失是核心卡点；银联商务已上线竞品。</p></div>
+      <div class="blk next"><h3>下一步</h3><p>Demo驱动深度调研；优先在前期有意向咨询的地区打样；核实金蝶联用能力边界；联动中信银行E管家及分公司BD。</p></div>
+    </article>
+  </main>
+
+  <section class="conclusions">
+    <h2 class="section-title" style="margin-bottom:12px">阶段性业务结论</h2>
+    <div class="concl-grid">
+      <div class="concl"><h3>1｜深化“支付+SaaS”，是存量支付做增量的重要方向</h3><p>通过SaaS/服务商把支付嵌入行业经营流程，延伸账户、分账、开票、对账等能力，在存量客户中寻找新增量。</p></div>
+      <div class="concl"><h3>2｜行业共创要从分公司真实基础出发</h3><p>以分公司现有客户、交易数据、SaaS合作和本地资源为依据，识别可共创、可验证的行业场景，而非按总部判断排优先级。</p></div>
+      <div class="concl"><h3>3｜开票、分账、对账与合规能力是共同关键</h3><p>多个行业卡点集中在税务、资金流和合规经营，需要把支付与合规经营能力组合起来，逐步沉淀可复用能力。</p></div>
+    </div>
+  </section>
+
+  <footer class="data-source">
+    <strong>数据口径：</strong>内部统计/项目台账——公司内部项目数据、交易数据、客户数、项目进度等；公开资料/行业调研底稿——公开媒体、行业报告、政策文件、合作伙伴资料等调研信息（详见各行业调研报告与排摸底稿，均为内部归档资料）。<br>
+    <strong>图表说明：</strong>仅对来源明确、口径可比较的数据进行柱形图、环图、占比条等可视化；不同单位、不同统计口径的数据不强行横向比较。<br>
+    <strong>说明：</strong>本图用于内部沟通与阶段性复盘，不代表最终业务结论或资源排布决策，后续结合分公司反馈、内部数据核实和产品能力补齐持续更新。
+  </footer>
+</div>
+</body>
+</html>
