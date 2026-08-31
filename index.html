@@ -47,16 +47,13 @@
     .eyebrow { color: var(--red); font-size: 17px; font-weight: 700; letter-spacing: .16em; margin-bottom: 16px; }
     h1, h2, h3, p { margin: 0; }
     h1 { font: 700 70px/1.12 var(--display); letter-spacing: -.04em; }
-    h2 { max-width: 1220px; font: 700 47px/1.18 var(--display); letter-spacing: -.035em; }
+    h2 { max-width: 1240px; font: 700 47px/1.18 var(--display); letter-spacing: -.035em; }
     h3 { font-size: 22px; line-height: 1.3; }
-    .takeaway { margin-top: 20px; max-width: 1080px; color: var(--muted); font-size: 23px; line-height: 1.55; }
+    .takeaway { margin-top: 20px; max-width: 1120px; color: var(--muted); font-size: 23px; line-height: 1.55; }
     .rule { width: 72px; height: 5px; margin: 27px 0 35px; background: var(--red); }
     .caption { font-size: 17px; line-height: 1.55; color: var(--muted); }
-    .small { font-size: 16px; line-height: 1.55; color: var(--muted); }
-    .accent { color: var(--red); }
-    .gold { color: var(--gold); }
     .lower { position: absolute; bottom: 47px; left: 92px; right: 92px; display: flex; justify-content: space-between; align-items: flex-end; }
-    .lower .source { max-width: 1050px; font-size: 14px; line-height: 1.45; color: #918b82; }
+    .lower .source { max-width: 1180px; font-size: 15px; line-height: 1.5; color: #918b82; }
     .lower .mark { color: var(--red); font: 700 16px var(--display); letter-spacing: .12em; }
 
     /* Cover */
@@ -68,7 +65,7 @@
     .cover .brand-logo { display: block; width: 220px; height: auto; margin-bottom: 42px; }
     .cover .cover-body { align-self: center; padding-bottom: 45px; }
     .cover h1 { max-width: 770px; font-size: 76px; }
-    .cover .sub { width: 690px; margin-top: 27px; font-size: 27px; line-height: 1.55; color: #e0f4ff; }
+    .cover .sub { width: 700px; margin-top: 27px; font-size: 27px; line-height: 1.55; color: #e0f4ff; }
     .cover .date { margin-top: 55px; font-size: 18px; letter-spacing: .12em; color: #b8e7fb; }
     .cover .cover-side { align-self: stretch; border-left: 1px solid rgba(255,255,255,.26); padding: 12px 0 0 50px; display: flex; flex-direction: column; justify-content: space-between; }
     .cover .side-number { font: 700 210px/.8 var(--display); color: rgba(255,255,255,.11); letter-spacing: -.10em; }
@@ -85,54 +82,60 @@
     .arrow::after { content: ""; position: absolute; right: 0; top: -5px; width: 10px; height: 10px; border-right: 2px solid var(--gold); border-top: 2px solid var(--gold); transform: rotate(45deg); }
 
     .four-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; margin-top: 54px; }
-    .pillar { min-height: 290px; padding: 27px 24px 25px; border-top: 4px solid var(--red); background: rgba(255,255,255,.44); }
+    .pillar { min-height: 330px; padding: 27px 24px 25px; border-top: 4px solid var(--red); background: rgba(255,255,255,.44); }
     .pillar .index { font: 700 17px var(--display); color: var(--gold); letter-spacing: .1em; }
     .pillar h3 { margin-top: 18px; font: 700 31px var(--display); color: var(--ink); }
-    .pillar p { margin-top: 20px; font-size: 18px; color: var(--muted); line-height: 1.55; }
+    .pillar p, .pillar li { margin-top: 16px; font-size: 18px; color: var(--muted); line-height: 1.55; }
+    .pillar ul { list-style: none; margin: 0; padding: 0; }
+    .pillar li { position: relative; padding-left: 18px; margin-top: 12px; font-size: 17px; }
+    .pillar li::before { content: ""; position: absolute; left: 0; top: 9px; width: 7px; height: 7px; background: var(--red); border-radius: 50%; }
 
-    .boundary { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; margin-top: 42px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
-    .boundary section { min-height: 346px; padding: 30px 30px 25px; border-right: 1px solid var(--line); }
-    .boundary section:last-child { border-right: 0; }
-    .boundary .label { font-size: 15px; font-weight: 700; color: var(--red); letter-spacing: .13em; }
-    .boundary h3 { margin: 18px 0 22px; font: 700 28px/1.25 var(--display); }
-    .boundary ul, .line-list { padding: 0; margin: 0; list-style: none; }
-    .boundary li, .line-list li { position: relative; padding: 12px 0 12px 19px; color: var(--muted); font-size: 17px; line-height: 1.42; border-top: 1px solid rgba(217,211,201,.65); }
-    .boundary li::before, .line-list li::before { content: ""; position: absolute; left: 0; top: 21px; width: 7px; height: 7px; background: var(--red); border-radius: 50%; }
-    .boundary section:nth-child(2) { background: rgba(0,167,225,.045); }
+    /* Compare table (P3 / P4 / P9 / P12) */
+    .cmp-table { width: 100%; margin-top: 42px; border-collapse: collapse; }
+    .cmp-table th { text-align: left; padding: 14px 26px 14px 0; color: var(--red); font-size: 16px; letter-spacing: .14em; font-weight: 700; border-bottom: 3px solid var(--red); }
+    .cmp-table td { vertical-align: top; padding: 21px 26px 21px 0; font-size: 19px; line-height: 1.52; color: var(--muted); border-bottom: 1px solid var(--line); }
+    .cmp-table td:first-child { color: var(--ink); font-weight: 700; white-space: nowrap; }
+    .cmp-table tr td:first-child { box-shadow: inset 4px 0 0 var(--gold); padding-left: 18px; }
+    .cmp-table .hi { color: var(--red-deep); font-weight: 700; }
 
-    .vertical-flow { position: relative; width: 980px; margin: 32px auto 0; padding-left: 56px; }
+    .vertical-flow { position: relative; width: 1040px; margin: 30px auto 0; padding-left: 56px; }
     .vertical-flow::before { content: ""; position: absolute; left: 17px; top: 18px; bottom: 18px; width: 1px; background: var(--gold); }
-    .flow-item { position: relative; display: grid; grid-template-columns: 325px 1fr; align-items: center; min-height: 93px; border-bottom: 1px solid var(--line); }
-    .flow-item::before { content: ""; position: absolute; left: -45px; top: 38px; width: 12px; height: 12px; background: var(--red); border-radius: 50%; box-shadow: 0 0 0 6px var(--paper); }
+    .flow-item { position: relative; display: grid; grid-template-columns: 345px 1fr; align-items: center; min-height: 88px; border-bottom: 1px solid var(--line); }
+    .flow-item::before { content: ""; position: absolute; left: -45px; top: 36px; width: 12px; height: 12px; background: var(--red); border-radius: 50%; box-shadow: 0 0 0 6px var(--paper); }
     .flow-item strong { font: 700 23px var(--display); }
     .flow-item span { color: var(--muted); font-size: 17px; line-height: 1.45; }
 
-    .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; margin-top: 48px; }
+    .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; margin-top: 44px; }
     .phase { position: relative; padding-left: 27px; }
     .phase::before { content: ""; position: absolute; left: 0; top: 1px; width: 5px; height: 100%; background: var(--gold); }
     .phase h3 { font: 700 31px var(--display); }
-    .phase .line-list { margin-top: 20px; }
+    .phase .line-list { margin-top: 18px; }
+    .line-list { padding: 0; margin: 0; list-style: none; }
+    .line-list li { position: relative; padding: 11px 0 11px 19px; color: var(--muted); font-size: 17px; line-height: 1.42; border-top: 1px solid rgba(217,211,201,.65); }
+    .line-list li::before { content: ""; position: absolute; left: 0; top: 20px; width: 7px; height: 7px; background: var(--red); border-radius: 50%; }
 
     .linear { display: grid; grid-template-columns: repeat(5, 1fr); margin-top: 62px; border-top: 1px solid var(--line); }
-    .linear .node { position: relative; padding: 29px 24px 0 0; min-height: 182px; }
+    .linear .node { position: relative; padding: 29px 24px 0 0; min-height: 200px; }
     .linear .node::before { content: ""; position: absolute; left: 0; top: -8px; width: 15px; height: 15px; border-radius: 50%; background: var(--red); box-shadow: 0 0 0 5px var(--paper); }
     .linear .node:not(:last-child)::after { content: ""; position: absolute; top: -1px; right: 13px; width: 10px; height: 10px; border-right: 1px solid var(--gold); border-top: 1px solid var(--gold); transform: rotate(45deg); }
     .linear .node .n { color: var(--red); font-size: 15px; letter-spacing: .1em; font-weight: 700; }
     .linear .node h3 { margin-top: 13px; font: 700 23px/1.25 var(--display); }
     .linear .node p { margin-top: 12px; color: var(--muted); font-size: 16px; line-height: 1.45; }
 
-    .formula { display: flex; align-items: center; justify-content: center; min-height: 132px; margin-top: 34px; color: var(--red-deep); font: 700 37px/1.35 var(--display); letter-spacing: -.025em; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.34); }
+    .formula { display: flex; align-items: center; justify-content: center; min-height: 96px; margin-top: 30px; padding: 12px 40px; text-align: center; color: var(--red-deep); font: 700 30px/1.4 var(--display); letter-spacing: -.02em; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: rgba(255,255,255,.34); }
 
-    .voucher-flow { display: grid; grid-template-columns: 1fr 56px 1fr 56px 1fr 56px 1fr; align-items: stretch; margin-top: 46px; }
-    .voucher-box { min-height: 305px; padding: 25px 22px; border-top: 4px solid var(--red); background: rgba(255,255,255,.46); }
-    .voucher-box h3 { margin-top: 14px; font: 700 25px/1.26 var(--display); }
-    .voucher-box p { margin-top: 15px; color: var(--muted); font-size: 16px; line-height: 1.48; }
-    .voucher-box .tiny-rule { width: 42px; height: 3px; margin-top: 15px; background: var(--gold); }
+    /* Voucher flow — 5 stations */
+    .voucher-flow { display: grid; grid-template-columns: 1fr 38px 1fr 38px 1fr 38px 1fr 38px 1fr; align-items: stretch; margin-top: 40px; }
+    .voucher-box { min-height: 318px; padding: 23px 20px; border-top: 4px solid var(--red); background: rgba(255,255,255,.46); }
+    .voucher-box .index { font: 700 15px var(--display); color: var(--gold); letter-spacing: .08em; }
+    .voucher-box h3 { margin-top: 13px; font: 700 23px/1.26 var(--display); }
+    .voucher-box p { margin-top: 13px; color: var(--muted); font-size: 15.5px; line-height: 1.5; }
+    .voucher-box .tiny-rule { width: 42px; height: 3px; margin-top: 14px; background: var(--gold); }
     .voucher-arrow { position: relative; align-self: center; height: 1px; background: var(--gold); }
     .voucher-arrow::after { content: ""; position: absolute; top: -5px; right: 0; width: 10px; height: 10px; border-right: 2px solid var(--gold); border-top: 2px solid var(--gold); transform: rotate(45deg); }
-    .control-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 34px; }
-    .control-strip div { padding-top: 14px; border-top: 1px solid var(--line); }
-    .control-strip strong { display: block; color: var(--red); font-size: 17px; margin-bottom: 7px; }
+    .control-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; margin-top: 30px; }
+    .control-strip div { padding-top: 13px; border-top: 1px solid var(--line); }
+    .control-strip strong { display: block; color: var(--red); font-size: 17px; margin-bottom: 6px; }
     .control-strip span { color: var(--muted); font-size: 15px; line-height: 1.42; }
 
     .stack { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0; margin-top: 50px; }
@@ -140,8 +143,6 @@
     .stack .layer:nth-child(2) { margin: 28px -28px; z-index: 2; border-color: rgba(0,167,225,.28); background: #fff; box-shadow: 0 15px 30px rgba(15,65,95,.09); }
     .stack .layer h3 { font: 700 27px var(--display); }
     .stack .layer p { margin-top: 15px; color: var(--muted); font-size: 17px; line-height: 1.45; }
-    .routes { display: flex; flex-wrap: wrap; gap: 11px; margin-top: 19px; }
-    .routes span { padding: 8px 11px; border: 1px solid rgba(0,167,225,.22); color: var(--red-deep); font-size: 15px; background: rgba(0,167,225,.035); }
 
     .roles { display: grid; grid-template-columns: repeat(3, 1fr); margin-top: 54px; }
     .role { padding: 0 38px; min-height: 274px; border-right: 1px solid var(--line); }
@@ -151,11 +152,10 @@
     .role h3 { margin-top: 17px; font: 700 31px var(--display); }
     .role p { margin-top: 16px; color: var(--muted); font-size: 18px; line-height: 1.56; }
 
-    .workshop { display: grid; grid-template-columns: 1.08fr .92fr; gap: 80px; margin-top: 48px; }
-    .checklist { columns: 2; column-gap: 35px; padding: 0; margin: 0; list-style: none; }
-    .checklist li { break-inside: avoid; position: relative; padding: 0 0 17px 30px; margin-bottom: 14px; border-bottom: 1px solid rgba(217,211,201,.72); color: var(--muted); font-size: 17px; line-height: 1.42; }
+    .workshop { display: grid; grid-template-columns: 1.08fr .92fr; gap: 80px; margin-top: 44px; }
+    .checklist { columns: 2; column-gap: 35px; padding: 0; margin: 0; list-style: none; counter-reset: item; }
+    .checklist li { break-inside: avoid; position: relative; padding: 0 0 15px 30px; margin-bottom: 12px; border-bottom: 1px solid rgba(217,211,201,.72); color: var(--muted); font-size: 17px; line-height: 1.42; }
     .checklist li::before { content: counter(item, decimal-leading-zero); counter-increment: item; position: absolute; left: 0; top: 0; color: var(--red); font: 700 16px var(--display); }
-    .checklist { counter-reset: item; }
     .action { align-self: center; padding: 37px 39px; border-left: 6px solid var(--red); background: #eaf4fa; }
     .action h3 { font: 700 34px/1.25 var(--display); }
     .action p { margin-top: 21px; font-size: 20px; line-height: 1.55; color: var(--muted); }
@@ -193,171 +193,174 @@
             <div class="identity">小冲店务通</div>
             <div class="cover-body">
               <h1>洲际酒店<br>资金管理需求<br>阶段性回复</h1>
-              <p class="sub">围绕OTA对账、资金分账、待扣款管理与通用财务凭证的试点建议</p>
+              <p class="sub">围绕OTA对账、批量资金处理、待扣款管理与通用财务凭证的推进建议</p>
               <p class="date">2026 / 08　阶段性沟通材料</p>
             </div>
           </div>
           <div class="cover-side">
             <div class="side-number">01</div>
-            <p class="side-note">以真实业务规则和数据样本为依据，逐步形成可验证的试点方案。</p>
+            <p class="side-note">让双方明确下一步配合什么、确认什么、如何用真实数据验证，再进入下一步。</p>
           </div>
         </div>
         <div class="bottomline"></div>
       </article>
 
-      <article class="slide" aria-label="第2页：确认方向与试点">
+      <article class="slide" aria-label="第2页：推进方式">
         <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">02</span></div>
-        <h2>看完这份材料，<br>洲际可以明确下一步怎么配合。</h2>
-        <p class="takeaway">每项需求都按“提供资料与权限—确认规则和责任—真实数据验证—共同确认结果”的节奏推进。</p>
-        <div class="three-step">
-          <div class="step"><div class="num">01 / 提供资料与权限</div><h3>先把样本和入口给到</h3><p>提供账单、订单、模板、凭证样例及必要的获取权限。</p></div>
-          <div class="arrow"></div>
-          <div class="step"><div class="num">02 / 确认规则和责任</div><h3>明确流程与负责人</h3><p>共同确认对账、审批、抵扣、凭证口径及各方责任部门。</p></div>
-          <div class="arrow"></div>
-          <div class="step"><div class="num">03 / 真实数据验证</div><h3>跑一轮再共同确认</h3><p>用历史或试点真实数据跑通流程，根据结果进入下一步。</p></div>
-        </div>
-        <div class="lower"><p class="source">本材料用于确认方案方向和试点思路，不构成最终产品规格、报价或交付时间承诺。</p></div>
-      </article>
-
-      <article class="slide" aria-label="第3页：四项诉求">
-        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">03</span></div>
-        <h2>四项诉求共同指向<br>一套资金管理闭环。</h2>
-        <p class="takeaway">四项需求都按同一节奏推进：提供资料、确认规则、真实数据验证、共同确认结果。</p>
-        <div class="four-grid">
-          <div class="pillar"><div class="index">01</div><h3>对得清</h3><p>携程、美团、飞猪账单与酒店订单核对，集中处理差异项。</p></div>
-          <div class="pillar"><div class="index">02</div><h3>分得准</h3><p>上传确认金额，按统一规则完成资金分配并保留执行结果。</p></div>
-          <div class="pillar"><div class="index">03</div><h3>扣得明</h3><p>已确认待扣款可在后续收入中按规则抵扣，过程可追溯。</p></div>
-          <div class="pillar"><div class="index">04</div><h3>记得清</h3><p>结算、分账、提现及抵扣形成可校验的通用财务凭证数据。</p></div>
-        </div>
-        <div class="lower"><p class="source">双方先确认资料、权限、流程和责任人，再决定试点范围与后续适配深度。</p></div>
-      </article>
-
-      <article class="slide" aria-label="第4页：能力边界">
-        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">04</span></div>
-        <h2>方案不是从零开始，<br>也不按全部现成功能理解。</h2>
-        <p class="takeaway">已有能力可以复用；洲际场景仍需结合资料、权限、流程和真实数据共同定版。</p>
-        <div class="boundary">
-          <section><div class="label">可复用的现有基础</div><h3>从已有资金管理能力起步</h3><ul><li>账户与余额管理</li><li>分账、提现及银行回单</li><li>表格导入、批量操作及银行协作基础</li><li>通用对账与差异识别框架</li></ul></section>
-          <section><div class="label">本项目拟联合建设</div><h3>围绕酒店业务规则专项适配</h3><ul><li>酒店OTA账单适配</li><li>集团与酒店对账确认流程</li><li>待扣款台账及后续抵扣</li><li>凭证规则、异常处理与系统衔接</li></ul></section>
-          <section><div class="label">仍需确认的条件</div><h3>以真实环境决定最终方案</h3><ul><li>OTA数据权限与获取方式</li><li>PMS数据及订单字段</li><li>财务制度、科目体系及现有系统</li><li>各方在试点中的业务分工与操作边界</li></ul></section>
-        </div>
-        <div class="lower"><p class="source">拉卡拉与中信银行已有成熟协作基础和对接SOP；项目推进时按既有流程保障银行侧配合，具体方案以洲际资料和真实数据确认结果为准。</p></div>
-      </article>
-
-      <article class="slide" aria-label="第5页：共同定版节奏">
-        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">05</span></div>
-        <h2>从“已有能力”到“洲际可用”，<br>需要共同走完五步。</h2>
-        <p class="takeaway">我们先说明能力边界，再由洲际补齐资料和权限，双方用真实数据确认结果。</p>
+        <h2>本次沟通解决一个问题：<br>下一步怎么推进。</h2>
+        <p class="takeaway">四项需求都按同一节奏推进：<span class="accent">已有基础—洲际配合—双方确认—真实数据验证—进入下一步。</span></p>
         <div class="vertical-flow">
-          <div class="flow-item"><strong>1｜说明已有基础</strong><span>对账、批量资金处理、待扣款和通用凭证等能力边界。</span></div>
-          <div class="flow-item"><strong>2｜洲际提供资料与权限</strong><span>账单、订单、模板、凭证样例及数据获取入口。</span></div>
-          <div class="flow-item"><strong>3｜双方确认规则与责任</strong><span>对账、审批、抵扣、财务口径及责任部门。</span></div>
-          <div class="flow-item"><strong>4｜用真实数据跑一轮</strong><span>检查匹配、资金结果、凭证数据和异常处理。</span></div>
-          <div class="flow-item"><strong>5｜共同确认结果</strong><span>据此形成试点方案，再评估后续适配和自动化。</span></div>
+          <div class="flow-item"><strong>1｜拉卡拉说明已有基础</strong><span>对账、批量资金处理、待扣款和通用凭证等能力边界。</span></div>
+          <div class="flow-item"><strong>2｜洲际提供数据、权限和资料</strong><span>账单、订单、模板、凭证样例及数据获取入口。</span></div>
+          <div class="flow-item"><strong>3｜双方确认规则、流程和责任</strong><span>业务规则、操作流程和责任部门逐项对齐。</span></div>
+          <div class="flow-item"><strong>4｜用真实数据跑一轮</strong><span>用历史或试点真实数据检查匹配、资金和凭证结果。</span></div>
+          <div class="flow-item"><strong>5｜共同确认，进入下一步</strong><span>形成洲际可用的试点方案，再决定适配或推广。</span></div>
         </div>
-        <div class="lower"><p class="source">阶段性回复的重点是把下一步配合事项讲清楚，不预设全部接口方式或固定交付日期。</p></div>
+        <div class="lower"><p class="source">本阶段先把资料、权限、流程和责任人补齐，使双方进入可控验证；本材料不构成最终产品规格、商务报价、上线时间或交付承诺。</p></div>
       </article>
 
-      <article class="slide" aria-label="第6页：OTA对账">
+      <article class="slide" aria-label="第3页：四项需求与客户配合">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">03</span></div>
+        <h2>四项需求，<br>需要洲际四类配合。</h2>
+        <table class="cmp-table">
+          <tr><th style="width:300px">需求</th><th>洲际需要提供 / 确认</th></tr>
+          <tr><td>OTA对账</td><td>账单样例、核心字段、获取方式、PMS订单样例、对账责任部门</td></tr>
+          <tr><td>批量分账</td><td>分账模板、金额口径、审批/确认方式、发起与审核人员</td></tr>
+          <tr><td>待扣款 / 记账挂账</td><td>业务定义、确认依据、抵扣顺序、提醒方式、财务处理规则</td></tr>
+          <tr><td>通用财务凭证</td><td>会计主体、科目、辅助核算、摘要、借贷方向、凭证样例和衔接要求</td></tr>
+        </table>
+        <div class="lower"><p class="source">四项需求的验证方式一致：用真实历史数据或试点样例跑一轮，共同确认结果和处理流程后再定版。</p></div>
+      </article>
+
+      <article class="slide" aria-label="第4页：已有基础与共同定版">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">04</span></div>
+        <h2>已有基础可以复用，<br>洲际场景需要共同定版。</h2>
+        <table class="cmp-table">
+          <tr><th style="width:640px">已有基础</th><th>需要结合洲际确认</th></tr>
+          <tr><td>对账核心能力、账单导入、规则匹配和差异处理框架</td><td>酒店账单格式、PMS字段、对账周期和差异处理方式</td></tr>
+          <tr><td>分账确认、批量资金处理、提现和回单能力</td><td>洲际审批/身份确认方式、模板、操作人与异常责任</td></tr>
+          <tr><td>账务与资金处理基础</td><td>待扣款状态、提醒、抵扣、撤销和冲销规则</td></tr>
+          <tr><td><span class="hi">凭证模板、科目映射、实时/批量制单和生成前校验的制单基础</span></td><td>洲际财务规则、凭证样例及现有系统衔接条件</td></tr>
+        </table>
+        <div class="lower"><p class="source">拉卡拉与中信银行已有成熟协作基础和对接SOP；银行侧按既有流程配合，本材料重点请洲际确认业务资料、权限、流程和责任部门。</p></div>
+      </article>
+
+      <article class="slide" aria-label="第5页：OTA对账">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">05</span></div>
+        <h2>OTA对账：<br>洲际先提供账单和获取方式。</h2>
+        <div class="vertical-flow">
+          <div class="flow-item"><strong>拉卡拉已有对账核心能力</strong><span>账单导入、字段映射、规则匹配与差异处理框架。</span></div>
+          <div class="flow-item"><strong>洲际提供样例与字段</strong><span>携程、美团、飞猪账单样例，PMS订单样例及关键字段说明。</span></div>
+          <div class="flow-item"><strong>确认获取方式与规则</strong><span>接口获取、平台推送或定期文件；对账周期与差异处理规则。</span></div>
+          <div class="flow-item"><strong>用历史真实数据跑一轮</strong><span>检查匹配、单边数据、金额差异、退款和跨期未达。</span></div>
+          <div class="flow-item"><strong>确认结果，形成对账方式</strong><span>结果和处理流程确认后，据此评估后续自动化方式。</span></div>
+        </div>
+        <div class="lower"><p class="source">需要洲际明确：账单由谁获取、以何种方式提供；出现差异后由哪个部门处理。</p></div>
+      </article>
+
+      <article class="slide" aria-label="第6页：批量分账">
         <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">06</span></div>
-        <h2>OTA对账：先提供账单样例，<br>再共同确认获取和核对方式。</h2>
-        <p class="takeaway">拉卡拉已有对账核心能力；洲际需要先给到账单、订单和获取方式，双方用真实数据跑一轮。</p>
-        <div class="two-column">
-          <section class="phase"><div class="eyebrow">拉卡拉已有核心功能</div><h3>数据接入、规则配置、差异处理</h3><ul class="line-list"><li>支持账单/订单文件或接口数据接入与字段映射。</li><li>支持按酒店、渠道、金额、佣金、退款等条件配置对账规则。</li><li>提供对账差异展示、分类、跟进和处理记录。</li><li>输出对账结果，为后续结算、分账和凭证提供依据。</li></ul></section>
-          <section class="phase"><div class="eyebrow">洲际配合与共同验证</div><h3>先明确部门、方式、规则和样本</h3><ul class="line-list"><li>请明确集团财务/资金管理、OTA渠道运营、IT/集成及酒店财务接口人。</li><li>提供携程、美团、飞猪账单样例、PMS订单样例和字段说明。</li><li>确认账单获取方式：接口、平台推送、文件交换或定期提供。</li><li>共同配置对账规则，用历史数据跑一轮并确认差异处理结果。</li></ul></section>
+        <h2>批量分账：<br>洲际先确认审批和身份确认方式。</h2>
+        <p class="takeaway">拉卡拉支持多种分账确认方式，按洲际确认的自身流程匹配执行。</p>
+        <div class="linear">
+          <div class="node"><div class="n">01</div><h3>说明可支持的方式</h3><p>无审批、短信确认、密码/身份验证或其他确认方式。</p></div>
+          <div class="node"><div class="n">02</div><h3>洲际确认自身流程</h3><p>是否需要审批、采用哪种确认方式。</p></div>
+          <div class="node"><div class="n">03</div><h3>确认角色与模板</h3><p>谁发起、谁审核、谁处理异常；分账表格由哪个部门维护。</p></div>
+          <div class="node"><div class="n">04</div><h3>样例数据走通</h3><p>跑通"提交—确认—执行—结果/回单"全过程。</p></div>
+          <div class="node"><div class="n">05</div><h3>确认后定版</h3><p>具体模板和操作细节在双方确认后定版。</p></div>
         </div>
-        <div class="lower"><p class="source">合作OTA账单格式和获取条件需由洲际牵头协调平台及内部部门确认；是否满足业务流程，以真实数据验证结果为准。</p></div>
+        <div class="lower"><p class="source">本页不展开银行接口细节，重点是让洲际明确自己的业务审批方式；银行侧按拉卡拉与中信银行既有协作流程配合。</p></div>
       </article>
 
-      <article class="slide" aria-label="第7页：批量分账">
+      <article class="slide" aria-label="第7页：待扣款与记账挂账">
         <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">07</span></div>
-        <h2>批量按金额分账：<br>先确认洲际自己的审批方式。</h2>
-        <p class="takeaway">拉卡拉已有批量处理和多种确认方式；洲际先确认“审批还是不审批、如何确认、谁负责”。</p>
-        <div class="linear">
-          <div class="node"><div class="n">01</div><h3>提供分账模板</h3><p>酒店、收款方、金额、费用类型、账期和原始单据等。</p></div>
-          <div class="node"><div class="n">02</div><h3>选择确认方式</h3><p>支持不审批、短信确认、审批流、密码或身份验证等方式。</p></div>
-          <div class="node"><div class="n">03</div><h3>按洲际流程执行</h3><p>洲际确认发起人、审核人、权限和异常负责人后提交处理。</p></div>
-          <div class="node"><div class="n">04</div><h3>结果回执与追溯</h3><p>记录成功、失败、回单和异常处理，作为后续凭证依据。</p></div>
-        </div>
-        <div class="lower"><p class="source">需要洲际确认具体分账流程和权限边界；银行侧按拉卡拉与中信银行既有协作流程配合。</p></div>
-      </article>
-
-      <article class="slide" aria-label="第8页：待扣款抵扣">
-        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">08</span></div>
-        <h2>扣款订单管理：<br>先把“长期未扣”怎么处理定下来。</h2>
-        <p class="takeaway">拉卡拉可提供待扣款台账和状态管理基础；洲际需要确认实际财务流程和异常处理规则。</p>
+        <h2>待扣款 / 记账挂账：<br>先共同确认一个可讨论的流程。</h2>
         <div class="two-column">
-          <section class="phase"><div class="eyebrow">拉卡拉已有基础</div><h3>台账、状态和处理记录</h3><ul class="line-list"><li>记录待扣款来源、审批依据、确认金额和责任酒店。</li><li>跟踪待扣、部分抵扣、已抵扣、争议暂停、撤销和冲销状态。</li><li>展示剩余金额，保留提醒、处理和审计记录。</li></ul></section>
-          <section class="phase"><div class="eyebrow">洲际需要定规则</div><h3>下一笔收入如何抵扣，长期未扣怎么办</h3><ul class="line-list"><li>下一笔收入到账后，按洲际确认规则计算抵扣和可分配金额。</li><li>长期未扣、收入不足或扣款失败时，明确提醒、升级和人工处理流程。</li><li>不形成银行账户负余额、不跨酒店调拨；财务记账方式由洲际确认。</li></ul></section>
+          <section class="phase"><div class="eyebrow">基于既往经验的初步框架</div><h3>正常分账与待扣款分开管理</h3><ul class="line-list"><li>形成待扣款事项，记录来源、金额、依据和责任酒店；</li><li>进入等待状态，跟踪后续收入和可抵扣金额；</li><li>后续收入到账后，按确认规则计算抵扣和剩余可分配金额；</li><li>长时间未抵扣时，按约定周期汇总并提醒具体责任人；</li><li>对已抵扣、部分抵扣、争议暂停、撤销和冲销保留状态及记录。</li></ul></section>
+          <section class="phase"><div class="eyebrow">需要洲际确认</div><h3>业务定义、规则与责任部门</h3><ul class="line-list"><li>待扣款的业务定义和财务处理规则；</li><li>提醒方式：邮件、系统通知或其他入口；</li><li>内部责任部门和具体处理人。</li></ul></section>
         </div>
-        <div class="formula">本次可分配金额　=　本次可用收入　−　本次确认抵扣金额</div>
-        <div class="lower"><p class="source">上述为基于既往经验的初步流程；洲际需提供现行财务流程和责任人，双方对照确认产品现有流程如何适配。</p></div>
+        <div class="formula">不形成银行账户负余额　·　不涉及跨酒店资金调拨　·　不由拉卡拉单方确认扣款依据</div>
+        <div class="lower"><p class="source">以上为讨论框架，不替洲际定义财务制度；具体规则以洲际确认结果为准。</p></div>
       </article>
 
-      <article class="slide" aria-label="第9页：凭证生成">
-        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">09</span></div>
-        <h2>凭证从已确认的业务结果生成，<br>并保留完整依据。</h2>
-        <p class="takeaway">基于既往项目经验，结算、分账、提现和挂账结果均可形成凭证草稿；洲际确认财务口径后再衔接正式系统。</p>
+      <article class="slide" aria-label="第8页：通用财务凭证">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">08</span></div>
+        <h2>通用财务凭证：<br>拉卡拉制单，洲际系统正式记账。</h2>
         <div class="voucher-flow">
-          <div class="voucher-box"><div class="index">01 / 已确认结果</div><h3>结算、分账、提现、抵扣</h3><div class="tiny-rule"></div><p>以已确认的业务与资金结果作为凭证来源，而不是直接由原始交易流水入账。</p></div>
+          <div class="voucher-box"><div class="index">01 / 已确认事件</div><h3>先对账，再制单</h3><div class="tiny-rule"></div><p>对账确认后的结算、分账、提现和待扣款抵扣才进入制单，不在数据未核清前生成凭证。</p></div>
           <div class="voucher-arrow"></div>
-          <div class="voucher-box"><div class="index">02 / 规则与映射</div><h3>匹配凭证规则与科目</h3><div class="tiny-rule"></div><p>按会计主体、业务类型、渠道、费用类型及辅助核算要求生成分录。</p></div>
+          <div class="voucher-box"><div class="index">02 / 凭证模板</div><h3>场景模板匹配</h3><div class="tiny-rule"></div><p>覆盖收入确认、红冲、分账、提现、手续费、计提、调拨等场景，支持按渠道、酒店条件分支匹配科目。</p></div>
           <div class="voucher-arrow"></div>
-          <div class="voucher-box"><div class="index">03 / 草稿与校验</div><h3>形成可确认凭证草稿</h3><div class="tiny-rule"></div><p>检查借贷平衡、科目与辅助核算、会计期间及来源完整性。</p></div>
+          <div class="voucher-box"><div class="index">03 / 科目映射</div><h3>集团分级维护</h3><div class="tiny-rule"></div><p>业务事件映射到多级科目与辅助核算；集团模板统一，酒店级差异单独维护。</p></div>
           <div class="voucher-arrow"></div>
-          <div class="voucher-box"><div class="index">04 / 输出与回执</div><h3>客户确认后输出或同步</h3><div class="tiny-rule"></div><p>记录接收状态、目标凭证标识和失败原因，形成处理闭环。</p></div>
+          <div class="voucher-box"><div class="index">04 / 生成前校验</div><h3>异常转人工</h3><div class="tiny-rule"></div><p>自动检查借贷平衡、科目有效、金额准确；规则未覆盖业务单独标记，转人工确认，不混入正常输出。</p></div>
+          <div class="voucher-arrow"></div>
+          <div class="voucher-box"><div class="index">05 / 草稿与追溯</div><h3>双向可追溯</h3><div class="tiny-rule"></div><p>输出可校验、可导出的凭证草稿，关联业务订单、对账结果、资金批次和银行结果。</p></div>
         </div>
-        <div class="control-strip"><div><strong>规则可配置</strong><span>模板与科目映射可按洲际财务口径配置。</span></div><div><strong>异常可处理</strong><span>未匹配或校验失败进入待处理列表。</span></div><div><strong>来源可追溯</strong><span>关联对账结果、资金批次和银行回单。</span></div><div><strong>正式账务有边界</strong><span>最终审核与记账由洲际财务系统承接。</span></div></div>
-        <div class="lower"><p class="source">自动生成的是“待入账通用凭证数据/凭证草稿”，不替代洲际现有财务系统的正式记账职责。</p></div>
+        <div class="control-strip"><div><strong>制单方式可选</strong><span>单笔实时制单，或按日/周/月批量汇总制单，颗粒度由洲际确认。</span></div><div><strong>样本先行验证</strong><span>选取覆盖结算、分账、退款和待扣款抵扣的典型样本先跑一轮。</span></div><div><strong>正式记账有边界</strong><span>最终审核、编号和入账由洲际现有财务系统承接。</span></div><div><strong>衔接方式后定</strong><span>确认映射规则和草稿格式后，再讨论具体衔接方式。</span></div></div>
+        <div class="lower"><p class="source">自动生成的是"待入账通用凭证数据/凭证草稿"，不替代洲际现有财务系统的正式记账职责；本阶段不预设具体财务软件厂商。</p></div>
       </article>
 
-      <article class="slide" aria-label="第10页：系统衔接">
+      <article class="slide" aria-label="第9页：谁来配合">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">09</span></div>
+        <h2>四项需求，<br>都需要明确"谁来配合"。</h2>
+        <table class="cmp-table">
+          <tr><th style="width:420px">配合事项</th><th>建议洲际确认的责任角色</th></tr>
+          <tr><td>OTA账单和PMS订单</td><td>OTA/PMS数据协同负责人、酒店业务/财务负责人</td></tr>
+          <tr><td>分账模板和审批</td><td>集团资金/业务负责人、酒店操作与审核人员</td></tr>
+          <tr><td>待扣款规则和提醒</td><td>业务财务负责人、具体处理人</td></tr>
+          <tr><td>会计科目和凭证样例</td><td>集团财务负责人、系统/集成负责人</td></tr>
+          <tr><td>项目资料与决策汇总</td><td>洲际项目统筹负责人</td></tr>
+        </table>
+        <div class="lower"><p class="source">责任部门和对接人明确后，资料、权限和流程的确认效率会显著提高。</p></div>
+      </article>
+
+      <article class="slide" aria-label="第10页：真实数据验证">
         <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">10</span></div>
-        <h2>通用凭证模型不预设厂商，<br>按洲际条件选择衔接方式。</h2>
-        <p class="takeaway">先统一凭证口径，再根据洲际现有系统和集成规范确定打通方式。</p>
-        <div class="stack">
-          <section class="layer"><div class="eyebrow">业务与资金结果</div><h3>已确认的业务依据</h3><p>结算、分账、提现、抵扣及其来源单据和银行结果。</p></section>
-          <section class="layer"><div class="eyebrow">通用财务凭证</div><h3>稳定核心字段，可配置映射</h3><p>会计主体、日期期间、科目、借贷金额、辅助核算及来源依据。</p></section>
-          <section class="layer"><div class="eyebrow">洲际现有财务系统或集成平台</div><h3>分阶段选择衔接路径</h3><div class="routes"><span>标准文件交换</span><span>官方接口衔接</span><span>客户集成平台衔接</span></div></section>
-        </div>
-        <div class="control-strip"><div><strong>试点先验证口径</strong><span>可先通过双方确认的标准文件完成凭证与科目映射验证。</span></div><div><strong>接口以条件为准</strong><span>系统版本、权限、网络与安全条件明确后，再评估自动化。</span></div><div><strong>遵循集团规范</strong><span>集成方式以洲际集团现有治理和信息安全要求为准。</span></div><div><strong>回执形成闭环</strong><span>接收状态、目标标识及失败原因可回写。</span></div></div>
-        <div class="lower"><p class="source">不预设任何具体财务软件或既有适配器；实际衔接方式需在系统信息明确后共同确认。</p></div>
-      </article>
-
-      <article class="slide" aria-label="第11页：试点推进">
-        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">11</span></div>
-        <h2>推进计划：<br>资料、规则、数据、结果逐项确认。</h2>
-        <p class="takeaway">每个阶段都有明确输入和输出；不以固定日期代替条件确认。</p>
+        <h2>双方按真实数据确认结果，<br>而不是只看功能描述。</h2>
         <div class="linear">
-          <div class="node"><div class="n">01</div><h3>启动与部门确认</h3><p>洲际明确集团财务/资金、OTA运营、IT/集成、酒店财务及项目统筹负责人。</p></div>
-          <div class="node"><div class="n">02</div><h3>资料与权限准备</h3><p>提供账单、订单、分账、挂账、凭证样例，确认接口、文件或其他获取权限。</p></div>
-          <div class="node"><div class="n">03</div><h3>规则与流程共创</h3><p>共同确认对账、分账确认、长期未扣处理、凭证字段和责任边界。</p></div>
-          <div class="node"><div class="n">04</div><h3>历史数据验证</h3><p>用真实样本跑通四类需求，检查结果、差异、异常和财务可接受性。</p></div>
-          <div class="node"><div class="n">05</div><h3>结果评审与定版</h3><p>形成问题清单和验证结论，再确定试点范围、适配内容及后续合作方式。</p></div>
+          <div class="node"><div class="n">01</div><h3>选取代表性样本</h3><p>具有代表性的酒店和业务场景。</p></div>
+          <div class="node"><div class="n">02</div><h3>准备数据样例</h3><p>OTA账单、PMS订单、分账文件、待扣款和凭证样例。</p></div>
+          <div class="node"><div class="n">03</div><h3>按确认规则跑一轮</h3><p>对账、分账、抵扣、制单全链路走通。</p></div>
+          <div class="node"><div class="n">04</div><h3>共同检查结果</h3><p>匹配结果、资金结果、凭证数据和异常处理。</p></div>
+          <div class="node"><div class="n">05</div><h3>书面确认</h3><p>对结果和流程形成双方认可的书面记录。</p></div>
         </div>
-        <div class="lower"><p class="source">具体计划以资料、权限、流程和真实数据确认结果为准，不预设固定周期。</p></div>
+        <div class="lower"><p class="source">验证通过后，双方再确定洲际试点方案的范围、衔接方式和后续推广安排。</p></div>
       </article>
 
-      <article class="slide" aria-label="第12页：试点价值">
+      <article class="slide" aria-label="第11页：试点材料清单">
+        <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">11</span></div>
+        <h2>试点材料清单：<br>数据、权限、流程、责任人。</h2>
+        <div class="four-grid">
+          <div class="pillar"><div class="index">01</div><h3>数据</h3><ul><li>OTA账单及字段说明</li><li>PMS订单样例</li><li>分账模板或历史文件</li><li>结算/提现/待扣款/凭证样例</li></ul></div>
+          <div class="pillar"><div class="index">02</div><h3>权限</h3><ul><li>OTA账单获取方式</li><li>PMS和财务数据提供范围</li><li>接口授权、文件交换或其他访问权限</li></ul></div>
+          <div class="pillar"><div class="index">03</div><h3>流程</h3><ul><li>OTA对账周期和差异处理</li><li>分账审批或身份确认方式</li><li>待扣款确认、提醒、抵扣、撤销和冲销</li><li>凭证审核、退回、更正和正式记账</li></ul></div>
+          <div class="pillar"><div class="index">04</div><h3>责任人</h3><ul><li>业务/运营负责人</li><li>酒店或集团财务负责人</li><li>信息技术或集成负责人</li><li>OTA/PMS数据协同负责人</li><li>项目统筹负责人</li></ul></div>
+        </div>
+        <div class="lower"><p class="source">为提高下一次沟通效率，建议洲际按此清单协助准备；资料齐备后双方逐项确认。</p></div>
+      </article>
+
+      <article class="slide" aria-label="第12页：验证结果与后续深度">
         <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">12</span></div>
-        <h2>试点将验证一套可管理、<br>可追溯、可复制的机制。</h2>
-        <p class="takeaway">价值不止于系统上线，而在于形成适用于洲际的资金与财务衔接机制。</p>
-        <div class="roles">
-          <section class="role"><div class="monogram">G</div><h3>集团财务</h3><p>统一查看账单、差异、分账、提现及凭证处理情况，将工作重点转向差异处理和资金管理。</p></section>
-          <section class="role"><div class="monogram">H</div><h3>酒店财务</h3><p>清晰查看本酒店的扣款、分账、资金和凭证依据，减少表格往返和重复沟通。</p></section>
-          <section class="role"><div class="monogram">A</div><h3>管理与审计</h3><p>建立业务单据、银行结果与财务记录之间的关联，为经营分析和审计检查提供数据基础。</p></section>
-        </div>
-        <div class="lower"><p class="source">以上为预期方向，具体效果以试点运行和双方验收结果为准。</p></div>
+        <h2>验证结果，<br>将决定后续方案深度。</h2>
+        <table class="cmp-table">
+          <tr><th style="width:520px">验证结果</th><th>下一步</th></tr>
+          <tr><td>规则和数据可直接复用</td><td>形成洲际试点流程和范围</td></tr>
+          <tr><td>需要字段、流程或模板适配</td><td>共同确认适配内容、责任与计划</td></tr>
+          <tr><td>外部平台或系统条件暂不具备</td><td>先采用可行的数据交换方式，待条件成熟后再提升自动化</td></tr>
+          <tr><td>财务口径或责任边界未确认</td><td>补充资料和内部确认，不提前固化交付承诺</td></tr>
+        </table>
+        <div class="lower"><p class="source">按验证结果分层推进，把风险控制在每一步确认之后，而不是一次性定死全部细节。</p></div>
       </article>
 
-      <article class="slide" aria-label="第13页：下一步">
+      <article class="slide" aria-label="第13页：下一步建议">
         <div class="mast"><span class="brand">洲际酒店资金管理</span><span class="page-no">13</span></div>
-        <h2>获得真实样本和系统条件后，<br>共同定版凭证和试点方案。</h2>
+        <h2>建议组织一次<br>数据试点。</h2>
         <div class="workshop">
-          <section><div class="eyebrow">建议在试点阶段确认</div><ol class="checklist"><li>集团牵头部门及四项需求对应负责人</li><li>试点酒店选择原则和首期优先级</li><li>OTA账单、PMS订单及分账文件样本</li><li>账单获取方式、数据权限和接口/文件入口</li><li>对账规则、差异处理及对账责任部门</li><li>分账审批/不审批、短信、审批流、密码验证等确认方式</li><li>长期未扣款的提醒、升级、人工处理及财务记账规则</li><li>会计主体、科目、辅助核算、凭证样例及现有系统衔接要求</li><li>双方项目统筹、业务、财务、技术/集成负责人</li></ol></section>
-          <aside class="action"><div class="eyebrow">建议行动</div><h3>启动试点阶段</h3><p>确认试点边界和凭证口径，形成双方认可的正式试点方案。</p><span class="action-line">试点启动 → 试点验证 → 正式方案</span></aside>
+          <section><div class="eyebrow">数据试点逐项完成</div><ol class="checklist"><li>确认需求理解和首期优先级</li><li>收集数据样例、权限和流程资料</li><li>明确洲际内部责任部门及对接人</li><li>共同确认规则、验证样本和结果判断方式</li><li>用历史或试点真实数据跑一轮并确认结果</li><li>基于验证结果形成正式试点范围、双方分工和后续方案</li></ol></section>
+          <aside class="action"><div class="eyebrow">会议收口</div><h3>资料与责任人 → 规则确认 → 真实数据验证 → 正式试点方案</h3><p>建议洲际确认四项需求的优先级、试点酒店和各职能负责人，并准备首批数据样本；拉卡拉基于确认结果补充试点范围、适配内容、双方分工和商务建议。</p><span class="action-line">数据试点定版前，不预设接口方式、自动化范围或固定交付周期</span></aside>
         </div>
-        <div class="lower"><p class="source">本次沟通的目标是确认方向、资料准备和试点安排，而非当场确认全部功能、接口方式或交付日期。</p></div>
+        <div class="lower"><p class="source">本材料不预设具体财务软件、接口方式、自动化程度或固定交付周期。</p></div>
       </article>
     </section>
 
