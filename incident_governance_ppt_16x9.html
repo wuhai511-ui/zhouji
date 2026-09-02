@@ -1,0 +1,1054 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>生产异常治理及产品化优化方案汇报</title>
+  <style>
+    :root {
+      --bg: #f3f7fb;
+      --card: #ffffff;
+      --navy: #0b1f3a;
+      --blue: #1e5eff;
+      --blue-2: #5a8bff;
+      --cyan: #16a3ff;
+      --green: #17b26a;
+      --orange: #f79009;
+      --red: #e5484d;
+      --purple: #7a5af8;
+      --text: #14213d;
+      --muted: #5b6b87;
+      --line: #d9e3f0;
+      --soft: #edf4ff;
+      --shadow: 0 14px 34px rgba(16, 24, 40, 0.08);
+      --radius: 22px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #dfe7f3;
+      color: var(--text);
+      font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      overflow: hidden;
+    }
+    .deck {
+      width: 100vw;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+    }
+    .slides {
+      display: flex;
+      height: 100%;
+      transition: transform .35s ease;
+    }
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      padding: 28px;
+      flex: 0 0 100vw;
+      background: linear-gradient(180deg, #eef4fb 0%, #f7faff 100%);
+    }
+    .canvas {
+      width: 100%;
+      height: 100%;
+      background: var(--bg);
+      border-radius: 26px;
+      box-shadow: 0 20px 50px rgba(15, 23, 42, .12);
+      overflow: hidden;
+      position: relative;
+    }
+    .header-strip {
+      height: 84px;
+      background: linear-gradient(90deg, var(--navy), #103566 70%, #16407b);
+      color: #fff;
+      padding: 22px 36px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .title {
+      font-size: 30px;
+      font-weight: 800;
+      letter-spacing: .5px;
+    }
+    .subtitle {
+      font-size: 14px;
+      opacity: .84;
+      margin-top: 5px;
+    }
+    .page-no {
+      font-size: 18px;
+      font-weight: 700;
+      opacity: .9;
+      min-width: 66px;
+      text-align: right;
+    }
+    .content {
+      padding: 24px 30px 28px 30px;
+      height: calc(100% - 84px);
+      display: grid;
+      gap: 18px;
+    }
+    .cover {
+      padding: 44px;
+      height: 100%;
+      background: radial-gradient(circle at top right, rgba(30,94,255,.22), transparent 30%), linear-gradient(135deg, #091a33 0%, #103566 58%, #0e4c8e 100%);
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover h1 {
+      margin: 0;
+      font-size: 42px;
+      line-height: 1.24;
+      font-weight: 800;
+      width: 70%;
+    }
+    .cover p {
+      font-size: 18px;
+      line-height: 1.75;
+      color: rgba(255,255,255,.88);
+      width: 66%;
+      margin-top: 18px;
+    }
+    .cover .badge-row, .kpi-row { display: flex; gap: 16px; flex-wrap: wrap; }
+    .cover .badge {
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      padding: 16px 20px;
+      min-width: 180px;
+      backdrop-filter: blur(6px);
+    }
+    .cover .badge .num { font-size: 32px; font-weight: 800; }
+    .cover .badge .txt { font-size: 14px; opacity: .85; margin-top: 6px; }
+    .cover .panel {
+      position: absolute;
+      right: 44px;
+      top: 68px;
+      width: 340px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 24px;
+      padding: 24px;
+      backdrop-filter: blur(10px);
+    }
+    .cover .panel h3 { margin: 0 0 16px 0; font-size: 22px; }
+    .cover .panel ul { margin: 0; padding-left: 18px; line-height: 1.9; color: rgba(255,255,255,.9); }
+    .cover .footer-note {
+      position: absolute;
+      bottom: 36px;
+      left: 44px;
+      font-size: 14px;
+      color: rgba(255,255,255,.72);
+    }
+    .grid-2 { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 18px 20px;
+      border: 1px solid rgba(16,24,40,.04);
+    }
+    .kpi { padding: 16px 18px; }
+    .kpi .label { font-size: 13px; color: var(--muted); }
+    .kpi .value { font-size: 34px; font-weight: 800; margin-top: 8px; color: var(--navy); }
+    .kpi .hint { font-size: 13px; color: var(--muted); margin-top: 8px; line-height: 1.55; }
+    .section-title {
+      margin: 0 0 10px 0;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--navy);
+    }
+    .mini-title { font-size: 16px; font-weight: 800; margin: 0 0 12px 0; color: var(--navy); }
+    .muted { color: var(--muted); }
+    .small { font-size: 13px; line-height: 1.65; }
+    .bullets { margin: 8px 0 0 0; padding-left: 18px; line-height: 1.8; }
+    .bullets li { margin-bottom: 2px; }
+    .chart-wrap { height: 280px; }
+    .donut-wrap { height: 280px; display: flex; align-items: center; justify-content: center; }
+    .info-box {
+      background: linear-gradient(180deg, #f8fbff 0%, #eef4ff 100%);
+      border: 1px solid #dbe8ff;
+      border-radius: 18px;
+      padding: 16px;
+    }
+    .impact-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .impact-item {
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 16px;
+      background: white;
+    }
+    .impact-item .impact-num { font-size: 26px; font-weight: 800; color: var(--blue); }
+    .impact-item .impact-title { font-size: 15px; font-weight: 700; margin-top: 4px; }
+    .impact-item .impact-text { font-size: 13px; color: var(--muted); line-height: 1.7; margin-top: 6px; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      overflow: hidden;
+      border-radius: 16px;
+    }
+    th, td {
+      border-bottom: 1px solid #e8eef7;
+      padding: 10px 10px;
+      vertical-align: top;
+      text-align: left;
+      line-height: 1.5;
+    }
+    th {
+      background: #f2f6fc;
+      color: #30415f;
+      font-weight: 700;
+    }
+    tr:last-child td { border-bottom: none; }
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      color: #fff;
+      margin-right: 6px;
+    }
+    .red { background: var(--red); }
+    .blue { background: var(--blue); }
+    .green { background: var(--green); }
+    .orange { background: var(--orange); }
+    .purple { background: var(--purple); }
+    .cyan { background: var(--cyan); }
+    .flow {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      align-items: center;
+      margin-top: 12px;
+    }
+    .flow .step {
+      background: white;
+      border: 1px solid #dbe3ef;
+      box-shadow: var(--shadow);
+      border-radius: 18px;
+      padding: 14px 12px;
+      min-height: 106px;
+      position: relative;
+    }
+    .flow .step h4 { margin: 0 0 8px 0; font-size: 14px; }
+    .flow .step p { margin: 0; font-size: 12px; color: var(--muted); line-height: 1.7; }
+    .arrow {
+      text-align: center;
+      font-size: 24px;
+      color: #8aa4d6;
+      font-weight: bold;
+    }
+    .pain-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .pain {
+      background: linear-gradient(180deg, #fff 0%, #fafcff 100%);
+      border-radius: 18px;
+      padding: 16px;
+      border: 1px solid #e4ebf4;
+    }
+    .pain h4 { margin: 0 0 10px 0; font-size: 16px; }
+    .pain p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.75; }
+    .matrix {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+    }
+    .option {
+      border-radius: 22px;
+      padding: 18px;
+      background: white;
+      border: 1px solid #e3eaf5;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      min-height: 390px;
+    }
+    .option h3 { margin: 0; font-size: 20px; }
+    .option .level { font-size: 13px; margin-top: 8px; color: var(--muted); }
+    .option .price {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--navy);
+      margin: 14px 0 10px;
+    }
+    .option ul { margin: 0; padding-left: 18px; line-height: 1.8; font-size: 13px; }
+    .option .footer {
+      margin-top: auto;
+      border-top: 1px dashed #dce5f2;
+      padding-top: 14px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+    .recommended {
+      border: 2px solid var(--blue);
+      background: linear-gradient(180deg, #fafdff 0%, #f1f7ff 100%);
+    }
+    .recommended::before {
+      content: '建议优先';
+      align-self: flex-start;
+      background: var(--blue);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 999px;
+      padding: 5px 10px;
+      margin-bottom: 12px;
+    }
+    .roadmap {
+      display: grid;
+      grid-template-columns: 0.9fr 2.1fr;
+      gap: 16px;
+    }
+    .phase-list .phase {
+      border-left: 5px solid var(--blue);
+      padding: 12px 12px 12px 16px;
+      background: white;
+      border-radius: 0 16px 16px 0;
+      margin-bottom: 12px;
+      box-shadow: var(--shadow);
+    }
+    .phase-list .phase h4 { margin: 0; font-size: 16px; }
+    .phase-list .phase p { margin: 6px 0 0; font-size: 13px; color: var(--muted); line-height: 1.7; }
+    .roadmap-table table td:first-child { width: 90px; font-weight: 700; }
+    .stage-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .stage {
+      background: white;
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      border-top: 6px solid var(--blue);
+    }
+    .stage h3 { margin: 0 0 10px 0; font-size: 20px; }
+    .stage .sub { color: var(--muted); font-size: 13px; line-height: 1.6; margin-bottom: 12px; }
+    .stage ul { margin: 0; padding-left: 18px; font-size: 13px; line-height: 1.9; }
+    .kpi-goal {
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 1px dashed #dde6f2;
+      font-size: 13px;
+      line-height: 1.75;
+      color: var(--muted);
+    }
+    .decision-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 16px; }
+    .decision-box {
+      background: white;
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .decision-list .item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+      border-bottom: 1px dashed #e1e8f2;
+    }
+    .decision-list .item:last-child { border-bottom: none; }
+    .decision-list .num {
+      width: 30px; height: 30px; border-radius: 50%; background: var(--blue); color: white;
+      display: flex; align-items: center; justify-content: center; font-weight: 800; flex: 0 0 auto;
+      margin-top: 3px;
+    }
+    .decision-list h4 { margin: 0 0 5px 0; font-size: 16px; }
+    .decision-list p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.8; }
+    .metric-list { display: grid; gap: 12px; }
+    .metric {
+      border: 1px solid #dfe8f4;
+      border-radius: 18px;
+      padding: 14px 16px;
+      background: linear-gradient(180deg, #fff 0%, #f9fbff 100%);
+    }
+    .metric .m1 { font-size: 13px; color: var(--muted); }
+    .metric .m2 { font-size: 28px; font-weight: 800; color: var(--navy); margin-top: 6px; }
+    .metric .m3 { font-size: 13px; color: var(--muted); margin-top: 4px; }
+    .legend { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 12px; }
+    .legend span { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; color: var(--muted); }
+    .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+    .footnote {
+      font-size: 12px; color: var(--muted); line-height: 1.7; margin-top: 8px;
+    }
+    .nav {
+      position: absolute;
+      bottom: 20px;
+      right: 24px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      z-index: 5;
+    }
+    .btn {
+      width: 42px; height: 42px; border-radius: 50%; border: none; cursor: pointer;
+      background: rgba(11,31,58,.85); color: white; font-size: 18px;
+      box-shadow: 0 8px 18px rgba(0,0,0,.18);
+    }
+    .dots { display: flex; gap: 8px; padding: 0 6px; }
+    .dots i {
+      width: 10px; height: 10px; border-radius: 50%; background: rgba(11,31,58,.25); display: inline-block;
+    }
+    .dots i.active { background: var(--blue); width: 28px; border-radius: 999px; }
+    .print-tip {
+      position: absolute;
+      left: 24px;
+      bottom: 24px;
+      font-size: 12px;
+      color: rgba(11,31,58,.6);
+      z-index: 5;
+      background: rgba(255,255,255,.7);
+      padding: 8px 10px;
+      border-radius: 10px;
+    }
+    @media print {
+      body { background: white; overflow: visible; }
+      .deck, .slides { display: block; overflow: visible; height: auto; width: auto; }
+      .slide { width: 100%; height: auto; page-break-after: always; padding: 0; }
+      .canvas { width: 100%; height: 100vh; min-height: 100vh; border-radius: 0; box-shadow: none; }
+      .nav, .print-tip { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="deck">
+    <div class="slides" id="slides">
+      <!-- Slide 1 -->
+      <section class="slide">
+        <div class="canvas cover">
+          <div style="margin-top: 16px; font-size: 14px; letter-spacing: 2px; opacity: .8;">小冲 / 店务通 / 钱账通</div>
+          <h1>生产异常治理及<br>产品化优化方案汇报</h1>
+          <p>
+            基于 2026 年 7—8 月运营故障样本，对生产异常进行归并分析，
+            目标是通过“产品优化 + 监控告警 + 异常治理机制”三位一体建设，
+            降低系统异常发生概率，并提升异常发生时的发现、处置和复盘效率。
+          </p>
+          <div class="badge-row" style="margin-top: 28px;">
+            <div class="badge"><div class="num">32</div><div class="txt">两个月故障样本总数</div></div>
+            <div class="badge"><div class="num">6</div><div class="txt">可归并的高频共性故障类型</div></div>
+            <div class="badge"><div class="num">80%</div><div class="txt">预计可转为运营自助或系统自动处理</div></div>
+          </div>
+          <div class="panel">
+            <h3>本次汇报核心结论</h3>
+            <ul>
+              <li>当前问题不是“偶发个案”，而是“重复出现的结构性问题”。</li>
+              <li>主要短板集中在：规则前置校验不足、监控缺失、运营工具缺失。</li>
+              <li>建议优先推进 P0：规则产品化、自动对账巡检、关键链路监控告警。</li>
+              <li>同步建立“事前预防—事中处置—事后复盘”的异常治理闭环。</li>
+            </ul>
+          </div>
+          <div class="footer-note">统计口径：7月1日—8月31日，双来源去重汇总，含故障邮件、周报及运营产研群记录。</div>
+        </div>
+      </section>
+
+      <!-- Slide 2 -->
+      <section class="slide">
+        <div class="canvas">
+          <div class="header-strip">
+            <div>
+              <div class="title">1. 故障总体概况与数据画像</div>
+              <div class="subtitle">从 32 起事件中识别高频共性问题，支撑后续产品化治理决策</div>
+            </div>
+            <div class="page-no">01</div>
+          </div>
+          <div class="content">
+            <div class="grid-4">
+              <div class="card kpi"><div class="label">样本总数</div><div class="value">32</div><div class="hint">其中 30 起可明确归并，2 起根因待确认</div></div>
+              <div class="card kpi"><div class="label">数据来源</div><div class="value">2类</div><div class="hint">故障邮件/周报 + 运营产研沟通群，双来源交叉印证</div></div>
+              <div class="card kpi"><div class="label">主要处置方式</div><div class="value">人工</div><div class="hint">以研发改库、跑批、补数据、改状态为主</div></div>
+              <div class="card kpi"><div class="label">目标收益</div><div class="value">个位数</div><div class="hint">预计研发人工介入由 32 起降至个位数</div></div>
+            </div>
+            <div class="grid-2">
+              <div class="card">
+                <h3 class="section-title">六类高频故障分布（30起）</h3>
+                <div class="chart-wrap" id="barChart"></div>
+                <div class="footnote">说明：2 起“根因未确认”事件未纳入分类频次统计。</div>
+              </div>
+              <div class="card">
+                <h3 class="section-title">结构占比</h3>
+                <div class="donut-wrap" id="donutChart"></div>
+                <div class="legend">
+                  <span><i class="dot" style="background:#1e5eff"></i>规则缺失 6</span>
+                  <span><i class="dot" style="background:#16a3ff"></i>对账不平 6</span>
+                  <span><i class="dot" style="background:#7a5af8"></i>监控告警 6</span>
+                  <span><i class="dot" style="background:#17b26a"></i>批量操作 5</span>
+                  <span><i class="dot" style="background:#f79009"></i>会员改挂 4</span>
+                  <span><i class="dot" style="background:#e5484d"></i>调账 3</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 3 -->
+      <section class="slide">
+        <div class="canvas">
+          <div class="header-strip">
+            <div>
+              <div class="title">2. 典型影响面与风险点</div>
+              <div class="subtitle">虽然部分类型频次不最高，但单次影响面大、客户感知强、处理成本高</div>
+            </div>
+            <div class="page-no">02</div>
+          </div>
+          <div class="content" style="grid-template-rows: auto 1fr;">
+            <div class="info-box small">
+              当前故障处理虽大多“最终可解决”，但暴露出两个深层问题：一是同类问题重复发生；二是部分故障异常发生时没有被系统及时发现，直到运营人工核对或客户投诉后才介入，导致影响范围扩大、处理时效被动。
+            </div>
+            <div class="grid-2">
+              <div class="card">
+                <h3 class="section-title">高影响案例</h3>
+                <div class="impact-grid">
+                  <div class="impact-item"><div class="impact-num">7000+</div><div class="impact-title">订单同步失败</div><div class="impact-text">华卓项目勾选机构分账但实际未开通，导致大量订单分账核心同步失败后才被发现。</div></div>
+                  <div class="impact-item"><div class="impact-num">1900</div><div class="impact-title">无效终端解绑</div><div class="impact-text">姝美荟需批量解绑三代无效终端，研发按 Excel 清单人工处理。</div></div>
+                  <div class="impact-item"><div class="impact-num">1012</div><div class="impact-title">提现订单集中提款</div><div class="impact-text">四川旅游 160 个应用涉及 1012 笔提现订单，批量处理耗时且依赖研发。</div></div>
+                  <div class="impact-item"><div class="impact-num">56</div><div class="impact-title">已付款待分账</div><div class="impact-text">伟林学校模板配置错误，导致 56 笔交易已付款但未完成分账。</div></div>
+                </div>
+              </div>
+              <div class="card">
+                <h3 class="section-title">风险暴露特征</h3>
+                <table>
+                  <thead>
+                    <tr><th>风险维度</th><th>表现</th><th>带来的后果</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>客户影响</td><td>部分异常连续多日未恢复，最终由客户投诉分公司</td><td>客户感知强，影响服务口碑</td></tr>
+                    <tr><td>资金准确性</td><td>对账不平、明细缺失、可结算金额计算错误</td><td>存在资金类风险与商户质疑风险</td></tr>
+                    <tr><td>处理时效</td><td>严重依赖邮件、群聊、人工整理清单</td><td>研发响应链路长，恢复时间拉长</td></tr>
+                    <tr><td>研发投入</td><td>大量时间用于改库、补数据、跑批、订正状态</td><td>挤占真正技术问题治理时间</td></tr>
+                    <tr><td>可审计性</td><td>调账、批量处理等缺乏线上化留痕</td><td>事后追溯与审计成本高</td></tr>
+                  </tbody>
+                </table>
+                <div class="footnote">结论：当前最需要解决的不是“多处理几起故障”，而是把故障经验沉淀为系统能力。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 4 -->
+      <section class="slide">
+        <div class="canvas">
+          <div class="header-strip">
+            <div>
+              <div class="title">3. 当前处理机制与核心痛点</div>
+              <div class="subtitle">现状能解决问题，但依赖人工、发现滞后、同类问题反复出现</div>
+            </div>
+            <div class="page-no">03</div>
+          </div>
+          <div class="content" style="grid-template-rows: auto auto 1fr;">
+            <div class="card">
+              <h3 class="section-title">当前故障处理主流程</h3>
+              <div class="flow">
+                <div class="step"><h4>① 发现异常</h4><p>商户反馈、运营日常使用发现、人工对账发现、客户投诉后发现</p></div>
+                <div class="arrow">→</div>
+                <div class="step"><h4>② 报修沟通</h4><p>通过邮件或群聊反馈，运营/产品整理商户、订单、金额等明细</p></div>
+                <div class="arrow">→</div>
+                <div class="step"><h4>③ 研发介入</h4><p>研发查日志、查库、定位问题，必要时人工改库、补规则、改状态、跑批</p></div>
+              </div>
+              <div class="flow" style="grid-template-columns: 1fr auto 1fr; margin-top: 10px;">
+                <div class="step"><h4>④ 结果验证</h4><p>运营回查订单、余额、分账结果，确认是否恢复</p></div>
+                <div class="arrow">→</div>
+                <div class="step"><h4>⑤ 关闭问题</h4><p>多以“当前问题已解决”为结束，缺少系统化复盘和闭环整改跟踪</p></div>
+              </div>
+            </div>
+            <div class="grid-4">
+              <div class="pain"><h4>发现较晚</h4><p>关键链路缺少系统监控与告警，不少异常要等到运营核对或客户投诉后才发现。</p></div>
+              <div class="pain"><h4>研发负担重</h4><p>大量本应工具化的问题，实际都变成研发人工数据处理，影响研发精力投入。</p></div>
+              <div class="pain"><h4>重复发生</h4><p>规则缺失、分账会员变更、对账不平等问题在不同商户场景中重复出现。</p></div>
+              <div class="pain"><h4>闭环不足</h4><p>缺少统一的异常台账、分级响应机制和复盘整改机制，经验不易沉淀。</p></div>
+            </div>
+            <div class="grid-2">
+              <div class="card">
+                <h3 class="section-title">当前机制的本质问题</h3>
+                <ul class="bullets small">
+                  <li><b>过于依赖人：</b>异常发现依赖运营、异常处理依赖研发、异常追踪依赖个人跟进。</li>
+                  <li><b>缺少前置预防：</b>很多问题本可在配置时、交易前或每日巡检中提前发现。</li>
+                  <li><b>工具链缺失：</b>运营没有足够的自助工具，只能把结构化操作转化为人工工单。</li>
+                  <li><b>机制未成体系：</b>没有形成“事前预防—事中响应—事后改进”的完整异常治理框架。</li>
+                </ul>
+              </div>
+              <div class="card">
+                <h3 class="section-title">治理目标</h3>
+                <ul class="bullets small">
+                  <li>把“人肉发现”转变为“系统发现”。</li>
+                  <li>把“研发手工处理”转变为“运营自助处理 / 系统自动处理”。</li>
+                  <li>把“解决一笔问题”转变为“解决一类问题”。</li>
+                  <li>把“处理完成即结束”转变为“复盘后沉淀系统能力”。</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 5 -->
+      <section class="slide">
+        <div class="canvas">
+          <div class="header-strip">
+            <div>
+              <div class="title">4. 六类问题对应的产品化优化方向</div>
+              <div class="subtitle">将 30 起高频共性故障归并为 6 项产品能力建设方向</div>
+            </div>
+            <div class="page-no">04</div>
+          </div>
+          <div class="content">
+            <div class="card">
+              <table>
+                <thead>
+                  <tr>
+                    <th style="width: 130px;">问题类型</th>
+                    <th style="width: 70px;">频次</th>
+                    <th>当前处理机制</th>
+                    <th>建议产品优化方向</th>
+                    <th style="width: 70px;">优先级</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><span class="tag blue">规则缺失</span></td>
+                    <td>6</td>
+                    <td>运营发明细，研发人工创建分账/退款规则并重跑</td>
+                    <td>运营工作台支持规则自助维护；交易前校验缺失即拦截；退款规则自动生成</td>
+                    <td><b>P0</b></td>
+                  </tr>
+                  <tr>
+                    <td><span class="tag cyan">对账不平</span></td>
+                    <td>6</td>
+                    <td>运营人工核对发现，研发查库、清理脏数据、重跑余额</td>
+                    <td>建立每日自动对账巡检；输出差异清单；支持运营发起修复；修正可结算金额计算规则</td>
+                    <td><b>P0</b></td>
+                  </tr>
+                  <tr>
+                    <td><span class="tag purple">监控告警</span></td>
+                    <td>6</td>
+                    <td>异常发生时无告警，依靠人工或客户反馈发现</td>
+                    <td>分账跑批完成度监控、关键接口监控、外部连接心跳监控、变更知会机制</td>
+                    <td><b>P0</b></td>
+                  </tr>
+                  <tr>
+                    <td><span class="tag orange">会员改挂</span></td>
+                    <td>4</td>
+                    <td>研发逐单修改分账会员后补分账</td>
+                    <td>开户前置校验；分账配置与开通状态一致性校验；运营批量改挂未分账订单</td>
+                    <td><b>P1</b></td>
+                  </tr>
+                  <tr>
+                    <td><span class="tag red">调账</span></td>
+                    <td>3</td>
+                    <td>邮件说明→领导审批→研发改库执行</td>
+                    <td>调账工单线上化；保留审批；系统执行并自动留痕</td>
+                    <td><b>P1</b></td>
+                  </tr>
+                  <tr>
+                    <td><span class="tag green">批量操作</span></td>
+                    <td>5</td>
+                    <td>运营提供 Excel/清单，研发批量处理</td>
+                    <td>运营工作台提供批量解绑、补推、重跑、状态订正等工具，并保留审批与日志</td>
+                    <td><b>P2</b></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="grid-3">
+              <div class="card">
+                <h3 class="mini-title">P0：先解决高频 + 高风险</h3>
+                <p class="small muted">规则类、对账类、监控类各发生 6 起，直接决定异常频率、资金准确性和问题发现时效。</p>
+              </div>
+              <div class="card">
+                <h3 class="mini-title">P1：再补齐结构性缺口</h3>
+                <p class="small muted">会员改挂与调账虽然频次略低，但单次影响面大，且涉及资金与开户等关键业务链路。</p>
+              </div>
+              <div class="card">
+                <h3 class="mini-title">P2：提升运营效率</h3>
+                <p class="small muted">批量操作能力可有效释放研发人力，建议结合运营工作台统一建设批处理入口和审批流。</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 6 -->
+      <section class="slide">
+        <div class="canvas">
+          <div class="header-strip">
+            <div>
+              <div class="title">5. 领导可选推进方案</div>
+              <div class="subtitle">从“快速止血”到“系统治理”，提供三个层级的推进路径</div>
+            </div>
+            <div class="page-no">05</div>
+          </div>
+          <div class="content">
+            <div class="matrix">
+              <div class="option">
+                <h3>方案 A｜快速止血型</h3>
+                <div class="level">适用：近期研发资源有限，优先处理高频问题</div>
+                <div class="price">聚焦 3 项 P0</div>
+                <ul>
+                  <li>分账/退款规则自助配置与事前校验</li>
+                  <li>自动对账巡检与差异告警</li>
+                  <li>关键链路监控告警建设</li>
+                </ul>
+                <div class="footer">
+                  <b>优点：</b> 投入相对可控、见效快。<br>
+                  <b>不足：</b> 会员改挂、调账、批量处理仍需研发介入。<br>
+                  <b>预期效果：</b> 明显降低高频重复故障和“事后才发现”的问题。
+                </div>
+              </div>
+              <div class="option recommended">
+                <h3>方案 B｜产品化治理型</h3>
+                <div class="level">适用：作为本轮主推方案，兼顾降本、提效、风险控制</div>
+                <div class="price">P0 + P1 + P2</div>
+                <ul>
+                  <li>完成 6 类产品能力建设</li>
+                  <li>建立运营工作台自助处理与审批能力</li>
+                  <li>将标准化数据处理从研发转移到系统/运营侧</li>
+                  <li>形成“系统自动 + 运营自助 + 研发处理复杂异常”的分层机制</li>
+                </ul>
+                <div class="footer">
+                  <b>优点：</b> 既治“当前痛点”，也治“结构性问题”。<br>
+                  <b>预期效果：</b> 约 80% 故障可转为运营自助或系统自动处理；研发人工介入降至个位数。<br>
+                  <b>建议：</b> 作为本次专项治理的目标方案。
+                </div>
+              </div>
+              <div class="option">
+                <h3>方案 C｜治理体系型</h3>
+                <div class="level">适用：作为长期目标，与产研运维联合推进</div>
+                <div class="price">产品 + 机制 + 组织</div>
+                <ul>
+                  <li>在方案 B 基础上，进一步建立统一异常台账、响应机制和复盘机制</li>
+                  <li>完善变更管理、值守机制、SLA与分级响应</li>
+                  <li>推动异常治理从专项改造升级为持续运营能力</li>
+                </ul>
+                <div class="footer">
+                  <b>优点：</b> 从“解决故障”升级到“持续治理”。<br>
+                  <b>不足：</b> 涉及部门协同更多、建设周期更长。<br>
+                  <b>建议：</b> 作为中长期治理方向持续推进。
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 7 -->
+      <section class="slide">
+        <div class="canvas">
+          <div class="header-strip">
+            <div>
+              <div class="title">6. 分阶段落地路径与优先级建议</div>
+              <div class="subtitle">建议先做 P0 再做 P1/P2，形成可交付、可验证、可持续的推进节奏</div>
+            </div>
+            <div class="page-no">06</div>
+          </div>
+          <div class="content">
+            <div class="roadmap">
+              <div class="phase-list">
+                <div class="phase"><h4>阶段一：P0（优先）</h4><p>目标：先解决最高频、最高风险、最影响时效的问题。</p></div>
+                <div class="phase"><h4>阶段二：P1（补短板）</h4><p>目标：解决资金和开户链路的结构性缺口，降低大批量异常风险。</p></div>
+                <div class="phase"><h4>阶段三：P2（提效率）</h4><p>目标：把重复、标准化、批量化的数据处理逐步工具化、线上化。</p></div>
+              </div>
+              <div class="card roadmap-table">
+                <h3 class="section-title">优先级建议与落地节奏</h3>
+                <table>
+                  <thead>
+                    <tr><th>阶段</th><th>建设内容</th><th>落地建议</th><th>主要价值</th></tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>P0</td><td>规则自助配置、自动对账巡检、关键链路监控告警</td><td>先结合已有需求与基础能力推进评审立项</td><td>降低故障发生频率，提升发现时效，控制资金风险</td></tr>
+                    <tr><td>P1</td><td>分账方前置校验、配置一致性校验、订单批量改挂、调账线上化</td><td>与运营工作台能力统一规划</td><td>减少大批量订单异常，提升资金处理合规性</td></tr>
+                    <tr><td>P2</td><td>批量解绑、补推、重跑、状态订正等运营批处理工具</td><td>按场景逐项排期，优先处理客户投诉关联场景</td><td>释放研发人力，提升运营响应速度</td></tr>
+                  </tbody>
+                </table>
+                <div class="footnote">建议先组织一次与研发部的专项评审，不逐笔讨论 32 起事件，而是围绕 6 项能力、3 个阶段进行方案确认和排期。</div>
+              </div>
+            </div>
+            <div class="grid-3">
+              <div class="card"><h3 class="mini-title">推进原则 1</h3><p class="small muted">先把最容易重复发生、最影响客户和资金安全的问题前置治理。</p></div>
+              <div class="card"><h3 class="mini-title">推进原则 2</h3><p class="small muted">凡是研发在重复执行的标准化操作，优先评估是否可系统化、工具化。</p></div>
+              <div class="card"><h3 class="mini-title">推进原则 3</h3><p class="small muted">产品优化与异常机制同步建设，避免“工具有了，但响应机制仍然靠人”。</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 8 -->
+      <section class="slide">
+        <div class="canvas">
+          <div class="header-strip">
+            <div>
+              <div class="title">7. 异常治理机制：事前—事中—事后闭环</div>
+              <div class="subtitle">不仅要有产品能力，还要同步建立治理机制，提升故障处理效率</div>
+            </div>
+            <div class="page-no">07</div>
+          </div>
+          <div class="content">
+            <div class="stage-grid">
+              <div class="stage" style="border-top-color:#1e5eff;">
+                <h3>事前：尽量不发生</h3>
+                <div class="sub">把问题挡在配置环节、交易前和每日巡检环节。</div>
+                <ul>
+                  <li>分账规则、退款规则、开户状态前置校验</li>
+                  <li>每日对账巡检、跑批完成度巡检</li>
+                  <li>接口成功率、外部连接心跳监控</li>
+                  <li>生产变更知会与高峰时段隔离</li>
+                </ul>
+                <div class="kpi-goal"><b>建议目标：</b> 高频故障提前发现率 ≥ 80%，规则类故障在交易前拦截。</div>
+              </div>
+              <div class="stage" style="border-top-color:#17b26a;">
+                <h3>事中：及时发现、快速恢复</h3>
+                <div class="sub">统一故障入口、分级响应、先恢复业务，再进一步分析根因。</div>
+                <ul>
+                  <li>监控告警触发后自动通知相关群/责任人</li>
+                  <li>建立故障分级：全量、资金、局部、单笔</li>
+                  <li>统一异常台账：时间、影响范围、状态、负责人</li>
+                  <li>优先采用重试、补跑、降级、切换等方式恢复</li>
+                </ul>
+                <div class="kpi-goal"><b>建议目标：</b> 重大异常当日发现当日处理，平均恢复时长明显缩短。</div>
+              </div>
+              <div class="stage" style="border-top-color:#f79009;">
+                <h3>事后：复盘沉淀、持续优化</h3>
+                <div class="sub">把每次异常转化为产品优化和技术治理项，避免同类问题重复发生。</div>
+                <ul>
+                  <li>明确复盘触发条件：客户投诉、资金异常、影响面大、重复问题</li>
+                  <li>复盘输出：根因、发现缺口、处理瓶颈、优化动作</li>
+                  <li>整改项入台账并跟踪关闭</li>
+                  <li>复盘后的规则、巡检项、监控项持续迭代</li>
+                </ul>
+                <div class="kpi-goal"><b>建议目标：</b> 重点故障复盘覆盖率 100%，同类故障复发率持续下降。</div>
+              </div>
+            </div>
+            <div class="card">
+              <h3 class="section-title">建议新增的机制化产出</h3>
+              <div class="grid-3">
+                <div class="info-box small"><b>异常台账</b><br>统一记录异常时间、系统、商户、影响订单数、金额、责任人、恢复时间、根因、整改项。</div>
+                <div class="info-box small"><b>监控清单</b><br>明确关键交易链路、关键接口、外部依赖、数据巡检四大类监控项及告警阈值。</div>
+                <div class="info-box small"><b>复盘模板</b><br>统一复盘“五问”：为何发生、为何未及时发现、为何难恢复、为何处理耗时、如何避免再发生。</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 9 -->
+      <section class="slide">
+        <div class="canvas">
+          <div class="header-strip">
+            <div>
+              <div class="title">8. 与研发部下一步联合梳理重点</div>
+              <div class="subtitle">建议用“能力评审”的方式推进，而不是继续逐个故障讨论</div>
+            </div>
+            <div class="page-no">08</div>
+          </div>
+          <div class="content">
+            <div class="grid-2">
+              <div class="card">
+                <h3 class="section-title">建议组织一次专项评审，重点明确四项输出</h3>
+                <table>
+                  <thead><tr><th>输出项</th><th>重点内容</th></tr></thead>
+                  <tbody>
+                    <tr><td>产品优化清单</td><td>围绕 6 类问题确定需求边界、业务规则、实施优先级、预期收益</td></tr>
+                    <tr><td>技术治理清单</td><td>对账巡检、监控告警、重试补偿、配置校验、变更规范等研发侧工作项</td></tr>
+                    <tr><td>运营工作台能力清单</td><td>规则维护、差异处理、调账工单、批量处理、自助改挂等工具建设范围</td></tr>
+                    <tr><td>异常机制清单</td><td>分级标准、通知机制、响应角色、值守方式、复盘模板、台账管理</td></tr>
+                  </tbody>
+                </table>
+              </div>
+              <div class="card">
+                <h3 class="section-title">建议的沟通方式</h3>
+                <ul class="bullets small">
+                  <li><b>不再逐笔讨论 32 起故障细节</b>，而是聚焦 6 类能力建设。</li>
+                  <li><b>先统一口径：</b> 哪些问题属于产品能力缺失，哪些属于技术治理问题，哪些属于研发流程改进项。</li>
+                  <li><b>先定 P0：</b> 规则产品化、对账巡检、监控告警。</li>
+                  <li><b>再定 P1/P2：</b> 运营工作台工具化能力与审批流能力。</li>
+                  <li><b>明确验收指标：</b> 故障发现时效、研发人工介入次数、资金差错暴露率、客户投诉关联问题数。</li>
+                </ul>
+                <div class="info-box small" style="margin-top:14px;">
+                  <b>建议产出形式：</b> 形成一份专项治理方案，包含需求清单、实施排期、责任分工、监控清单、机制方案五部分内容。
+                </div>
+              </div>
+            </div>
+            <div class="grid-4">
+              <div class="card kpi"><div class="label">建议评审周期</div><div class="value" style="font-size:28px;">1 次专项会</div><div class="hint">先达成方向共识，再分项拉齐细节</div></div>
+              <div class="card kpi"><div class="label">建议首批立项</div><div class="value" style="font-size:28px;">3 项 P0</div><div class="hint">对高频高风险问题优先切入</div></div>
+              <div class="card kpi"><div class="label">建议同步建立</div><div class="value" style="font-size:28px;">异常台账</div><div class="hint">问题管理由“聊天记录”转为“结构化治理”</div></div>
+              <div class="card kpi"><div class="label">建议核心原则</div><div class="value" style="font-size:28px;">先机制后工具</div><div class="hint">流程、责任、监控要与产品优化同步建设</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Slide 10 -->
+      <section class="slide">
+        <div class="canvas">
+          <div class="header-strip">
+            <div>
+              <div class="title">9. 请领导决策事项</div>
+              <div class="subtitle">明确治理方向、确定优先级、授权专项推进</div>
+            </div>
+            <div class="page-no">09</div>
+          </div>
+          <div class="content">
+            <div class="decision-grid">
+              <div class="decision-box">
+                <h3 class="section-title">建议领导重点拍板的三件事</h3>
+                <div class="decision-list">
+                  <div class="item">
+                    <div class="num">1</div>
+                    <div>
+                      <h4>同意将故障治理从“逐笔处理”升级为“产品化治理”</h4>
+                      <p>不再仅围绕单次故障修数据，而是以六类共性问题为对象，建设系统能力，减少重复救火。</p>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class="num">2</div>
+                    <div>
+                      <h4>同意优先推进三项 P0 工作</h4>
+                      <p>即“规则自助配置与前置校验 + 自动对账巡检 + 关键链路监控告警”，优先解决高频、资金和时效三大核心问题。</p>
+                    </div>
+                  </div>
+                  <div class="item">
+                    <div class="num">3</div>
+                    <div>
+                      <h4>同意同步建立异常治理闭环机制</h4>
+                      <p>由产品牵头，联合研发、运营、运维，建立异常台账、分级响应、复盘整改、监控清单和责任分工。</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="decision-box">
+                <h3 class="section-title">治理目标（建议口径）</h3>
+                <div class="metric-list">
+                  <div class="metric"><div class="m1">目标 1</div><div class="m2">降低异常发生概率</div><div class="m3">通过前置校验、规则完善、自动巡检减少同类问题重复发生</div></div>
+                  <div class="metric"><div class="m1">目标 2</div><div class="m2">提升异常发现时效</div><div class="m3">通过监控告警实现从“客户发现”到“系统主动发现”的转变</div></div>
+                  <div class="metric"><div class="m1">目标 3</div><div class="m2">提升异常处理效率</div><div class="m3">通过运营工作台自助处理和机制优化，缩短故障恢复时间</div></div>
+                  <div class="metric"><div class="m1">目标 4</div><div class="m2">沉淀长期治理能力</div><div class="m3">每次故障都产出可复用的监控项、规则项和产品优化项</div></div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <h3 class="section-title">建议结束语</h3>
+              <p class="small muted" style="margin:0; line-height:1.9;">
+                本次希望推动的不是“多做几项需求”，而是从当前重复性的生产异常中，沉淀出一套可持续的治理模式：<b>简单问题系统自动处理、常见问题运营可自助处理、复杂问题研发快速定位处理</b>，同时通过事前预防、事中响应、事后复盘，逐步把生产异常治理从“被动救火”升级为“主动治理”。
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <div class="print-tip">←/→ 切换页面；浏览器打印可导出 PDF</div>
+    <div class="nav">
+      <button class="btn" id="prevBtn">←</button>
+      <div class="dots" id="dots"></div>
+      <button class="btn" id="nextBtn">→</button>
+    </div>
+  </div>
+
+  <script>
+    const slideCount = document.querySelectorAll('.slide').length;
+    const slidesEl = document.getElementById('slides');
+    const dotsEl = document.getElementById('dots');
+    let current = 0;
+
+    for (let i = 0; i < slideCount; i++) {
+      const d = document.createElement('i');
+      if (i === 0) d.classList.add('active');
+      d.addEventListener('click', () => go(i));
+      dotsEl.appendChild(d);
+    }
+
+    function go(index) {
+      current = Math.max(0, Math.min(slideCount - 1, index));
+      slidesEl.style.transform = `translateX(-${current * 100}vw)`;
+      [...dotsEl.children].forEach((x, idx) => x.classList.toggle('active', idx === current));
+    }
+    document.getElementById('prevBtn').onclick = () => go(current - 1);
+    document.getElementById('nextBtn').onclick = () => go(current + 1);
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') go(current + 1);
+      if (e.key === 'ArrowLeft' || e.key === 'PageUp') go(current - 1);
+    });
+
+    function renderBarChart() {
+      const data = [
+        { name: '规则缺失', value: 6, color: '#1e5eff' },
+        { name: '对账不平', value: 6, color: '#16a3ff' },
+        { name: '监控告警', value: 6, color: '#7a5af8' },
+        { name: '批量操作', value: 5, color: '#17b26a' },
+        { name: '会员改挂', value: 4, color: '#f79009' },
+        { name: '调账', value: 3, color: '#e5484d' }
+      ];
+      const max = 6;
+      const w = 620, h = 280;
+      const pad = { top: 20, right: 18, bottom: 44, left: 54 };
+      const chartW = w - pad.left - pad.right;
+      const chartH = h - pad.top - pad.bottom;
+      const barW = 58;
+      const gap = (chartW - barW * data.length) / (data.length - 1);
+      let svg = `<svg viewBox="0 0 ${w} ${h}" width="100%" height="100%">`;
+      svg += `<rect x="0" y="0" width="${w}" height="${h}" fill="transparent"/>`;
+      for (let i = 0; i <= max; i++) {
+        const y = pad.top + chartH - (chartH / max) * i;
+        svg += `<line x1="${pad.left}" y1="${y}" x2="${w-pad.right}" y2="${y}" stroke="#e8eef7" stroke-width="1"/>`;
+        svg += `<text x="${pad.left-12}" y="${y+4}" text-anchor="end" font-size="12" fill="#73839f">${i}</text>`;
+      }
+      data.forEach((d, i) => {
+        const x = pad.left + i * (barW + gap);
+        const bh = chartH * (d.value / max);
+        const y = pad.top + chartH - bh;
+        svg += `<rect x="${x}" y="${y}" width="${barW}" height="${bh}" rx="10" fill="${d.color}" opacity="0.92"/>`;
+        svg += `<text x="${x + barW/2}" y="${y - 8}" text-anchor="middle" font-size="14" font-weight="700" fill="#22324d">${d.value}</text>`;
+        svg += `<text x="${x + barW/2}" y="${pad.top + chartH + 22}" text-anchor="middle" font-size="12" fill="#5b6b87">${d.name}</text>`;
+      });
+      svg += `</svg>`;
+      document.getElementById('barChart').innerHTML = svg;
+    }
+
+    function polarToCartesian(cx, cy, r, angle) {
+      const rad = (angle - 90) * Math.PI / 180.0;
+      return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+    }
+    function donutSegment(cx, cy, r, start, end) {
+      const s = polarToCartesian(cx, cy, r, end);
+      const e = polarToCartesian(cx, cy, r, start);
+      const large = end - start <= 180 ? '0' : '1';
+      return `M ${s.x} ${s.y} A ${r} ${r} 0 ${large} 0 ${e.x} ${e.y}`;
+    }
+    function renderDonut() {
+      const data = [
+        { name: '规则缺失', value: 6, color: '#1e5eff' },
+        { name: '对账不平', value: 6, color: '#16a3ff' },
+        { name: '监控告警', value: 6, color: '#7a5af8' },
+        { name: '批量操作', value: 5, color: '#17b26a' },
+        { name: '会员改挂', value: 4, color: '#f79009' },
+        { name: '调账', value: 3, color: '#e5484d' }
+      ];
+      const total = data.reduce((a, b) => a + b.value, 0);
+      let angle = 0;
+      const cx = 180, cy = 138, r = 92;
+      let svg = `<svg viewBox="0 0 360 280" width="100%" height="100%">`;
+      svg += `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="#ebf1f8" stroke-width="28"/>`;
+      data.forEach(d => {
+        const span = d.value / total * 360;
+        const path = donutSegment(cx, cy, r, angle, angle + span);
+        svg += `<path d="${path}" fill="none" stroke="${d.color}" stroke-width="28" stroke-linecap="round"/>`;
+        angle += span;
+      });
+      svg += `<circle cx="${cx}" cy="${cy}" r="58" fill="#fff"/>`;
+      svg += `<text x="${cx}" y="${cy - 6}" text-anchor="middle" font-size="30" font-weight="800" fill="#0b1f3a">30</text>`;
+      svg += `<text x="${cx}" y="${cy + 20}" text-anchor="middle" font-size="13" fill="#5b6b87">已归并故障样本</text>`;
+      svg += `</svg>`;
+      document.getElementById('donutChart').innerHTML = svg;
+    }
+    renderBarChart();
+    renderDonut();
+  </script>
+</body>
+</html>
