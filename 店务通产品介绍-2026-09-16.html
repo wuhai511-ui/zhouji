@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>店务通产品介绍 · 拉卡拉营销中心商户产品部</title>
+<style>
+  :root{
+    --primary:#1a56db; --primary-dark:#1340aa; --accent:#0ea5e9;
+    --bg:#f5f7fa; --card:#ffffff; --text:#1f2937; --muted:#6b7280;
+    --border:#e5e7eb; --green:#059669; --red:#dc2626; --amber:#d97706;
+    --chip-blue:#eff6ff; --chip-green:#ecfdf5; --chip-red:#fef2f2; --chip-amber:#fffbeb;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"Microsoft YaHei","PingFang SC","Segoe UI",sans-serif;background:var(--bg);color:var(--text);line-height:1.7;font-size:15px}
+  .container{max-width:1080px;margin:0 auto;padding:24px 20px 60px}
+
+  /* Hero */
+  .hero{background:linear-gradient(135deg,#1340aa 0%,#1a56db 55%,#0ea5e9 100%);color:#fff;border-radius:16px;padding:44px 40px;margin-bottom:28px;box-shadow:0 8px 24px rgba(26,86,219,.25)}
+  .hero .tag{display:inline-block;background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.35);padding:3px 14px;border-radius:999px;font-size:13px;margin-bottom:14px;letter-spacing:1px}
+  .hero h1{font-size:34px;font-weight:700;margin-bottom:10px}
+  .hero p.sub{font-size:16px;opacity:.92;max-width:820px}
+  .hero .meta{margin-top:18px;font-size:13px;opacity:.8}
+
+  /* Sections */
+  section{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:30px 32px;margin-bottom:24px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  h2{font-size:22px;color:var(--primary-dark);border-left:5px solid var(--primary);padding-left:12px;margin-bottom:18px;line-height:1.3}
+  h3{font-size:17px;color:var(--primary);margin:22px 0 10px}
+  h4{font-size:15px;margin:14px 0 6px}
+  p{margin-bottom:10px}
+  .lead{color:var(--muted)}
+  ul,ol{padding-left:22px;margin-bottom:10px}
+  li{margin-bottom:5px}
+
+  /* Cards grid */
+  .grid{display:grid;gap:14px;margin:14px 0}
+  .grid-2{grid-template-columns:repeat(2,1fr)}
+  .grid-3{grid-template-columns:repeat(3,1fr)}
+  .grid-4{grid-template-columns:repeat(4,1fr)}
+  .card{border:1px solid var(--border);border-radius:10px;padding:16px 18px;background:#fbfcfe}
+  .card h4{color:var(--primary);margin-top:0}
+  .card .icon{display:inline-block;width:34px;height:34px;line-height:34px;text-align:center;border-radius:8px;background:var(--chip-blue);color:var(--primary);font-weight:700;margin-bottom:8px}
+
+  /* Tables */
+  .table-wrap{overflow-x:auto;margin:12px 0}
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{background:#f1f5ff;color:var(--primary-dark);font-weight:600;text-align:left;padding:10px 12px;border:1px solid var(--border);white-space:nowrap}
+  td{padding:9px 12px;border:1px solid var(--border);vertical-align:top}
+  tr:nth-child(even) td{background:#fafbfd}
+
+  /* Badges / chips */
+  .chip{display:inline-block;padding:1px 10px;border-radius:999px;font-size:12px;font-weight:600;margin:1px 2px}
+  .c-blue{background:var(--chip-blue);color:var(--primary)}
+  .c-green{background:var(--chip-green);color:var(--green)}
+  .c-red{background:var(--chip-red);color:var(--red)}
+  .c-amber{background:var(--chip-amber);color:var(--amber)}
+  .yes{color:var(--green);font-weight:600}.no{color:var(--red);font-weight:600}
+
+  /* Flow steps */
+  .flow{counter-reset:step;margin:14px 0}
+  .step{position:relative;padding:14px 16px 14px 58px;border:1px solid var(--border);border-radius:10px;margin-bottom:12px;background:#fbfcfe}
+  .step::before{counter-increment:step;content:counter(step);position:absolute;left:14px;top:14px;width:30px;height:30px;border-radius:50%;background:var(--primary);color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;font-size:15px}
+  .step h4{margin:0 0 4px;color:var(--primary-dark)}
+  .step p{margin:0;color:var(--muted);font-size:14px}
+
+  .callout{border-left:4px solid var(--amber);background:var(--chip-amber);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:14px}
+  .callout.blue{border-color:var(--primary);background:var(--chip-blue)}
+  .callout.red{border-color:var(--red);background:var(--chip-red)}
+  .callout b{color:inherit}
+
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  .vs-card{border-top:4px solid var(--primary)}
+  .vs-card+.vs-card{border-top-color:var(--amber)}
+  .vs-card ul{padding-left:18px}
+  .vs-card li{font-size:14px}
+  .case-card{border:1px solid var(--border);border-radius:10px;padding:16px 18px;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.03)}
+  .case-card h4{color:var(--primary);margin-top:0}
+  .case-card p{font-size:14px;margin:6px 0}
+
+  footer{color:var(--muted);font-size:12.5px;text-align:center;padding:20px;border-top:1px dashed var(--border)}
+
+  @media (max-width:768px){
+    .grid-2,.grid-3,.grid-4,.two-col{grid-template-columns:1fr}
+    .hero{padding:30px 24px}.hero h1{font-size:26px}
+    section{padding:22px 18px}
+  }
+  @media print{
+    body{background:#fff} section,.hero{box-shadow:none;break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- ============ Hero ============ -->
+  <div class="hero">
+    <span class="tag">拉卡拉 · 营销中心商户产品部</span>
+    <h1>店务通 · 银行内部户资金归集与分账 SaaS</h1>
+    <p class="sub">针对行业商户（店）的财务需求（务），依托银行内部账户（记账簿专用账户）设计的多收单通道资金归集及清分（通）的行业产品，为连锁品牌、电商平台商户、供应链核心企业提供合规、高效的资金管理方案。</p>
+    <div class="meta">版本：V2026.09 ｜ 资料性质：内部业务介绍材料（含敏感定价口径，对外请以定价表为准）</div>
+  </div>
+
+  <!-- ============ 1. 产品定位 ============ -->
+  <section id="definition">
+    <h2>一、产品定位与业务链路</h2>
+    <h3>1.1 一句话定位</h3>
+    <p>店务通是基于<strong>银行内部户账户体系</strong>，为连锁商户提供<strong>多平台收单资金归集、统一对账、灵活分账与合规付款</strong>的企业资金分账产品（SaaS + API）。</p>
+    <h3>1.2 底层业务链路（四步闭环）</h3>
+    <div class="grid grid-4">
+      <div class="card"><div class="icon">1</div><h4>开户</h4><p>商户及其业务关联方按银行要求在线完成银行内部户（电子记账簿）开户。</p></div>
+      <div class="card"><div class="icon">2</div><h4>入金</h4><p>商户将各收单机构 / 公域平台的结算账号变更为银行内部户，每日接收结算资金入金。</p></div>
+      <div class="card"><div class="icon">3</div><h4>分账</h4><p>商户按实际业务将入金资金分账给供应商、渠道、门店等利益相关方。</p></div>
+      <div class="card"><div class="icon">4</div><h4>提现</h4><p>各方将内部户名下资金提现至开户时绑定的同名银行账户。</p></div>
+    </div>
+    <h3>1.3 解决的核心痛点</h3>
+    <ul>
+      <li><strong>二清合规风险</strong>：平台/管理方统一收款后再分发，依托持牌资质与银行内部户体系合规解决；</li>
+      <li><strong>公转私受限</strong>：资金到对公户后再转个人受限，个人卡频繁转账有冻卡风险；</li>
+      <li><strong>资金分散难管</strong>：美团/饿了么/抖音/淘宝/拼多多多平台、多收单机构资金统一归集、统一对账；</li>
+      <li><strong>分账效率低</strong>：账期分佣、上下游结算由人工转账转为系统自动化分账；</li>
+      <li><strong>财务凭证不合规</strong>：提供银行性质账户流水凭证（入金/分账/提现三类电子回单）。</li>
+    </ul>
+  </section>
+
+  <!-- ============ 2. 主要功能 ============ -->
+  <section id="features">
+    <h2>二、主要功能</h2>
+    <div class="grid grid-3">
+      <div class="card"><h4>账户管理</h4><p>多银行内部户开通与管理（苏商/中信/光大/江西等）；平台、管理方、商户、供应商、渠道等角色灵活定义；支持个人/个体户/企业开户；实名认证、绑卡管理、电子协议、限额与提现周期管理。</p></div>
+      <div class="card"><h4>资金归集</h4><p>支持美团、饿了么、京东、淘宝、拼多多、抖音等主流公域平台，以及线下多收单机构结算入金；公域/私域资金区分管理；银行入金白名单机制。</p></div>
+      <div class="card"><h4>清分付款（分账）</h4><p>余额分账、固定比例分账、固定金额分账、组合分账；单笔/批量分账；自动结算（D1）/手动结算（D1）；平台分账模式、商户分账模式；支持分账审核流。</p></div>
+      <div class="card"><h4>综合对账</h4><p>入金对账、出金对账、多平台对账；自动/手动对账任务；差异重对、手动调整、补录；对平数据一键完成分账。</p></div>
+      <div class="card"><h4>电子回单</h4><p>入金回单（收单机构→商户）、分账回单（商户→分账方）、提现回单（提现人→本人）三单体系，满足财务合规要求。</p></div>
+      <div class="card"><h4>增值服务与输出</h4><p>餐饮供应链 SaaS、上下游采购（付费开通）；SaaS 管理后台 + 小程序一站式操作；API 接口对接（需单独申请）；角色+员工账号权限管理。</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 3. 银行通道 ============ -->
+  <section id="banks">
+    <h2>三、银行通道</h2>
+    <h3>3.1 通道总览</h3>
+    <div class="table-wrap"><table>
+      <tr><th>银行</th><th>账户模式</th><th>入金模式</th><th>定位</th></tr>
+      <tr><td><b>苏商银行</b></td><td>平台母户 / 独立母户</td><td>平台入金 + 子户入金</td><td>四大垂类（餐饮/电商/本地生活/医美）全覆盖，开户门槛最低</td></tr>
+      <tr><td><b>中信银行</b></td><td>独立母户</td><td>母户入金</td><td>头部客户、大额交易，银行品牌背书强</td></tr>
+      <tr><td><b>光大银行</b></td><td>独立母户</td><td>母户入金</td><td>资金落地监管户，合规等级最高</td></tr>
+      <tr><td><b>江西银行</b></td><td>独立母户</td><td>母户入金</td><td>联合存管模式，银行侧深度合作</td></tr>
+    </table></div>
+
+    <h3>3.2 两种展业模式</h3>
+    <div class="two-col">
+      <div class="card"><h4>机构母户（平台母户）</h4><p>以拉卡拉子公司为主体在银行开设母户（资金管理主账户），下挂多级子户（记账簿）。<br><span class="chip c-green">优点</span> 无需银行实地尽调，商户快速入网、上线效率高。</p></div>
+      <div class="card"><h4>独立母户</h4><p>以商户自身为主体在银行开设母户，下挂子户。<br><span class="chip c-green">优点</span> 支持个性化服务，不受其他商户业务规范性影响，服务稳定。<br><span class="chip c-amber">适用</span> 交易规模较大（日均存款 1000 万元以上）且业务模式复杂的商户。</p></div>
+    </div>
+
+    <h3>3.3 通道关键维度对比</h3>
+    <div class="table-wrap"><table>
+      <tr><th>维度</th><th>苏商银行</th><th>中信银行</th><th>光大银行</th><th>江西银行</th></tr>
+      <tr><td>日均存款门槛</td><td>平台户无限制；独立户 1000 万+</td><td>年日均 1000 万+</td><td>1000 万+</td><td>1000 万+</td></tr>
+      <tr><td>银行现场尽调</td><td>平台户 <span class="no">不需要</span> / 独立户 <span class="yes">需要</span></td><td><span class="yes">需要</span></td><td><span class="yes">需要</span></td><td><span class="yes">需要</span></td></tr>
+      <tr><td>大额订单支付入金</td><td>独立母户 <span class="yes">支持</span></td><td><span class="yes">支持</span></td><td><span class="yes">支持</span></td><td><span class="yes">支持</span></td></tr>
+      <tr><td>线下转账模式</td><td>独立母户 <span class="yes">支持</span></td><td><span class="no">不支持</span></td><td><span class="yes">支持</span></td><td><span class="yes">支持</span></td></tr>
+      <tr><td>子户直接入金</td><td><span class="yes">支持</span>（子户直接接收渠道结算资金）</td><td><span class="no">否</span></td><td><span class="no">否</span></td><td><span class="no">否</span></td></tr>
+      <tr><td>提现限额（个人/个体户）</td><td>50 万/笔·日，100 万/月</td><td>单户单议</td><td>单户单议</td><td>单户单议</td></tr>
+      <tr><td>提现限额（企业）</td><td>100 万/笔·日，1000 万/月</td><td>单户单议</td><td>单户单议</td><td>单户单议</td></tr>
+      <tr><td>分账限额</td><td colspan="4">各通道分账均无限额（苏商为企业经营活动需要的正常额度管理）</td></tr>
+      <tr><td>提现到账时效</td><td>D+1 上午 10:30 左右（独立母户可特申 D0）</td><td>客户手动提现</td><td>D+1 上午 10:30 左右</td><td>D+1 下午 18:00 左右</td></tr>
+      <tr><td>回单凭证</td><td>电子回单（后台下载/API）</td><td>电子回单</td><td>监管户流水</td><td>存管户流水</td></tr>
+    </table></div>
+
+    <h3>3.4 通道选型速查</h3>
+    <div class="table-wrap"><table>
+      <tr><th>客户特征</th><th>推荐银行</th><th>原因</th></tr>
+      <tr><td>餐饮、电商、本地生活、医美四大垂类</td><td><b>苏商银行（平台母户）</b></td><td>垂类全覆盖、开户门槛最低、支持子户入金</td></tr>
+      <tr><td>头部客户、品牌背书、大额交易</td><td><b>中信银行</b></td><td>独立母户，银行品牌效力强，支持大额入金</td></tr>
+      <tr><td>资金落地监管、合规要求最高</td><td><b>光大银行</b></td><td>资金落地监管户，合规等级最高</td></tr>
+      <tr><td>联合存管、银行侧深度合作</td><td><b>江西银行</b></td><td>拉卡拉联合存管模式</td></tr>
+    </table></div>
+  </section>
+
+  <!-- ============ 4. 准入与禁入行业 ============ -->
+  <section id="industry">
+    <h2>四、准入行业与禁入行业</h2>
+    <h3>4.1 目标行业（准入以各银行通道要求为准）</h3>
+    <p>
+      <span class="chip c-blue">医美大健康</span><span class="chip c-blue">文旅商圈（美食街/商业综合体/旅行商店）</span><span class="chip c-blue">公域电商</span><span class="chip c-blue">连锁餐饮</span><span class="chip c-blue">教育培训</span><span class="chip c-blue">K 娱（KTV 等）</span><span class="chip c-blue">服装</span><span class="chip c-blue">加油站</span><span class="chip c-blue">房产物业</span><span class="chip c-blue">停车场</span><span class="chip c-blue">装修建材</span><span class="chip c-blue">汽车零售</span><span class="chip c-blue">供应链平台</span>
+    </p>
+    <h3>4.2 各银行通道行业准入</h3>
+    <div class="table-wrap"><table>
+      <tr><th>通道</th><th>行业准入</th></tr>
+      <tr><td><b>苏商银行 · 平台母户</b></td><td>仅限四大垂类：① 餐饮类商户；② 公域电商（抖音/淘宝/拼多多等主流平台，<b>不含本地生活类</b>）入驻商户；③ 本地生活服务；④ 医美。垂类外商户禁用平台母户。</td></tr>
+      <tr><td><b>苏商银行 · 独立母户</b></td><td>除禁入行业外暂未限定行业。</td></tr>
+      <tr><td><b>中信银行</b></td><td>除禁入行业外暂未限定行业（具体可向营销中心商户产品部对口售前咨询）。</td></tr>
+      <tr><td><b>光大 / 江西银行</b></td><td>除禁入行业外暂未限定行业。</td></tr>
+    </table></div>
+    <h3>4.3 禁入行业</h3>
+    <div class="table-wrap"><table>
+      <tr><th>通道</th><th>禁入行业</th></tr>
+      <tr><td>苏商银行（独立母户）</td><td rowspan="3"><span class="chip c-red">游戏类</span><span class="chip c-red">虚拟充值类</span><span class="chip c-red">资管类</span><span class="chip c-red">金融理财类</span><span class="chip c-red">灵活用工类</span></td></tr>
+      <tr><td>光大银行</td></tr>
+      <tr><td>江西银行</td></tr>
+      <tr><td>中信银行</td><td><span class="chip c-red">医美</span><span class="chip c-red">直播</span><span class="chip c-red">虚拟产品</span><span class="chip c-red">交易中心</span></td></tr>
+    </table></div>
+    <div class="callout"><b>谨慎行业：</b>自营电商（垂类知名、企业背景良好，需线下实地尽调）。所有通道均需提供业务模式说明；入网参照《入网商户准入要求》执行资料清单与多级审核。</div>
+  </section>
+
+  <!-- ============ 5. 产品对比 ============ -->
+  <section id="compare">
+    <h2>五、店务通与 LAPP 关键差异对比</h2>
+    <p class="lead">店务通 vs LAPP：同一体系，两个战场。LAPP 在分账与财税能力上覆盖店务通，但店务通有<strong>独立母户</strong>独占优势——二者打的是不同市场，互补大于竞争，选型看客户缺什么。</p>
+    <div class="table-wrap"><table>
+      <tr><th>维度</th><th>店务通</th><th>LAPP</th></tr>
+      <tr><td>账户体系</td><td>银行电子记账簿，SaaS 发指令，银行执行清分</td><td>银行电子记账簿 + 支付账户，自闭环完成清算</td></tr>
+      <tr><td>合作银行</td><td>苏商、江西、光大、中信</td><td>网商银行（对接中）等</td></tr>
+      <tr><td>独立母户</td><td><span class="yes">支持</span>：格雨（医美）/ 汉固达（中信）/ 光大 / 江西银行等已落地</td><td><span class="no">不支持（此为 LAPP 缺失项）</span></td></tr>
+      <tr><td>客户类型</td><td>餐饮、电商、本地生活（公域）、泛行业独立母户</td><td>品牌连锁、餐饮、健康服务、酒店文旅、跨境贸易、零售、汽车后市场、物流供应链</td></tr>
+      <tr><td>分账能力</td><td>余额分账、固定比例，自动/手动结算</td><td>比例/固定/阶梯/组合四规则，支持多级、多次、按店差异</td></tr>
+      <tr><td>财税闭环</td><td>无（提供银行流水凭证，接外部财务系统）</td><td>对账→制证→开票→报表全链路，支持数电票自动开具</td></tr>
+      <tr><td>交付方式</td><td>标准 SaaS 后台 + 小程序 + API</td><td>零开发控台 / 开放 API / 嵌入 ISV、合作伙伴 SaaS（规划建设中）</td></tr>
+      <tr><td>AI 路线</td><td>暂无</td><td>八爪鱼 + WorkBuddy，"一门店一策略"AI 资金规则配置</td></tr>
+      <tr><td>通道成本</td><td>开户对公 1 元/对私 0 元，提现 5 元或 1 元/笔，分账免费；API 接入 1 万元/户</td><td>全链路 0 费用（开户/入金/转账/提现/接入/维护/稽核均免费）</td></tr>
+    </table></div>
+  </section>
+
+  <!-- ============ 6. 开户流程 ============ -->
+  <section id="onboarding">
+    <h2>六、开户流程</h2>
+    <h3>6.1 商户入网标准流程（七步）</h3>
+    <div class="flow">
+      <div class="step"><h4>售前诊断与通道匹配</h4><p>确认行业准入、资金规模，选择平台母户/独立母户及对应银行通道。</p></div>
+      <div class="step"><h4>立项审批</h4><p>店务通银行内部户分账需邮件审批：分管领导审批 → 营销中心审批 → 银行审批（苏商、光大）。</p></div>
+      <div class="step"><h4>收集商户入网材料</h4><p>按商户类型提供对应材料（见 6.2），提交入网审核。</p></div>
+      <div class="step"><h4>银行开户</h4><p>在线开户，银行自动审核（苏商为静默开户无短信提醒）；对公账户需打款鉴权。 </p></div>
+      <div class="step"><h4>入金配置</h4><p>运营人员向商户提供银行内部账户，商户到收单机构/挂靠平台变更结算账号，资金结算进分账系统。</p></div>
+      <div class="step"><h4>分账方开户与规则配置</h4><p>创建分账方账户（支持单笔/批量），配置分账规则，系统操作培训。</p></div>
+      <div class="step"><h4>上线运行</h4><p>对账与结算正式运行；分账方开户数量按商户资金规模控制，超限联系运营。</p></div>
+    </div>
+    <div class="callout"><b>重要提示：</b>① 分账 ≠ 到账——分账（付款订单）仅入对方虚拟账户，提现才实际出金到绑定银行卡；② 开户为异步流程（打款验证 + 开户结果查询闭环）；③ 绑卡建议使用一类卡；④ 所有通道不承诺固定开户/交付时效。</div>
+
+    <h3>6.2 商户开户所需材料</h3>
+    <div class="table-wrap"><table>
+      <tr><th>商户类型</th><th>所需材料</th><th>备注</th></tr>
+      <tr><td>通用</td><td>营业执照、法人/经办人身份信息、办公环境/门店/交易流水/协议等客户资质材料</td><td>企业与个人均需基础材料</td></tr>
+      <tr><td>餐饮类商户</td><td>品牌门店照片 3-4 张；近 1 个月流水（平台后台截图/收单机构流水/银行流水）；平台店铺名称</td><td>优先收单机构或银行流水</td></tr>
+      <tr><td>线下实体类</td><td>近 1-3 个月流水；行业许可证（医疗/药品/食品经营/加油站等）；门店/经营场所/仓库照片</td><td>公司与门店名称不一致需关联关系证明；加盟店需加盟协议</td></tr>
+      <tr><td>线上挂靠类</td><td>近 1-3 个月流水；挂靠平台商家后台截图；商品页面截图；仓库照片；发货订单截图</td><td>代运营服务商另需服务协议、服务商后台截图</td></tr>
+      <tr><td>自研平台类</td><td>网站/APP/小程序信息（域名、ICP 备案、测试账号）；近 6 个月流水；实地走访照片；法人视频尽调</td><td>自研网站需电信经营许可证；APP 需在应用商店上架</td></tr>
+      <tr><td>苏商垂直类业务</td><td>控股股东及最终受益人信息；垂直类业务报备模板（品牌方+门店信息）</td><td>名称、证件、有效期、电话、地址、受益方式</td></tr>
+    </table></div>
+
+    <h3>6.3 开户主体与门槛</h3>
+    <ul>
+      <li><strong>主体类型</strong>：支持个人、个体工商户、企业开户；个体户可绑法人个人卡；支持非法人申请开户；港澳台及外国法人：苏商银行支持，中信银行需持有中信借记卡。</li>
+      <li><strong>规模门槛</strong>：平台母户注册资本/年交易量无限制；独立母户苏商日均存款 1000 万+，中信年日均 1000 万（有获客可适当降低）。</li>
+      <li><strong>开户个数</strong>：苏商同一企业/个人最多 10 户；一个统一社会信用代码在同一平台首次开户一次，多户走"二次开户"。</li>
+      <li><strong>地区</strong>：全国。</li>
+    </ul>
+  </section>
+
+  <!-- ============ 7. 对接流程 ============ -->
+  <section id="integration">
+    <h2>七、对接流程与方式</h2>
+    <div class="two-col">
+      <div class="card">
+        <h4>方式一：SaaS 产品输出（默认）</h4>
+        <p>为客户提供管理后台 + 小程序，一站式完成开户、分账、查询、对账、回单下载全流程，开通即用、零开发。</p>
+        <p><span class="chip c-green">适合</span> 无技术团队或需快速上线的客户。</p>
+      </div>
+      <div class="card">
+        <h4>方式二：API 接口对接</h4>
+        <p>为有技术能力或需将店务通功能融入既有系统的客户提供接口对接。<strong>原则上不对外提供</strong>，需单独申请并收取系统对接费（参考：1.5 万元/户接入费，需特批）。</p>
+        <p><span class="chip c-amber">适合</span> 有自研系统、需深度集成的平台型客户。</p>
+      </div>
+    </div>
+    <h3>7.1 API 对接技术要点（以苏商银行为例）</h3>
+    <ul>
+      <li><strong>协议</strong>：HTTPS + POST，UTF-8；报文业务数据采用 SM4（ECB）国密加密，随机密钥经银行公钥 RSA 加密传输；签名算法 SHA256withRSA。</li>
+      <li><strong>环境</strong>：SIT / UAT / 生产三套环境，银行分配 appCode、channelId 与密钥对。</li>
+      <li><strong>核心接口域</strong>：开户（个人二/四要素、企业绑卡/非绑卡、二次开户、变更）→ 打款认证 → 充值 → 支付分账 → 消费/担保消费 → 提现/非绑卡提现 → 退款 → 余额/明细/状态查询 → 电子回单申请 → 对账文件申请。</li>
+      <li><strong>对接关键约束</strong>：channelSerialNo 全局唯一不可重复；开户类交易为异步、需主动查询结果；企业经营信息需及时补录，否则银行将处置账户；分账与提现是两个独立步骤。</li>
+    </ul>
+    <h3>7.2 上线后排障与运营</h3>
+    <ul>
+      <li>分账/提现/开户费由考拉御风统一收取，再分润给经销商；</li>
+      <li>提供测试账号（苏商银行）用于沙箱验证；</li>
+      <li>运营工单与故障响应走"运营产研沟通群"机制。</li>
+    </ul>
+  </section>
+
+  <!-- ============ 8. 分账操作流程细化 ============ -->
+  <section id="splitflow">
+    <h2>八、分账操作流程细化（账单分账 / 外卖分账）</h2>
+    <p class="lead">店务通账单分账是"<strong>渠道原始账单 + 门店 ID 匹配</strong>"的批量分账模式：资金归集到银行中间账户后，按渠道账单逐日拆分到品牌方与各门店的银行虚拟账户。外卖分账是该通用流程在美团/饿了么/微信外卖渠道的实例化。</p>
+
+    <h3>8.1 前置配置</h3>
+    <div class="grid grid-2">
+      <div class="card"><h4>门店开户与门店 ID</h4><p>支持代理开户与自主开户（二维码 / PC 链接）；主体分个体工商户（建议）、对公、个人三类，资料提交后由银行侧审核，开户完成后绑定结算卡并短信验证。<strong>门店必须录入美团、饿了么门店编号（门店 ID）</strong>——系统按账单内的门店 ID 匹配资金并分账，缺失则无法对上账。</p></div>
+      <div class="card"><h4>收款模板（按订单分账规则）</h4><p><strong>品牌方不参与分账</strong>：仅添加"门店"角色并激活"是否卖家"，公式自动带入"所有结余资金"；<br><strong>品牌方参与分账</strong>：加"平台角色"（公式如 amount*0.05 表示品牌方抽佣 5%，默认入账品牌方余额账户）+ "门店"角色（卖家，剩余全部结余）。</p></div>
+      <div class="card"><h4>员工角色与权限</h4><p>建议三类角色：运营经理（门店开户、结算卡变更）、财务操作（上传分账账单）、财务审核（上传渠道原始账单、分账核对）；员工支持多角色权限合并。</p></div>
+      <div class="card"><h4>平台设置</h4><p>压款（保证金）、默认提现账期（分账资金冻结天数）、自动提现开关；单门店可在门店详情单独设置提现账期。</p></div>
+    </div>
+
+    <h3>8.2 核心流程：账单分账三步</h3>
+    <div class="flow">
+      <div class="step"><h4>资金确认（财务 · 账单分账）</h4><p>美团/饿了么等渠道完成连锁结算后，资金于结算日打至银行中间账户；系统自动查询并列出流水，品牌方选择对应流水确认；若流水"标为其他款项"，该笔金额归入平台账户。</p></div>
+      <div class="step"><h4>账单确认（财务操作）</h4><p>上传分账账单（大文件进入"文件处理缓存区"异步处理，需等待状态为"完成"），查询后生成按天的账单记录。</p></div>
+      <div class="step"><h4>门店分账（财务审核）</h4><p>上传渠道原始账单 → 系统展示调账清单 → 短信验证码确认（发送至经办人预留手机号）→ 系统自动将当日资金分账到各门店与品牌方的银行虚拟账户。</p></div>
+    </div>
+    <div class="callout"><b>异常处理：</b>分账状态显示"部分分账/失败"仅指银行虚拟账户间划账失败，不影响整体资金数额，由运营排查后代为补发失败部分。</div>
+
+    <h3>8.3 外卖分账场景细则（美团 / 饿了么 / 微信外卖）</h3>
+    <ul>
+      <li><strong>渠道账单结构</strong>：美团外卖订单明细（64 列）、微信外卖交易明细（26 列 + 门店透视）、美团买单/团购收益明细、美团打款报表；</li>
+      <li><strong>多品牌管理</strong>：单门店仅可挂一个品牌；多品牌经营时，资金流水到账后需先手动选择所属品牌再分账；</li>
+      <li><strong>门店管理分层</strong>：区域（自定义经营区域）+ 品牌两层管理，适配连锁品牌方与加盟商结构。</li>
+    </ul>
+
+    <h3>8.4 结算、提现与财务统计</h3>
+    <ul>
+      <li><strong>自动提现 T+1</strong>：分账资金进入分账方余额账户后，冻结指定天数方可提现；</li>
+      <li><strong>经营统计</strong>：按账单日输出门店/品牌方分账明细与总计；</li>
+      <li><strong>历史账单</strong>：分账明细与状态回溯；</li>
+      <li><strong>门店结算</strong>：当日提现状态（成功/部分成功），可查明细报错原因；</li>
+      <li><strong>门店扣款</strong>：扣货款/罚单等，门店余额不足时任务挂起、后续来款定时扣完，款项进品牌方账户；</li>
+      <li><strong>费用</strong>：每日门店分账手续费统计；平台账户页可看余额、待结算余额（可提现）与变更记录。</li>
+    </ul>
+  </section>
+
+  <!-- ============ 9. 典型场景 ============ -->
+  <section id="cases">
+    <h2>九、典型应用场景与客户案例</h2>
+    <div class="table-wrap"><table>
+      <tr><th>场景</th><th>核心需求</th><th>代表案例</th></tr>
+      <tr><td>医美连锁</td><td>门店收款后管理方统一提现与分账审核；渠道分佣量大</td><td>光博士医美、上海/长沙多家医美机构、中诺口腔</td></tr>
+      <tr><td>文旅商圈 / 美食街</td><td>管理方统一入网多门店，抽佣与统一管账；商圈钱包</td><td>南康旅投、江西某美食街、长沙某商业综合体</td></tr>
+      <tr><td>抖音电商 / 公域电商</td><td>销售款分账给供应商、推广渠道、主播分佣</td><td>合肥耀卓（抖店服装）、某抖音电商代运营商户</td></tr>
+      <tr><td>电商代运营</td><td>多商户统一收款后按固定比例自动抽佣</td><td>深圳某抖音代运营服务商、杭州某团（京东本地生活服务商）</td></tr>
+      <tr><td>连锁餐饮（多渠道分账）</td><td>外卖平台与线下门店资金统一管理、统一清分</td><td>某连锁豆浆品牌、某连锁茶饮品牌（700 店 / 日均约 200 万）</td></tr>
+      <tr><td>汽车零售</td><td>购车尾款统一收取、定期向经销商结算；大额订单支付</td><td>广汽集团（苏商独立母户）</td></tr>
+      <tr><td>教育培训</td><td>在线报名收款、与授课老师分时结算</td><td>上海某艺术展演承办方、重庆某连锁教培机构</td></tr>
+      <tr><td>K 娱（KTV 等）</td><td>合伙人分润、业务提成（歌手/酒水/服务生）批量发放</td><td>河南某 KTV、浙江某 KTV</td></tr>
+      <tr><td>政企统一收银</td><td>政府指定机构统一收银与归集（独立母户）</td><td>光大—伊宁市伊贸源、江西银行—赣州经开区国资</td></tr>
+    </table></div>
+    <p class="lead">以下案例已匿名脱敏，以行业画像呈现；效果数字为材料口径，正式对外使用前需完成客户授权。</p>
+
+    <h3>9.1 电商代运营案例</h3>
+    <div class="grid grid-2">
+      <div class="case-card"><h4>深圳某抖音代运营服务商</h4><p><span class="chip c-blue">公域电商</span></p><p><strong>场景</strong>：代运营多个抖店商户，需从商户销售款中收取代运营服务费。<br><strong>方案</strong>：商户资金归集至银行内部户体系，按固定比例自动抽佣分账，替代人工逐户结算。<br><strong>价值</strong>：抽佣自动化，财务效率提升，杜绝人工错账。</p></div>
+      <div class="case-card"><h4>杭州某团 · 京东本地生活服务商</h4><p><span class="chip c-blue">本地生活</span></p><p><strong>场景</strong>：作为京东本地生活服务商，面向大量合作商户收取代运营费用。<br><strong>方案</strong>：通过店务通实现商户代运营费用的统一收取与清分。<br><strong>价值</strong>：收费链路系统化，商户规模扩张不再增加财务人力。</p></div>
+      <div class="case-card"><h4>广州某拼多多跨境电商品牌</h4><p><span class="chip c-blue">跨境电商</span></p><p><strong>场景</strong>：跨境销售结汇后需向上游供应商付款。<br><strong>方案</strong>：通过店务通实现结汇资金归集后向上游供应商定向付款。<br><strong>价值</strong>：资金归集与付款一条链路完成，凭证合规。</p></div>
+      <div class="case-card"><h4>某男装品牌经销商</h4><p><span class="chip c-blue">电商店群</span></p><p><strong>场景</strong>：抖音矩阵式多店铺经营，资金分散、品牌方回款慢。<br><strong>方案</strong>：多店铺资金统一归集管理后，按约定向品牌方付款。<br><strong>价值</strong>：店群资金一盘棋，品牌回款周期显著缩短。</p></div>
+    </div>
+
+    <h3>9.2 餐饮多渠道分账案例</h3>
+    <div class="grid grid-3">
+      <div class="case-card"><h4>某连锁豆浆品牌</h4><p><span class="chip c-green">餐饮连锁</span></p><p><strong>痛点</strong>：线上外卖/公域渠道 + 线下门店收银，多渠道资金割裂、对账难。<br><strong>方案</strong>：多渠道资金统一归集至总部账户体系，按分账模板执行品牌方抽佣，向门店与上游供应商批量付款。<br><strong>亮点</strong>：归集—抽佣—付款全链路自动化。</p></div>
+      <div class="case-card"><h4>某连锁加盟餐饮品牌</h4><p><span class="chip c-green">餐饮加盟</span></p><p><strong>痛点</strong>：直营与加盟并存，线上线下资金分散，管理费抽取与向门店付款效率低。<br><strong>方案</strong>：线上线下资金一体化归集，品牌方按规则抽取管理费，按门店维度向加盟店分账付款。<br><strong>亮点</strong>：门店维度分账付款，总部管控力增强。</p></div>
+      <div class="case-card"><h4>某连锁茶饮品牌</h4><p><span class="chip c-green">700 家门店</span><span class="chip c-amber">日均约 200 万元</span></p><p><strong>痛点</strong>：线上公域卖券（抖音/美团券）+ 线下收银（POS/码牌），渠道多、门店多、笔数多。<br><strong>方案</strong>："支付账户 + 银行内部户"组合模式：资金统一收款后按<strong>杯品维度</strong>自动分账给门店与总部，向原料供应商自动/批量付款。<br><strong>亮点</strong>：支撑 700 家门店、日均约 200 万元交易规模稳定运营。</p></div>
+    </div>
+  </section>
+
+  <!-- ============ 10. 费用 ============ -->
+  <section id="pricing">
+    <h2>十、费用参考（内部口径）</h2>
+    <div class="callout red"><b>内部资料提示：</b>以下费率、沉淀收益为敏感商业数据，仅供内部参考，对外请以最新《店务通定价表》及签约审批口径为准。</div>
+    <div class="table-wrap"><table>
+      <tr><th>项目</th><th>对私</th><th>对公</th></tr>
+      <tr><td>开户费（苏商）</td><td>0 元</td><td>1 元</td></tr>
+      <tr><td>分账手续费（苏商）</td><td colspan="2">0.05%（其他通道单户单议）</td></tr>
+      <tr><td>提现手续费（苏商）</td><td>1 元/笔</td><td>5 元/笔</td></tr>
+      <tr><td>API 接入费</td><td colspan="2">1.5 万元/户（需特批）</td></tr>
+      <tr><td>沉淀收益（苏商）</td><td colspan="2">0-2000 万：1.12%；≥2 亿：1.44%（原则上不分润，需按内部阶梯价单独申请）</td></tr>
+    </table></div>
+  </section>
+
+  <footer>
+    资料来源：店务通产品 PPT（商户版/商务版）、店务通银行通道表（2025.04.24 最新版）、店务通 vs LAPP 产品对比摘要、苏商银行接口调用业务流程、知识库素材收集模板（店务通补充版）、外卖/账单分账操作手册、餐饮连锁客户案例集｜整理日期：2026-09-16 ｜ 拉卡拉 · 营销中心商户产品部
+  </footer>
+
+</div>
+</body>
+</html>
