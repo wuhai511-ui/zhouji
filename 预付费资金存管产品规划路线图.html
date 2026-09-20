@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>预付费资金存管产品规划路线图 · 汇报版</title>
+<style>
+  :root{
+    --ink:#0b1520;
+    --ink-2:#132437;
+    --ink-3:#1d3550;
+    --paper:#f7f4ef;
+    --paper-2:#fdfcfa;
+    --gold:#c19a4b;
+    --gold-2:#e0c37e;
+    --teal:#0e7c6b;
+    --teal-2:#3aa392;
+    --text:#16222f;
+    --text-2:#42525f;
+    --muted:#7b8794;
+    --line:rgba(11,21,32,.12);
+    --line-strong:rgba(11,21,32,.24);
+    --shadow:0 1px 2px rgba(11,21,32,.05),0 12px 32px -12px rgba(11,21,32,.18);
+    --font-display:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong",serif;
+    --font-body:"HarmonyOS Sans SC","PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+    --font-mono:"JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+    --maxw:1140px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:var(--font-body);
+    color:var(--text);
+    background:var(--paper);
+    line-height:1.72;
+    -webkit-font-smoothing:antialiased;
+    font-size:15.5px;
+  }
+  /* 背景质感：细网格 + 暖光晕 */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
+    background-image:
+      radial-gradient(900px 420px at 12% -6%, rgba(193,154,75,.14), transparent 62%),
+      radial-gradient(700px 380px at 96% 4%, rgba(14,124,107,.10), transparent 60%),
+      linear-gradient(rgba(11,21,32,.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(11,21,32,.028) 1px, transparent 1px);
+    background-size:auto,auto,32px 32px,32px 32px;
+  }
+  .wrap{position:relative;z-index:1}
+
+  /* 进度条 */
+  .progress{position:fixed;top:0;left:0;height:3px;width:0;z-index:60;
+    background:linear-gradient(90deg,var(--gold),var(--teal));box-shadow:0 0 12px rgba(193,154,75,.5)}
+
+  /* ===== 封面 ===== */
+  .hero{
+    background:
+      radial-gradient(1200px 500px at 82% -10%, rgba(193,154,75,.22), transparent 60%),
+      linear-gradient(160deg,var(--ink) 0%, var(--ink-2) 58%, #0a1a26 100%);
+    color:#f2efe9;position:relative;overflow:hidden;
+    padding:clamp(48px,7vw,96px) 0 clamp(40px,5vw,72px);
+  }
+  .hero::after{
+    content:"";position:absolute;inset:0;opacity:.5;pointer-events:none;
+    background-image:linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px);
+    background-size:56px 56px;
+    -webkit-mask-image:radial-gradient(70% 70% at 70% 30%,#000,transparent 80%);
+            mask-image:radial-gradient(70% 70% at 70% 30%,#000,transparent 80%);
+  }
+  .hero .inner{max-width:var(--maxw);margin:0 auto;padding:0 24px;position:relative;z-index:1}
+  .kicker{display:inline-flex;align-items:center;gap:10px;font-size:12.5px;letter-spacing:.22em;
+    text-transform:uppercase;color:var(--gold-2);font-weight:600}
+  .kicker::before{content:"";width:34px;height:1px;background:var(--gold);display:inline-block}
+  h1.hero-title{
+    font-family:var(--font-display);font-weight:700;
+    font-size:clamp(30px,4.4vw,52px);line-height:1.18;margin:18px 0 10px;letter-spacing:.01em;
+  }
+  .hero-sub{color:#c8d2dc;font-size:clamp(14.5px,1.4vw,17px);max-width:640px;margin:0 0 26px}
+  .thesis{
+    border-left:3px solid var(--gold);padding:14px 20px;margin:26px 0 0;
+    background:rgba(255,255,255,.055);border-radius:0 10px 10px 0;
+    font-family:var(--font-display);font-size:clamp(15px,1.6vw,19px);color:#fbf7ef;line-height:1.7;
+  }
+  .hero-meta{display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:30px;font-size:13px;color:#9fadba}
+  .hero-meta b{color:#e9eef3;font-weight:600}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--teal-2);display:inline-block;margin-right:7px;vertical-align:1px}
+
+  /* ===== 导航 ===== */
+  .nav{position:sticky;top:0;z-index:50;background:rgba(247,244,239,.86);
+    backdrop-filter:saturate(140%) blur(10px);border-bottom:1px solid var(--line)}
+  .nav ul{max-width:var(--maxw);margin:0 auto;padding:0 18px;list-style:none;display:flex;gap:4px;overflow-x:auto}
+  .nav a{display:block;padding:13px 12px;font-size:13.5px;color:var(--text-2);text-decoration:none;
+    font-weight:500;white-space:nowrap;border-bottom:2px solid transparent;transition:.2s}
+  .nav a:hover{color:var(--ink)}
+  .nav a.active{color:var(--ink);border-bottom-color:var(--gold)}
+
+  /* ===== 区块 ===== */
+  main{max-width:var(--maxw);margin:0 auto;padding:0 24px 40px}
+  section{padding:clamp(38px,5vw,60px) 0;border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:none}
+  .sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:6px}
+  .sec-num{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--gold);
+    letter-spacing:.14em;flex:none}
+  h2{font-family:var(--font-display);font-size:clamp(21px,2.4vw,28px);font-weight:700;
+    margin:0;color:var(--ink);letter-spacing:.01em;line-height:1.3}
+  .sec-desc{color:var(--text-2);font-size:14.5px;margin:12px 0 26px;max-width:820px}
+  h3{font-size:15.5px;font-weight:700;color:var(--ink);margin:30px 0 14px;
+    display:flex;align-items:center;gap:10px}
+  h3::before{content:"";width:4px;height:15px;background:var(--gold);border-radius:2px;flex:none}
+  p{margin:0 0 14px}
+
+  /* 卡片 */
+  .card{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;
+    padding:22px 24px;box-shadow:var(--shadow)}
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .g3{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .g4{grid-template-columns:repeat(4,minmax(0,1fr))}
+
+  /* 表格 */
+  .tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--paper-2);
+    box-shadow:var(--shadow)}
+  table{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+  th{background:linear-gradient(180deg,#f2efe8,#ece8e0);color:var(--ink);
+    text-align:left;font-weight:700;padding:12px 14px;border-bottom:1px solid var(--line-strong);
+    font-size:13px;letter-spacing:.02em;white-space:nowrap}
+  td{padding:12px 14px;border-bottom:1px solid var(--line);color:var(--text-2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:rgba(193,154,75,.06)}
+  td b,th b{color:var(--ink)}
+  .num{font-family:var(--font-mono);font-size:12.5px;color:var(--muted);font-weight:600}
+
+  /* 决策清单 */
+  .decision{display:flex;gap:14px;padding:15px 0;border-bottom:1px dashed var(--line)}
+  .decision:last-child{border-bottom:none}
+  .d-idx{flex:none;width:30px;height:30px;border-radius:9px;background:var(--ink);color:var(--gold-2);
+    display:grid;place-items:center;font-family:var(--font-mono);font-size:13px;font-weight:700}
+  .d-body{flex:1}
+  .d-title{font-weight:700;color:var(--ink);font-size:14.5px;margin-bottom:3px}
+  .d-text{color:var(--text-2);font-size:14px}
+
+  /* 架构图 */
+  .arch{display:flex;flex-direction:column;gap:8px}
+  .layer{display:grid;grid-template-columns:132px 1fr;border-radius:11px;overflow:hidden;
+    border:1px solid var(--line);background:var(--paper-2);box-shadow:0 1px 2px rgba(11,21,32,.04)}
+  .layer .tag{padding:14px 12px;font-size:12.5px;font-weight:700;color:#fff;
+    display:grid;place-items:center;text-align:center;letter-spacing:.03em;line-height:1.4}
+  .layer .body{padding:13px 16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  .chip{font-size:12.5px;padding:5px 11px;border-radius:7px;background:#eef1f4;color:var(--ink-3);
+    border:1px solid rgba(11,21,32,.08);font-weight:500}
+  .chip.gold{background:rgba(193,154,75,.14);border-color:rgba(193,154,75,.4);color:#8a6a1f}
+  .chip.teal{background:rgba(14,124,107,.12);border-color:rgba(14,124,107,.35);color:#0a6355}
+  .layer.l-app .tag{background:linear-gradient(135deg,#1d3550,#132437)}
+  .layer.l-deliver .tag{background:linear-gradient(135deg,#2a4767,#1b3049)}
+  .layer.l-svc .tag{background:linear-gradient(135deg,#35608c,#234c72)}
+  .layer.l-route .tag{background:linear-gradient(135deg,#8a6a1f,#c19a4b);color:#fff}
+  .layer.l-core .tag{background:linear-gradient(135deg,#0a6355,#0e7c6b)}
+  .layer.l-access .tag{background:linear-gradient(135deg,#4a4f8a,#3a3f75)}
+  .layer.l-pay .tag{background:linear-gradient(135deg,#3d4750,#2b333c)}
+  .layer.hl{outline:2px solid rgba(193,154,75,.55);outline-offset:-1px}
+
+  /* 双模式 */
+  .mode{border-radius:14px;padding:20px 22px;border:1px solid var(--line);background:var(--paper-2);position:relative;box-shadow:var(--shadow)}
+  .mode.a{border-top:4px solid var(--gold)}
+  .mode.b{border-top:4px solid var(--teal)}
+  .mode h4{margin:0 0 4px;font-family:var(--font-display);font-size:17px;color:var(--ink)}
+  .mode .sub{font-size:12.5px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-bottom:14px}
+  .mode ul{margin:0;padding-left:18px;color:var(--text-2);font-size:14px}
+  .mode li{margin-bottom:6px}
+
+  /* 路线图 */
+  .road{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;align-items:start}
+  .phase{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;overflow:hidden;
+    box-shadow:var(--shadow);display:flex;flex-direction:column;height:100%}
+  .phase .p-head{padding:16px 18px 14px;color:#fff;position:relative}
+  .phase.p0 .p-head{background:linear-gradient(135deg,#1d3550,#132437)}
+  .phase.p1 .p-head{background:linear-gradient(135deg,#234c72,#1b3d5c)}
+  .phase.p2 .p-head{background:linear-gradient(135deg,#0e7c6b,#0a6355)}
+  .phase.p3 .p-head{background:linear-gradient(135deg,#8a6a1f,#c19a4b)}
+  .p-code{font-family:var(--font-mono);font-size:12px;letter-spacing:.16em;opacity:.85}
+  .p-name{font-family:var(--font-display);font-size:17px;font-weight:700;margin:4px 0 2px}
+  .p-time{font-size:12.5px;opacity:.85}
+  .phase .p-body{padding:14px 18px 6px;flex:1}
+  .p-item{display:flex;gap:9px;font-size:13.5px;color:var(--text-2);padding:6px 0;
+    border-bottom:1px dashed var(--line)}
+  .p-item:last-child{border-bottom:none}
+  .p-item .bullet{flex:none;width:5px;height:5px;border-radius:50%;background:var(--gold);margin-top:8px}
+  .p-item b{color:var(--ink)}
+  .p-mile{padding:12px 18px 16px}
+  .p-mile span{display:inline-block;font-size:12.5px;font-weight:700;color:#0a6355;
+    background:rgba(14,124,107,.12);border:1px solid rgba(14,124,107,.3);border-radius:20px;padding:5px 13px}
+
+  /* 时间轴 */
+  .timeline{position:relative;margin-top:26px;padding:26px 8px 6px}
+  .timeline .rail{position:absolute;left:8px;right:8px;top:52px;height:3px;
+    background:linear-gradient(90deg,var(--ink-3),var(--teal),var(--gold));border-radius:2px;opacity:.55}
+  .tl-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;position:relative}
+  .tl-item{text-align:center}
+  .tl-dot{width:15px;height:15px;border-radius:50%;background:var(--gold);margin:0 auto 12px;
+    border:3px solid var(--paper);box-shadow:0 0 0 2px var(--gold);position:relative;z-index:1}
+  .tl-item.m2 .tl-dot{background:var(--teal);box-shadow:0 0 0 2px var(--teal)}
+  .tl-code{font-family:var(--font-mono);font-weight:700;color:var(--ink);font-size:14px}
+  .tl-name{font-size:13px;color:var(--text-2);margin-top:2px}
+  .tl-time{font-size:12px;color:var(--muted);font-family:var(--font-mono)}
+
+  /* 统计 */
+  .stat{background:var(--paper-2);border:1px solid var(--line);border-radius:14px;padding:20px;
+    box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .stat::after{content:"";position:absolute;right:-30px;top:-30px;width:90px;height:90px;
+    border-radius:50%;background:radial-gradient(circle,rgba(193,154,75,.16),transparent 70%)}
+  .stat .v{font-family:var(--font-display);font-size:clamp(24px,3vw,34px);font-weight:700;color:var(--ink);line-height:1.1}
+  .stat .v small{font-size:15px;font-weight:600;color:var(--text-2);margin-left:4px}
+  .stat .k{font-size:13px;color:var(--muted);margin-top:8px}
+
+  /* 风险 */
+  .risk{border-left:3px solid var(--gold);background:var(--paper-2);border-radius:0 10px 10px 0;
+    padding:13px 16px;border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .risk .rt{font-weight:700;color:var(--ink);font-size:14px;margin-bottom:3px}
+  .risk .rd{font-size:13.5px;color:var(--text-2)}
+  .risk .ra{font-size:13px;color:#0a6355;margin-top:6px}
+  .risk .ra::before{content:"→ ";color:var(--teal);font-weight:700}
+
+  /* 行动清单 */
+  .actions{counter-reset:act;display:grid;gap:10px}
+  .act{display:flex;gap:14px;background:var(--paper-2);border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;box-shadow:0 1px 2px rgba(11,21,32,.04)}
+  .act::before{counter-increment:act;content:counter(act,decimal-leading-zero);
+    font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--gold);
+    border-right:1px solid var(--line);padding-right:14px;flex:none}
+  .act span{font-size:14px;color:var(--text-2)}
+  .act span b{color:var(--ink)}
+
+  /* 引用/提示 */
+  .callout{background:linear-gradient(180deg,rgba(193,154,75,.10),rgba(193,154,75,.03));
+    border:1px solid rgba(193,154,75,.35);border-radius:12px;padding:16px 20px;color:#6b5417;font-size:14px}
+  .callout.teal{background:linear-gradient(180deg,rgba(14,124,107,.10),rgba(14,124,107,.03));
+    border-color:rgba(14,124,107,.3);color:#0a5b4e}
+
+  footer{background:var(--ink);color:#8f9daa;padding:34px 0;font-size:13px;margin-top:10px}
+  footer .inner{max-width:var(--maxw);margin:0 auto;padding:0 24px;display:flex;flex-wrap:wrap;
+    justify-content:space-between;gap:14px}
+  footer b{color:#dfe6ec}
+
+  /* 打印 */
+  @media print{
+    body{background:#fff;font-size:11.5px}
+    body::before{display:none}
+    .nav,.progress{display:none}
+    .hero{background:#0b1520 !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    section{page-break-inside:avoid;border-bottom:1px solid #ddd}
+    .card,.tbl-wrap,.phase,.mode,.stat,.act,.risk{box-shadow:none}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+
+  /* 响应式 */
+  @media (max-width:900px){
+    .g4{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .road{grid-template-columns:repeat(2,minmax(0,1fr))}
+    .g3{grid-template-columns:1fr}
+    .layer{grid-template-columns:104px 1fr}
+  }
+  @media (max-width:620px){
+    .g2,.g4,.road{grid-template-columns:1fr}
+    .tl-row{grid-template-columns:repeat(2,1fr);row-gap:22px}
+    .timeline .rail{display:none}
+    h1.hero-title{font-size:27px}
+  }
+
+  /* 入场动效 */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .7s cubic-bezier(.2,.7,.2,1),transform .7s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in{opacity:1;transform:none}
+</style>
+</head>
+<body>
+<div class="progress" id="bar"></div>
+
+<header class="hero">
+  <div class="inner">
+    <div class="kicker">内部汇报 · 产品规划</div>
+    <h1 class="hero-title">预付费资金存管<br>产品规划路线图</h1>
+    <p class="hero-sub">从"监管来了才被动"到"产品能力先行"——以资金存管产品为主体，双模式承接预付费场景，分层账户底座稳步演进。</p>
+    <div class="thesis">我们不是争议裁判，而是「资金存管 + 规则清分」的技术与账户服务商：钱存监管户、按约定规则与消费者确认结果自动清分，争议交给支付投诉 / 消协流程。</div>
+    <div class="hero-meta">
+      <div><span class="dot"></span>版本：<b>确认版 V1</b></div>
+      <div><span class="dot"></span>日期：<b>2026-09-18</b></div>
+      <div><span class="dot"></span>状态：<b>规划中</b></div>
+      <div><span class="dot"></span>决策：<b>8 项已确认</b></div>
+    </div>
+  </div>
+</header>
+
+<nav class="nav">
+  <ul>
+    <li><a href="#s1">背景与目标</a></li>
+    <li><a href="#s2">定位与决策</a></li>
+    <li><a href="#s4">场景与规则</a></li>
+    <li><a href="#s5">能力架构</a></li>
+    <li><a href="#s6">账户底座</a></li>
+    <li><a href="#s7">路线图</a></li>
+    <li><a href="#s8">争议风控</a></li>
+    <li><a href="#s9">商业模式</a></li>
+    <li><a href="#s12">风险与行动</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- 1 背景与目标 -->
+  <section id="s1" class="reveal">
+    <div class="sec-head"><span class="sec-num">01</span><h2>背景与目标</h2></div>
+    <p class="sec-desc">预付费行业的资金安全问题已成监管焦点，产品能力必须先行，避免监管落地时失去承接位置。</p>
+    <div class="grid g3">
+      <div class="card">
+        <h3 style="margin-top:0">监管驱动</h3>
+        <p style="margin:0;color:var(--text-2);font-size:14px">教培 / 健身 / 美业 / 亲子 / 餐饮预付卡资金安全问题频发，各地陆续出台存管、限额、冷静期要求；最高法已确立 <b>7 天冷静期</b>、霸王条款无效。</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">风险窗口</h3>
+        <p style="margin:0;color:var(--text-2);font-size:14px">一旦地市教育 / 商务部门强推预付费监管，若无现成产品承接，将重演<b>「数电发票」式的被动</b>局面。</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">既有积累</h3>
+        <p style="margin:0;color:var(--text-2);font-size:14px">此前已做过一版设计（B 端后台 + C 端小程序），因<b>争议仲裁过于复杂</b>而中止；业务需求分析与店务通银行存管方案已成型。</p>
+      </div>
+    </div>
+
+    <h3>三层目标</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>层级</th><th>目标</th></tr></thead>
+        <tbody>
+          <tr><td class="num">短期</td><td>拿出"能承接监管要求"的最小可用产品（MVP），避免监管落地时被动</td></tr>
+          <tr><td class="num">中期</td><td>形成「收单 + 资金存管 + 清分」标准能力，切入教培 / 本地生活头部客户</td></tr>
+          <tr><td class="num">长期</td><td>抽象为通用型资金存管能力，上承各行业应用封装，形成可复制的商业模式</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 2 定位与决策 -->
+  <section id="s2" class="reveal">
+    <div class="sec-head"><span class="sec-num">02</span><h2>产品定位与关键决策</h2></div>
+    <p class="sec-desc">8 项关键决策已与业务方逐条确认，构成本路线图的边界与前提。</p>
+    <div class="card">
+      <div class="decision"><div class="d-idx">1</div><div class="d-body"><div class="d-title">产品定位</div><div class="d-text">拉卡拉<b>自己推 + 挂银行（银行账户托管）</b>，不做商委平台配角；路径 = 先支付账户跑通 → 叠加银行账户</div></div></div>
+      <div class="decision"><div class="d-idx">2</div><div class="d-body"><div class="d-title">争议处理边界</div><div class="d-text">拉卡拉<b>不做仲裁</b>；V1 规则 =「N 天自动默认确认 + 规则偏商家 + 复用支付投诉流程」</div></div></div>
+      <div class="decision"><div class="d-idx">3</div><div class="d-body"><div class="d-title">账户底座优先级</div><div class="d-text">V1 支付账户验证 → V2 银行内部户 → 数币智能合约列为远期观察</div></div></div>
+      <div class="decision"><div class="d-idx">4</div><div class="d-body"><div class="d-title">外部借力</div><div class="d-text">「成为支付宝安心付服务商」作为<b>并行探索任务</b>写入路线图</div></div></div>
+      <div class="decision"><div class="d-idx">5</div><div class="d-body"><div class="d-title">首发场景</div><div class="d-text">教培（重庆）+ 本地生活（美容 / 健身 / 按摩）<b>两者都要</b></div></div></div>
+      <div class="decision"><div class="d-idx">6</div><div class="d-body"><div class="d-title">交付载体</div><div class="d-text">V1 复用<b>小冲 / 店务通后台</b>做规则配置；<b>同步规划</b>独立 C 端小程序 / 钱包</div></div></div>
+      <div class="decision"><div class="d-idx">7</div><div class="d-body"><div class="d-title">商业模式口径</div><div class="d-text">对外按「监管费 ~1% + 收单 0.3% + 沉淀分润」表述，与内部一致</div></div></div>
+      <div class="decision"><div class="d-idx">8</div><div class="d-body"><div class="d-title">项目立项</div><div class="d-text">以<b>资金存管产品</b>为主体发起立项</div></div></div>
+    </div>
+
+    <h3>核心设计原则</h3>
+    <div class="grid g3">
+      <div class="card" style="padding:18px 20px"><b style="color:var(--ink)">支付与分账解耦</b><div style="font-size:13.5px;color:var(--text-2);margin-top:6px">付完即结束，不让资金长期挂账、不把分账越做越复杂。</div></div>
+      <div class="card" style="padding:18px 20px"><b style="color:var(--ink)">规则偏商家</b><div style="font-size:13.5px;color:var(--text-2);margin-top:6px">产品卖给商家，默认向商家倾斜，同时做好消费者投诉应对。</div></div>
+      <div class="card" style="padding:18px 20px"><b style="color:var(--ink)">不碰裁判权</b><div style="font-size:13.5px;color:var(--text-2);margin-top:6px">无平台 / 监管身份，不承担仲裁；争议走既有外部流程。</div></div>
+      <div class="card" style="padding:18px 20px"><b style="color:var(--ink)">底层通用、上层封装</b><div style="font-size:13.5px;color:var(--text-2);margin-top:6px">底层抽象通用能力，各行业做应用层封装与包装。</div></div>
+      <div class="card" style="padding:18px 20px"><b style="color:var(--ink)">银行优先、支付账户过渡</b><div style="font-size:13.5px;color:var(--text-2);margin-top:6px">银行账户有沉淀与公信力但周期长；先用支付账户跑通逻辑。</div></div>
+      <div class="card" style="padding:18px 20px"><b style="color:var(--ink)">自动化为先</b><div style="font-size:13.5px;color:var(--text-2);margin-top:6px">规则可配置、到期自动扣划 / 自动确认，减少人工介入。</div></div>
+    </div>
+  </section>
+
+  <!-- 4 场景与规则 -->
+  <section id="s4" class="reveal">
+    <div class="sec-head"><span class="sec-num">03</span><h2>目标场景与规则模型</h2></div>
+    <p class="sec-desc">以三类扣款场景覆盖教培与本地生活的主要形态，规则引擎按"触发方式 + 金额模型"统一抽象。</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>场景类型</th><th>扣款特征</th><th>典型行业</th><th>规则模型</th></tr></thead>
+        <tbody>
+          <tr><td><b>包月 / 包期</b></td><td>每月固定金额，按期自动扣</td><td>健身、包月美容、物业费分期</td><td>时间触发 + 固定金额</td></tr>
+          <tr><td><b>一课一销</b></td><td>按次核销，扣款时点动态</td><td>教培、亲子、单次服务</td><td>核销事件触发 + 金额固定</td></tr>
+          <tr><td><b>按项目 / 行为</b></td><td>消费内容不同、金额不同</td><td>美业（泡脚 / 高级项目）、SPA</td><td>消费事件触发 + 动态金额</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>规则要素（配置维度）</h3>
+    <div class="card" style="font-family:var(--font-mono);font-size:13px;color:var(--ink-3);line-height:2.2">
+      清分基数 · 清分比例/金额 · 清分时点（实时 / D+n / 月结） · 触发方式（时间 / 核销 / 确认） · 退款与扣回规则 · 争议默认处理（N 天自动确认）
+    </div>
+
+    <h3>清分规则（承接既有需求分析）</h3>
+    <div class="grid g3">
+      <div class="card" style="padding:18px 20px"><b>按服务进度清分</b><div style="font-size:13.5px;color:var(--text-2);margin-top:6px">按月 / 按课 / 按次比例清分。</div></div>
+      <div class="card" style="padding:18px 20px"><b>按消费次数清分</b><div style="font-size:13.5px;color:var(--text-2);margin-top:6px">次数越多单次越优惠（阶梯）。</div></div>
+      <div class="card" style="padding:18px 20px"><b>按消费者评价清分</b><div style="font-size:13.5px;color:var(--text-2);margin-top:6px">满意全额清分，有问题扣一定比例作保证金。</div></div>
+    </div>
+  </section>
+
+  <!-- 5 能力架构 -->
+  <section id="s5" class="reveal">
+    <div class="sec-head"><span class="sec-num">04</span><h2>能力架构：双模式 · 双轨并行</h2></div>
+    <p class="sec-desc">录音明确「两种模式都得具备」——模式 A 预付费托管（自建）与模式 B 先享后付（借力支付宝安心付）。架构升级为双轨并行，共用内核、分离账户执行层。</p>
+
+    <div class="arch">
+      <div class="layer l-app"><div class="tag">应用层</div><div class="body"><span class="chip">教培模板</span><span class="chip">健身模板</span><span class="chip">美业模板</span><span class="chip">C 端小程序</span></div></div>
+      <div class="layer l-deliver"><div class="tag">交付 / 包装层</div><div class="body"><span class="chip">用户侧交付</span><span class="chip">商户侧交付</span><span class="chip">对商户屏蔽底层差异</span><span class="chip">开箱即用</span></div></div>
+      <div class="layer l-svc"><div class="tag">服务层</div><div class="body"><span class="chip">合同方案</span><span class="chip">商户入驻</span><span class="chip">消费者开户/签约</span><span class="chip">规则配置</span><span class="chip">核销</span><span class="chip">对账</span></div></div>
+      <div class="layer l-route hl"><div class="tag">模式编排层</div><div class="body"><span class="chip gold">模式 A 预付费托管（资金划转/存管）</span><span class="chip">⇄</span><span class="chip teal">模式 B 先享后付（授信/代扣）</span></div></div>
+      <div class="layer l-core"><div class="tag">内核层</div><div class="body"><span class="chip">规则引擎</span><span class="chip">定时任务</span><span class="chip">核销引擎</span><span class="chip">记账 / 映射</span><span class="chip">扣款 / 清分指令</span><span class="chip">退款联动</span></div></div>
+      <div class="layer l-access hl"><div class="tag">能力接入层</div><div class="body"><span class="chip gold">自建：支付账户(V1) / 银行内部户(V2) / 数币账户(V3 远期)</span><span class="chip teal">外部：支付宝安心付（服务商模式）</span><span class="chip teal">其他信用付 / 合作银行产品</span></div></div>
+      <div class="layer l-pay"><div class="tag">收单 / 入金</div><div class="body"><span class="chip">拉卡拉全支付（码牌 / POS / 线上 / 聚合）</span></div></div>
+    </div>
+    <p class="sec-desc" style="margin-top:14px;font-size:13.5px">相比初版结构新增两层：<b>模式编排层</b>（决定走哪条轨）与 <b>能力接入层</b>（把安心付等外部能力与自建账户底座并列接入）。</p>
+
+    <h3>核心模块要点</h3>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>模块</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><b>规则引擎</b></td><td>支持包月 / 一课一销 / 按项目的定时化与事件化规则配置；可先基于小冲 / 店务通后台实现</td></tr>
+          <tr><td><b>账户映射</b></td><td>消费者预存余额 ↔ 商户应收之间的映射关联，向商户清晰展示应收</td></tr>
+          <tr><td><b>核销引擎</b></td><td>一课一销的核销动作（上传资料、刷脸 / 打卡、签字等凭证）</td></tr>
+          <tr><td><b>清分指令</b></td><td>生成清分指令下发至账户体系执行（支付账户 / 银行）</td></tr>
+          <tr><td><b>退款联动</b></td><td>退款路径设计与清账（商家先退 → 账户侧清掉 → 回退）</td></tr>
+          <tr><td><b>C 端查询</b></td><td>余额、已付 / 未付、服务记录、账单（小程序 / 钱包）</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>安心付整合方案（模式 B：先享后付）</h3>
+    <div class="callout teal" style="margin-bottom:18px">
+      自建体系只覆盖"资金已划转的托管模式"；录音明确<b>两种模式都得具备</b>。安心付代表「钱不划转、授信 / 代扣」的先享后付模式——路径是 <b>成为安心付服务商</b>：支付宝输出能力，我们做前端交付 + 中间运营包装。
+    </div>
+
+    <div class="grid g2" style="margin-bottom:18px">
+      <div class="mode a">
+        <h4>模式 A · 预付费托管</h4>
+        <div class="sub">自建</div>
+        <ul>
+          <li>资金状态：<b>已划转、托管冻结</b></li>
+          <li>商家应收：形成应收账款、可周转</li>
+          <li>C 端体验：需预付全款、有压力</li>
+          <li>合规背书：银行托管、监管认可</li>
+          <li>适配：教培 / 健身等大额长期</li>
+        </ul>
+      </div>
+      <div class="mode b">
+        <h4>模式 B · 先享后付</h4>
+        <div class="sub">借力支付宝安心付</div>
+        <ul>
+          <li>资金状态：<b>未划转、授信 / 代扣</b></li>
+          <li>商家应收：未形成应收、周转弱</li>
+          <li>C 端体验：先享后付、无压力</li>
+          <li>合规背书：依赖支付宝信用体系</li>
+          <li>适配：小额高频、锁客 / 提转化</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>架构层</th><th>安心付的整合方式</th></tr></thead>
+        <tbody>
+          <tr><td><b>能力接入层</b></td><td>作为"信用付 / 先享后付"通道，与自建账户底座<b>并列</b>（钱不划转，不占用存管账户）</td></tr>
+          <tr><td><b>模式编排层</b></td><td>按场景路由：需资金托管 / 合规背书 → 模式 A；要"无预付压力 / 锁客" → 模式 B</td></tr>
+          <tr><td><b>内核层</b></td><td>规则引擎输出"何时扣、扣多少"，经 API 驱动安心付扣款；对账口径归一</td></tr>
+          <tr><td><b>交付 / 包装层</b></td><td>复用同一套用户侧 / 商户侧前端，对商户屏蔽底层差异，做开箱即用</td></tr>
+          <tr><td><b>商业</b></td><td>以服务商身份获取服务分润</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="sec-desc" style="margin-top:14px;font-size:13.5px"><b>依赖与待确认：</b>安心付是否对机构开放、接口与政策清单、分润与费率结构、合规与责任边界。<b>落地节奏：</b>V1 自建存管先跑通；安心付并行调研，可行则在 P2/P3 作为第二通道接入。</p>
+  </section>
+
+  <!-- 6 账户底座 -->
+  <section id="s6" class="reveal">
+    <div class="sec-head"><span class="sec-num">05</span><h2>账户底座演进（模式 A）</h2></div>
+    <p class="sec-desc">先用支付账户把规则与全流程跑通 → 再叠加银行内部户；数币智能合约列为远期观察。</p>
+    <div class="grid g3">
+      <div class="card" style="border-top:4px solid #3d4750">
+        <div class="num" style="color:var(--muted)">V1 · 验证与过渡</div>
+        <h3 style="margin:8px 0 10px">支付账户</h3>
+        <p style="font-size:13.5px;color:var(--text-2)">可快速跑通逻辑与规则、可做 demo / 试点。</p>
+        <p style="font-size:13px;color:#9a6b1f;margin:0">注意：升单体验问题、公信力弱、无沉淀</p>
+      </div>
+      <div class="card" style="border-top:4px solid var(--teal)">
+        <div class="num" style="color:var(--teal)">V2 · 主战场</div>
+        <h3 style="margin:8px 0 10px">银行内部户</h3>
+        <p style="font-size:13.5px;color:var(--text-2)">银行背书与公信力、资金沉淀收益、符合监管预期。</p>
+        <p style="font-size:13px;color:#9a6b1f;margin:0">注意：信用卡充值不支持（仅借记卡）、退款联动复杂、周期长</p>
+      </div>
+      <div class="card" style="border-top:4px solid var(--gold)">
+        <div class="num" style="color:#8a6a1f">V3 · 观察 / 试点</div>
+        <h3 style="margin:8px 0 10px">数币账户 + 智能合约</h3>
+        <p style="font-size:13.5px;color:var(--text-2)">包月自动扣款天然匹配。</p>
+        <p style="font-size:13px;color:#9a6b1f;margin:0">注意：一课一销需叠加资料 + 确认多因子后复杂；能力尚不具备</p>
+      </div>
+    </div>
+    <div class="callout" style="margin-top:16px">本节为<b>模式 A（预付费托管）</b>的账户底座；<b>模式 B（先享后付）</b>的载体是支付宝安心付等外部能力。苏州、重庆的数币智能合约预付费卡试点持续跟进。</div>
+  </section>
+
+  <!-- 7 路线图 -->
+  <section id="s7" class="reveal">
+    <div class="sec-head"><span class="sec-num">06</span><h2>分阶段路线图</h2></div>
+    <p class="sec-desc">四阶段推进：规则定型 → 支付账户跑通 MVP → 银行内部户托管 → 规模化与生态。</p>
+
+    <div class="road">
+      <div class="phase p0">
+        <div class="p-head"><div class="p-code">PHASE 0</div><div class="p-name">规则定型与准备</div><div class="p-time">第 1–2 周</div></div>
+        <div class="p-body">
+          <div class="p-item"><span class="bullet"></span><span>场景与规则梳理 → 《场景与规则清单》</span></div>
+          <div class="p-item"><span class="bullet"></span><span>争议规则设计 → 《争议与风控规则 V1》</span></div>
+          <div class="p-item"><span class="bullet"></span><span>账户方案定型 → 《账户方案选型说明》</span></div>
+          <div class="p-item"><span class="bullet"></span><span>借力调研（安心付 / 数币）</span></div>
+          <div class="p-item"><span class="bullet"></span><span>试点摸底（重庆教培 + 本地生活）</span></div>
+        </div>
+        <div class="p-mile"><span>M0 · 方案与规则定稿</span></div>
+      </div>
+
+      <div class="phase p1">
+        <div class="p-head"><div class="p-code">PHASE 1</div><div class="p-name">MVP：支付账户跑通</div><div class="p-time">第 3–8 周</div></div>
+        <div class="p-body">
+          <div class="p-item"><span class="bullet"></span><span>通用内核：规则引擎 / 定时任务 / 记账映射 / 清分指令</span></div>
+          <div class="p-item"><span class="bullet"></span><span>规则配置：复用<b>小冲 / 店务通后台</b></span></div>
+          <div class="p-item"><span class="bullet"></span><span>场景落地：包月自动扣款 + 一课一销核销</span></div>
+          <div class="p-item"><span class="bullet"></span><span>争议机制：N 天自动确认 + 投诉流程衔接</span></div>
+          <div class="p-item"><span class="bullet"></span><span>C 端入口（小程序 / 钱包雏形）</span></div>
+          <div class="p-item"><span class="bullet"></span><span><b>安心付并行预研</b>（不阻塞主线）</span></div>
+        </div>
+        <div class="p-mile"><span>M1 · MVP 上线 + 小范围试点</span></div>
+      </div>
+
+      <div class="phase p2">
+        <div class="p-head"><div class="p-code">PHASE 2</div><div class="p-name">银行内部户托管</div><div class="p-time">第 9–20 周</div></div>
+        <div class="p-body">
+          <div class="p-item"><span class="bullet"></span><span>银行账户对接：开户、冻结 / 解冻</span></div>
+          <div class="p-item"><span class="bullet"></span><span>充值通道：借记卡充值（信用卡替代方案）</span></div>
+          <div class="p-item"><span class="bullet"></span><span>退款联动：商家先退 → 清账 → 回退</span></div>
+          <div class="p-item"><span class="bullet"></span><span>银行沉淀：收益分润机制落地</span></div>
+          <div class="p-item"><span class="bullet"></span><span>独立 C 端：小程序 / 钱包正式版</span></div>
+        </div>
+        <div class="p-mile"><span>M2 · 银行版上线 + 重庆教培签约</span></div>
+      </div>
+
+      <div class="phase p3">
+        <div class="p-head"><div class="p-code">PHASE 3</div><div class="p-name">规模化与生态</div><div class="p-time">第 21 周起</div></div>
+        <div class="p-body">
+          <div class="p-item"><span class="bullet"></span><span>行业模板化：教培 / 健身 / 美业 / 亲子</span></div>
+          <div class="p-item"><span class="bullet"></span><span>渠道扩张：SaaS 服务商 + 分公司 / 代理商</span></div>
+          <div class="p-item"><span class="bullet"></span><span>外部借力落地：安心付服务商能力接入</span></div>
+          <div class="p-item"><span class="bullet"></span><span>前沿跟进：数币智能合约试点</span></div>
+          <div class="p-item"><span class="bullet"></span><span>增值服务：订单贷 / 应收贷 / 经营分析</span></div>
+        </div>
+        <div class="p-mile"><span>M3 · 规模化复制 + 商业闭环</span></div>
+      </div>
+    </div>
+
+    <div class="timeline">
+      <div class="rail"></div>
+      <div class="tl-row">
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-code">P0</div><div class="tl-name">规则定型</div><div class="tl-time">第 1–2 周</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-code">P1</div><div class="tl-name">支付账户跑通</div><div class="tl-time">第 3–8 周</div></div>
+        <div class="tl-item m2"><div class="tl-dot"></div><div class="tl-code">P2</div><div class="tl-name">银行内部户托管</div><div class="tl-time">第 9–20 周</div></div>
+        <div class="tl-item"><div class="tl-dot"></div><div class="tl-code">P3</div><div class="tl-name">模板化 + 生态</div><div class="tl-time">第 21 周起</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 8 争议风控 -->
+  <section id="s8" class="reveal">
+    <div class="sec-head"><span class="sec-num">07</span><h2>争议与风控规则（V1 基线）</h2></div>
+    <p class="sec-desc">历史版本因"仲裁过于复杂"而中止。V1 采取极简规则，把裁判权交还外部流程。</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>环节</th><th>规则</th></tr></thead>
+        <tbody>
+          <tr><td><b>消费者确认</b></td><td>服务完成后消费者确认；<b>N 天（7/15 天）未确认自动默认确认</b></td></tr>
+          <tr><td><b>清分前置</b></td><td>商户提交服务完成证明（拍照 / 刷脸打卡 / 签字等），平台做基础校验</td></tr>
+          <tr><td><b>争议立场</b></td><td><b>规则偏商家</b>，同时准备消费者投诉应对</td></tr>
+          <tr><td><b>仲裁归属</b></td><td><b>拉卡拉不做裁判</b>；争议走支付投诉逻辑 / 消协流程</td></tr>
+          <tr><td><b>事后处理</b></td><td>消费者可对单笔提出退款诉求，按约定规则处理</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- 9 商业模式 -->
+  <section id="s9" class="reveal">
+    <div class="sec-head"><span class="sec-num">08</span><h2>商业模式与规模参考</h2></div>
+    <p class="sec-desc">机构对存管费率高度敏感，目标定价 ≤1%；银行沉淀收益是可争取的第二收入。</p>
+
+    <div class="grid g4" style="margin-bottom:22px">
+      <div class="stat"><div class="v">1<small>%</small></div><div class="k">资金监管费（目标 ≤1%）</div></div>
+      <div class="stat"><div class="v">0.3<small>%</small></div><div class="k">收单交易手续费</div></div>
+      <div class="stat"><div class="v">1–1.5<small>%</small></div><div class="k">沉淀利息分润</div></div>
+      <div class="stat"><div class="v">30–50<small>亿</small></div><div class="k">重庆单区域初期年交易量量级</div></div>
+    </div>
+
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>收入项</th><th>口径</th></tr></thead>
+        <tbody>
+          <tr><td>收单交易手续费</td><td>约 0.3%</td></tr>
+          <tr><td>资金监管费</td><td>约 1%（市场标准费率，机构高度敏感，目标 ≤1%）</td></tr>
+          <tr><td>提现手续费</td><td>按提现方式 / 加急程度收取</td></tr>
+          <tr><td>开户费</td><td>商户 / 供应商开通合作银行账户定额收取</td></tr>
+          <tr><td>沉淀利息</td><td>与合作银行分润，约 1%~1.5%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>规模参考（既有预测）</h3>
+    <div class="grid g2">
+      <div class="card" style="padding:18px 20px">
+        <b style="color:var(--ink)">第 1 年</b>
+        <div style="font-size:14px;color:var(--text-2);margin-top:6px">3–4 家商户 · 存管 1–3 亿 · 收入约 <b>103–305 万</b></div>
+      </div>
+      <div class="card" style="padding:18px 20px">
+        <b style="color:var(--ink)">第 2 年</b>
+        <div style="font-size:14px;color:var(--text-2);margin-top:6px">10–20 家商户 · 存管 10–30 亿 · 收入约 <b>1030–3050 万</b></div>
+      </div>
+    </div>
+
+    <h3>价值主张</h3>
+    <div class="grid g3">
+      <div class="card" style="padding:18px 20px"><b>对商户</b><div style="font-size:13.5px;color:var(--text-2);margin-top:6px">更低成本、更低门槛、更强销售转化。</div></div>
+      <div class="card" style="padding:18px 20px"><b>对消费者</b><div style="font-size:13.5px;color:var(--text-2);margin-top:6px">更安全、更透明、更贴场景。</div></div>
+      <div class="card" style="padding:18px 20px"><b>对监管</b><div style="font-size:13.5px;color:var(--text-2);margin-top:6px">合规产品满足市场需求。</div></div>
+    </div>
+  </section>
+
+  <!-- 10-11 试点与借力 -->
+  <section id="s10" class="reveal">
+    <div class="sec-head"><span class="sec-num">09</span><h2>试点策略与外部借力</h2></div>
+    <p class="sec-desc">教培（重庆）打样、本地生活并行；同步推进安心付服务商、数币试点、银行合作与监管沟通。</p>
+    <div class="grid g2">
+      <div>
+        <h3 style="margin-top:0">试点与客户策略</h3>
+        <div class="tbl-wrap">
+          <table>
+            <thead><tr><th>方向</th><th>内容</th></tr></thead>
+            <tbody>
+              <tr><td><b>教培（重庆优先）</b></td><td>4–5 家头部机构试点，把"银行级安全背书"从合规成本转为品牌赋能工具</td></tr>
+              <tr><td><b>本地生活</b></td><td>健身 / 美容 / 美发 / 按摩 / SPA，连锁与单店并行</td></tr>
+              <tr><td><b>拓展路径</b></td><td>头部机构打样 → SaaS 服务商合作 → 分公司 / 代理商放量</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-top:0">外部借力</h3>
+        <div class="card">
+          <div class="d-title" style="margin-bottom:6px">① 支付宝安心付服务商（并行探索）</div>
+          <div style="font-size:13.5px;color:var(--text-2);margin-bottom:14px">确认是否对机构开放、能否拿到接口、政策清单；拿到后做前端交付 + 中间运营包装。</div>
+          <div class="d-title" style="margin-bottom:6px">② 数币智能合约试点</div>
+          <div style="font-size:13.5px;color:var(--text-2);margin-bottom:14px">跟进苏州（示范）、重庆等地预付费卡监管试点，作为 V3 底座储备。</div>
+          <div class="d-title" style="margin-bottom:6px">③ 银行合作</div>
+          <div style="font-size:13.5px;color:var(--text-2);margin-bottom:14px">账户系统、资金存管、支付结算、风险监控，并获取沉淀收益。</div>
+          <div class="d-title" style="margin-bottom:6px">④ 监管沟通</div>
+          <div style="font-size:13.5px;color:var(--text-2)">与地方教育 / 商务主管部门保持沟通，争取合规与政策支持。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 风险 + 13 行动 -->
+  <section id="s12" class="reveal">
+    <div class="sec-head"><span class="sec-num">10</span><h2>风险与依赖 · 下一步行动</h2></div>
+    <p class="sec-desc">争议仲裁与银行周期是两大核心变量；30 天行动聚焦"规则、客户、借力、立项"四件事。</p>
+
+    <h3>风险与依赖</h3>
+    <div class="grid g2" style="margin-bottom:10px">
+      <div class="risk"><div class="rt">争议仲裁复杂（历史中止主因）</div><div class="rd">规则千差万别、举证困难</div><div class="ra">V1 极简规则 + 不做裁判 + 复用投诉流程</div></div>
+      <div class="risk"><div class="rt">银行账户周期与门槛</div><div class="rd">信用卡充值、退款联动、日均存款要求</div><div class="ra">支付账户先过渡；产品侧给替代方案</div></div>
+      <div class="risk"><div class="rt">商家改造意愿低</div><div class="rd">习惯资金自由支配</div><div class="ra">主打监管强制与"品牌增信"两个被动触点</div></div>
+      <div class="risk"><div class="rt">政策节奏不确定</div><div class="rd">各地标准不一、时点不可控</div><div class="ra">产品能力先行，避免被动</div></div>
+      <div class="risk"><div class="rt">数币能力不具备</div><div class="rd">智能合约多因子复杂</div><div class="ra">列为远期观察，不阻塞主线</div></div>
+      <div class="risk"><div class="rt">连锁多商户号问题</div><div class="rd">一会员绑多商户号体验差</div><div class="ra">作为已知限制，纳入后续专项评估</div></div>
+    </div>
+
+    <h3>下一步行动（30 天）</h3>
+    <div class="actions">
+      <div class="act"><span>输出《场景与规则清单》《争议与风控规则 V1》《账户方案选型说明》。</span></div>
+      <div class="act"><span>启动重庆教培 + 本地生活意向客户接洽，形成《意向客户清单》。</span></div>
+      <div class="act"><span>完成安心付服务商路径与数币试点的《外部借力调研纪要》。</span></div>
+      <div class="act"><span>基于小冲 / 店务通后台，搭建 P1 通用内核与规则配置的开发方案文档，与技术团队评审。</span></div>
+      <div class="act"><span>复用既有设计文档（B 端后台 + C 端小程序），输出 V1 页面清单与交互稿。</span></div>
+      <div class="act"><span>就<b>预付费资金存管产品</b>发起立项。</span></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="inner">
+    <div><b>预付费资金存管产品规划路线图</b> · 确认版 V1 · 2026-09-18</div>
+    <div>依据：内部头脑风暴录音 + 《资金存管与清分服务商业需求分析》+ 《资金存管产品设计文档骨架》</div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  var bar = document.getElementById('bar');
+  var navLinks = Array.prototype.slice.call(document.querySelectorAll('.nav a'));
+  var sections = navLinks.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+
+  function onScroll(){
+    var st = window.scrollY || document.documentElement.scrollTop;
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (st / h) * 100 : 0) + '%';
+
+    var idx = -1;
+    for (var i = 0; i < sections.length; i++){
+      if (sections[i] && sections[i].getBoundingClientRect().top <= 140) idx = i;
+    }
+    navLinks.forEach(function(a, i){ a.classList.toggle('active', i === idx); });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+
+  // 入场动效
+  var reveals = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+      });
+    }, {rootMargin:'0px 0px -8% 0px', threshold:0.06});
+    reveals.forEach(function(el){ io.observe(el); });
+  } else {
+    reveals.forEach(function(el){ el.classList.add('in'); });
+  }
+
+  // 键盘 P 键打印
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'p' || e.key === 'P'){ /* 交给浏览器默认 */
+      if (e.ctrlKey || e.metaKey) return;
+    }
+  });
+})();
+</script>
+</body>
+</html>
