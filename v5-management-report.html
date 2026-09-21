@@ -125,10 +125,35 @@ td{color:#bfd0df}
 .abstract h4{color:var(--gold-2);margin:0 0 10px;font-size:14px}
 .abstract .fb{font-family:var(--font-mono);font-size:13px;color:#9fb5c8;line-height:2.0}
 .abstract .fb b{color:var(--gold-2)}
-.models{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:16px 0}
-.model-card{background:rgba(13,30,49,.9);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
-.model-card .m-name{font-weight:700;font-size:13px;color:var(--text);margin-bottom:4px}
-.model-card .m-detail{font-size:12px;color:var(--muted)}
+/* 统一业务链路 — 横向流水线 */
+.rule-priority{display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:12px 18px;border-radius:14px;
+  border:1px solid #375a78;background:linear-gradient(90deg,#102a43,#103639);margin:16px 0}
+.rule-priority .rp-chain{font-size:15px;font-weight:700;color:#d5f0ff;letter-spacing:.01em}
+.rule-priority .rp-chain b{color:#ffd17a}
+.rule-priority .rp-note{font-size:11.5px;color:#8fa8bf;max-width:560px;line-height:1.5}
+.pipeline{display:grid;grid-template-columns:repeat(8,minmax(0,1fr));gap:9px;margin:18px 0 6px}
+.pipe{position:relative;border:1px solid #24415f;background:rgba(13,30,49,.92);border-radius:14px;padding:12px 11px;
+  display:flex;flex-direction:column;gap:6px;min-height:196px}
+.pipe:after{content:"›";position:absolute;right:-8px;top:50%;transform:translateY(-50%);color:#5c87ad;font-size:18px;font-weight:800}
+.pipe:last-child:after{display:none}
+.pipe .p-step{font-size:10.5px;color:#6faed9;font-weight:700;letter-spacing:.1em}
+.pipe .p-name{font-size:14px;font-weight:800;color:#eef5ff;line-height:1.3}
+.pipe .p-model{font-size:11px;color:#78e3bc;font-weight:700}
+.pipe .p-q{font-size:11.5px;color:#9fb2c8;line-height:1.5;flex:1}
+.pipe .p-out{font-size:11px;color:#dceafb;border-top:1px dashed #294a69;padding-top:6px}
+.pipe .p-out b{color:#8bc7ff}
+.pipe.hot{border-color:#c19a4b;background:linear-gradient(180deg,#2e2614,#12202f);box-shadow:0 0 0 1px rgba(193,154,75,.25)}
+.pipe.hot .p-name{color:#ffd17a}
+.pipe.gatep{background:linear-gradient(180deg,#102a43,#103639);border-color:#375a78}
+.abstract-out{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}
+.abstract-out table{min-width:0}
+.converge{margin-top:16px;padding:16px 20px;border-radius:16px;border:1px solid #c19a4b;
+  background:linear-gradient(90deg,#2e2614,#101f2e);display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+.converge .cv-text{font-size:15px;font-weight:700;color:#ffedbd;line-height:1.65}
+.converge .cv-text b{color:#ffd17a}
+.converge .cv-next{font-size:12.5px;color:#ffd17a;font-weight:700;white-space:nowrap}
+@media(max-width:1400px){.pipeline{grid-template-columns:repeat(4,minmax(0,1fr))}.pipe:after{display:none}}
+@media(max-width:900px){.pipeline{grid-template-columns:1fr}.abstract-out{grid-template-columns:1fr}}
 .card{background:linear-gradient(180deg,rgba(18,38,61,.94),rgba(10,24,40,.94));border:1px solid #203b57;color:#eef5ff}
 .card p,.card div,.card li{color:#c1d0df}
 .card .d-text{color:#c1d0df}
@@ -151,8 +176,7 @@ td{color:#bfd0df}
 <nav>
   <a href="#s1">01</a>  <a href="#s2">02</a>  <a href="#s3">03</a>  <a href="#s4">04</a>
   <a href="#s5">05</a>  <a href="#s6">06</a>  <a href="#s7">07</a>  <a href="#s8">08</a>
-  <a href="#s9">09</a>  <a href="#s10">10</a>  <a href="#s11">11</a>  <a href="#s12">12</a>
-  <a href="#s13">13</a>
+  <a href="#s9">09</a>  <a href="#s10">10</a>  <a href="#s11">11</a>
 </nav>
 <header class="hero">
 <div class="eyebrow">Prepaid Funds Control · Architecture Review</div>
@@ -168,7 +192,7 @@ td{color:#bfd0df}
 </header>
 
 <section class="slide" id="s1">
-<div class="section-num">01 / 14</div>
+<div class="section-num">01 / 11</div>
 <div class="eyebrow">National Baseline</div>
 <h2>先把“真实合同规则”放到司法与监管硬基线下面</h2>
 <div class="quote">平台规则优先级应变成：<em>司法/监管硬约束 ＞ 行业/地方正式规则 ＞ 合同约定 ＞ 商户配置</em>。</div>
@@ -192,7 +216,7 @@ td{color:#bfd0df}
 </section>
 
 <section class="slide" id="s2">
-<div class="section-num">02 / 14</div>
+<div class="section-num">02 / 11</div>
 <div class="eyebrow">Policy Map</div>
 <h2>重点区域政策汇总｜点击卡片查看各地明细</h2>
 <p class="kicker">同一“预付”问题，现实中存在全额托管、比例存管、消费者钱包、服务信托、公证提存、数币智能合约等多条技术路线。</p>
@@ -200,7 +224,7 @@ td{color:#bfd0df}
 <div class="notice" style="margin-top:18px"><b>产品结论：</b>监管规则必须是运行时决策层，而不是写死在某一账户产品里。输入：地区 × 行业 × 客群 × 商户类型 × 金额 × 期限/次数 × 底座/保障方式；输出：是否可售、监管比例、账户要求、确认/退款、释放条件。</div>
 </section>
 
-<section class="slide" id="s3"><div class="section-num">03 / 14</div>
+<section class="slide" id="s3"><div class="section-num">03 / 11</div>
   <div class="sec-head"><span class="sec-num">01</span><h2>核心结论：三条红线不可越</h2></div>
   <p class="sec-desc">项目在P0层面成立，但合规路径唯一。"预付资金受控释放＋按履约进度清分"与当前监管方向高度一致，落地必须走银行专用存款账户存管＋持牌机构按指令清分。</p>
   <div class="grid g3">
@@ -210,7 +234,7 @@ td{color:#bfd0df}
   </div>
 </section>
 
-<section class="slide" id="s4"><div class="section-num">04 / 14</div>
+<section class="slide" id="s4"><div class="section-num">04 / 11</div>
   <div class="sec-head"><span class="sec-num">02</span><h2>行业对比：五个赛道，五种打法</h2></div>
   <p class="sec-desc">监管强度与跑路风险大致正相关——教培和养老监管最严；健身次之，上海全国最精细；美业因分类模糊，风险反而被市场低估。</p>
   <div class="tbl-wrap">
@@ -227,7 +251,7 @@ td{color:#bfd0df}
   </div>
 </section>
 
-<section class="slide" id="s5"><div class="section-num">05 / 14</div>
+<section class="slide" id="s5"><div class="section-num">05 / 11</div>
   <div class="sec-head"><span class="sec-num">03</span><h2>典型场景：先看业务，再抽象规则</h2></div>
   <p class="sec-desc">平台不从账户能力出发，而从真实业务场景出发。六个典型场景覆盖预付式消费的主要形态，每个场景的问题清单和规则结论是规则引擎设计的直接输入。</p>
 
@@ -253,7 +277,7 @@ td{color:#bfd0df}
 
   <!-- 场景二：健身年卡 -->
   <div class="scene">
-    <div class="scene-head"><span class="scene-num teal">S2</span><span class="scene-title">健身年卡</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式A · 时间周期履约 + 周期释放</span></span></div>
+    <div class="scene-head"><span class="scene-num teal">S2</span><span class="scene-title">健身年卡</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式A · 时间周期履约 + 周期释放</span></div>
     <div class="scene-desc">消费者购买12个月健身年卡共3,600元，一次付款进入受控状态。按自然月/固定周期释放，支持跨门店履约（总部统一合同），暂停会籍可顺延服务期限。</div>
     <div class="scene-body">
       <div>
@@ -272,7 +296,7 @@ td{color:#bfd0df}
 
   <!-- 场景三：美业项目包 -->
   <div class="scene">
-    <div class="scene-head"><span class="scene-num gold">S3</span><span class="scene-title">美业项目包</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式A · 项目履约 + 动态计价</span></span></div>
+    <div class="scene-head"><span class="scene-num gold">S3</span><span class="scene-title">美业项目包</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式A · 项目履约 + 动态计价</span></div>
     <div class="scene-desc">消费者支付5,000元购买组合美容套餐（护理、美甲、美容项目、需多次完成的疗程），各项目结算金额不同。支持跨门店消费、临时升级、按次或全部完成后释放。</div>
     <div class="scene-body">
       <div>
@@ -291,7 +315,7 @@ td{color:#bfd0df}
 
   <!-- 场景四：物业预缴 -->
   <div class="scene">
-    <div class="scene-head"><span class="scene-num" style="background:var(--teal-2);color:#fff">S4</span><span class="scene-title">物业预缴</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式A · 持续履约 + 多资金子余额</span></span></div>
+    <div class="scene-head"><span class="scene-num" style="background:var(--teal-2);color:#fff">S4</span><span class="scene-title">物业预缴</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式A · 持续履约 + 多资金子余额</span></div>
     <div class="scene-desc">消费者选择季度/半年/年度预缴物业费（含物业费、停车费、增值服务），各费用形成独立资金子项，每个子余额拥有独立的履约规则、释放规则和争议状态。</div>
     <div class="scene-body">
       <div>
@@ -310,7 +334,7 @@ td{color:#bfd0df}
 
   <!-- 场景五：小额按摩先享后付 -->
   <div class="scene">
-    <div class="scene-head"><span class="scene-num" style="background:var(--red);color:#fff">S5</span><span class="scene-title">小额按摩先享后付</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式B · 先履约 + 后扣款</span></span></div>
+    <div class="scene-head"><span class="scene-num" style="background:var(--red);color:#fff">S5</span><span class="scene-title">小额按摩先享后付</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式B · 先履约 + 后扣款</span></div>
     <div class="scene-desc">消费者首次进入门店签署先享后付授权，完成一笔198元按摩服务，不需要事先充值。服务完成后系统产生应付账单并向消费者扣款，扣款失败自动重试并通知补缴。</div>
     <div class="scene-body">
       <div>
@@ -325,7 +349,8 @@ td{color:#bfd0df}
         <div class="step"><span class="step-num">4</span><span>扣款成功 → 商户结算/清分</span></div>
       </div>
     </div>
-  
+  </div>
+
   <!-- 场景六：养老机构 -->
   <div class="scene">
     <div class="scene-head"><span class="scene-num red">S6</span><span class="scene-title">养老机构</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式A · 强监管多资金Bucket</span></div>
@@ -346,77 +371,105 @@ td{color:#bfd0df}
   </div>
 </section>
 
-<section class="slide" id="s6"><div class="section-num">06 / 14</div>
-  <div class="sec-head"><span class="sec-num">04</span><h2>从六类场景抽象统一业务链路</h2></div>
-  <p class="sec-desc">行业并不是平台真正的底层区别。真正变化的是：什么时候收费、什么算履约、如何计价、谁确认、什么时候释放/扣款、发生争议怎么办。</p>
-  <div class="abstract">
-    <h4>设计路径</h4>
-    <div class="fb">
-      真实场景 → 明确业务问题 → 确定业务规则 → 抽象统一流程<br>
-      → 抽象核心模型 → 模式编排 → 资金底座执行<br><br>
-      <b>签约/下单 → 收款/授权 → 履约事件 → 计价 → 消费者确认/自动确认/争议 → 资金释放/扣款 → 商户清分 → 退款/售后/对账</b>
+<section class="slide" id="s6"><div class="section-num">06 / 11</div>
+  <div class="sec-head"><span class="sec-num">04</span><h2>从六类场景抽象出一条统一业务链路</h2></div>
+  <p class="sec-desc">行业不是平台真正的底层区别。真正变化的是：什么时候收费、什么算履约、怎么算钱、谁确认，以及最终是释放资金还是发起扣款。</p>
+
+  <div class="rule-priority">
+    <div class="rp-chain"><b>司法 / 监管硬基线</b> ＞ 地方行业规则 ＞ 合同约定 ＞ 商户配置</div>
+    <div class="rp-note">合同参数可以配置，但退款、计价、自动确认、资金监管等不能突破适用的司法与监管规则。</div>
+  </div>
+
+  <div class="pipeline">
+    <div class="pipe gatep">
+      <div class="p-step">① 监管准入</div>
+      <div class="p-name">Policy Gate</div>
+      <div class="p-q">地区 × 行业 × 客群 × 商户类型 × 金额 × 期限/次数</div>
+      <div class="p-out">输出：<b>能不能卖 / 能卖多少 / 资金怎么管</b></div>
+    </div>
+    <div class="pipe">
+      <div class="p-step">② 签约 / 下单</div>
+      <div class="p-name">合同模型</div>
+      <div class="p-q">消费者到底买了什么？套餐 / 项目 / 期限 / 原价 / 优惠价 / 本金 / 赠送权益 / 退款 / 暂停 / 转让 / 跨店</div>
+      <div class="p-out">输出：<b>合同规则 + 权益</b></div>
+    </div>
+    <div class="pipe">
+      <div class="p-step">③ 收款 / 授权</div>
+      <div class="p-name">受控 或 授权</div>
+      <div class="p-q">预付场景：形成受控资金<br>后付场景：形成消费者授权</div>
+      <div class="p-out">输出：<b>受控余额 / 授信额度</b></div>
+    </div>
+    <div class="pipe">
+      <div class="p-step">④ 履约</div>
+      <div class="p-name">履约模型</div>
+      <div class="p-q">服务真的发生了吗？扫码 / 签到 / 人脸 / 闸机 / SaaS课消 / 时间周期 / 消费者确认；经履约证据中心 + 反套现风控</div>
+      <div class="p-out">输出：<b>可信履约事件</b></div>
+    </div>
+    <div class="pipe">
+      <div class="p-step">⑤ 计价</div>
+      <div class="p-name">计价模型</div>
+      <div class="p-q">这次履约到底值多少钱？固定金额 / 按次 / 按周期 / 按项目 / 套餐分摊 / 动态补差</div>
+      <div class="p-out">输出：<b>本次应释放 / 应扣金额</b></div>
+    </div>
+    <div class="pipe">
+      <div class="p-step">⑥ 确认 / 争议</div>
+      <div class="p-name">确认 + 争议/退款模型</div>
+      <div class="p-q">正常：主动确认 / 规则允许的自动确认 → 可执行<br>异常：提出争议 → 冻结 / 重新举证 / 退款</div>
+      <div class="p-out">退款先判断<b>责任原因</b>，再按司法/监管规则 + 合同参数重新计价</div>
+    </div>
+    <div class="pipe hot">
+      <div class="p-step">⑦ 资金动作</div>
+      <div class="p-name">资金执行模型</div>
+      <div class="p-q">业务系统最终只生成标准资金指令，上层不直接接触资金</div>
+      <div class="p-out"><b>Release / Debit / Freeze / Refund</b></div>
+    </div>
+    <div class="pipe">
+      <div class="p-step">⑧ 清分 / 售后</div>
+      <div class="p-name">清分模型</div>
+      <div class="p-q">资金确认成为商户已履约收入后：总部 / 门店 / 教练技师 / 渠道 / 服务商</div>
+      <div class="p-out">对账 / 退款 / 差错 / <b>审计留痕</b></div>
     </div>
   </div>
-</section>
 
-<section class="slide" id="s7">
-<div class="section-num">07 / 14</div>
-<div class="eyebrow">Contract × Evidence × Pricing</div>
-<h2>业务内核真正的难点：不是“事件从哪来”，而是“能不能信、怎么算、能不能退”</h2>
-<div class="grid grid-3">
-  <div class="card">
-    <h3>合同规则中心</h3>
-    <p>真实合同用于校准有效期、暂停/转让/转店、违约金、项目原价/优惠价、赠送权益。但<b>司法/监管硬基线优先</b>。</p>
-    <div class="hr"></div><span class="badge">合同版本固化</span> <span class="badge">规则来源留痕</span>
+  <div class="abstract-out">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>六个场景真正不同的</th></tr></thead>
+        <tbody>
+          <tr><td>收费时点</td></tr>
+          <tr><td>履约触发方式</td></tr>
+          <tr><td>履约证据</td></tr>
+          <tr><td>计价方式</td></tr>
+          <tr><td>确认机制</td></tr>
+          <tr><td>监管强度</td></tr>
+          <tr><td>最终资金动作</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>平台可以统一的</th></tr></thead>
+        <tbody>
+          <tr><td>合同规则</td></tr>
+          <tr><td>履约事件</td></tr>
+          <tr><td>计价规则</td></tr>
+          <tr><td>确认 / 争议</td></tr>
+          <tr><td>标准资金指令</td></tr>
+          <tr><td>清分 / 对账</td></tr>
+          <tr><td>审计与风险控制</td></tr>
+        </tbody>
+      </table>
+    </div>
   </div>
-  <div class="card">
-    <h3>履约证据中心</h3>
-    <p>扫码、人脸、闸机、SaaS课消、消费者确认、设备记录都不是天然可信。需要做<b>可信等级 + 反套现风控</b>。</p>
-    <div class="hr"></div><span class="badge">集中核销</span> <span class="badge">非营业时段</span> <span class="badge">批量异常</span>
-  </div>
-  <div class="card">
-    <h3>计价与退款重算</h3>
-    <p>支持固定/按次/按周期/按项目/套餐分摊/动态补差，并能根据<b>退款原因</b>切换原价、优惠价、赠送比例等计算路径。</p>
-    <div class="hr"></div><span class="badge">本金/赠送拆分</span> <span class="badge">可追溯重算</span>
-  </div>
-</div>
-<div class="notice danger" style="margin-top:18px"><b>不再成立的旧表述：</b>“退款计价由商户配置即可”。正确口径是：<b>商户可配置，但必须受司法/监管规则约束</b>；系统先识别退款责任与适用规则，再调用合同参数。</div>
 
-<div class="hr"></div>
-<h2>总架构：规则横向治理，六层纵向落地</h2>
-<div class="gate"><b>横向监管规则决策层（Policy Gate）</b>｜地区 × 行业 × 客群 × 商户类型 × 金额 × 期限/次数 × 规则效力 → 输出准入、限额、存管比例、账户要求、自动确认、退款/清退、可选增信方式</div>
-<div class="layers">
-  <div class="layer delivery"><div class="layer-title">产品交付层</div><div class="layer-body"><span class="chip">商户运营后台</span><span class="chip">消费者小程序/H5</span><span class="chip">监管/银行工作台</span><span class="chip">SaaS / ISV API</span><span class="chip">合同/权益查询</span><span class="chip">对账报表/SFTP</span></div></div>
-  <div class="arrow">↓</div>
-  <div class="layer core"><div class="layer-title">统一业务内核</div><div class="layer-body"><span class="chip">合同规则</span><span class="chip">权益/资金Bucket</span><span class="chip">履约证据中心</span><span class="chip">计价引擎</span><span class="chip">确认/争议/退款</span><span class="chip">风险预警</span><span class="chip">资金指令</span><span class="chip">清分/对账</span><span class="chip">审计留痕</span></div></div>
-  <div class="arrow">↓</div>
-  <div class="layer mode"><div class="layer-title">模式编排</div><div class="layer-body"><span class="chip">模式A：预付资金受控释放</span><span class="chip">A1 全额托管</span><span class="chip">A2 比例存管</span><span class="chip">A3 消费者钱包</span><span class="chip">模式B：先享后付授权扣款</span></div></div>
-  <div class="arrow">↓</div>
-  <div class="layer dual"><div class="layer-title">双线资金层</div><div class="layer-body"><span class="chip">线① 标准收单结算</span><span class="chip">线② 存管/受控资金释放</span><span class="chip">物理隔离</span><span class="chip">独立账务</span><span class="chip">独立对账</span></div></div>
-  <div class="arrow">↓</div>
-  <div class="layer fund"><div class="layer-title">资金底座</div><div class="layer-body"><span class="chip">银行专用存款/托管账户</span><span class="chip">银行个人Ⅱ/Ⅲ类受控账户</span><span class="chip">服务信托/受托账户</span><span class="chip">公证提存账户</span><span class="chip">数字人民币智能合约钱包</span><span class="chip">外部信用/代扣渠道</span></div></div>
-  <div class="arrow">↓</div>
-  <div class="layer legal"><div class="layer-title">法律 / 增信层</div><div class="layer-body"><span class="chip">服务信托</span><span class="chip">公证提存</span><span class="chip">履约保证保险</span><span class="chip">银行保函</span><span class="chip">保证金</span><span class="chip">监管认定/项目协议</span></div></div>
-</div>
-</section>
-</section>
-
-<section class="slide" id="s8"><div class="section-num">08 / 14</div>
-  <div class="sec-head"><span class="sec-num">05</span><h2>七大核心模型</h2></div>
-  <p class="sec-desc">所有行业最终统一到这七个模型，每个模型是一个可配置的技术模块。场景决定规则，规则驱动履约，履约触发资金动作。</p>
-  <div class="models">
-    <div class="model-card"><div class="m-name">合同模型</div><div class="m-detail">套餐/项目/价格/期限/退款/暂停/跨店/自动确认等规则，签约时固化</div></div>
-    <div class="model-card"><div class="m-name">履约模型</div><div class="m-detail">统一产生 Fulfillment Event（扫码/签到/API/SaaS/时间周期触发）</div></div>
-    <div class="model-card"><div class="m-name">计价模型</div><div class="m-detail">计算本次履约对应金额（固定/按次/按周期/按项目/动态/套餐分摊/补差等）</div></div>
-    <div class="model-card"><div class="m-name">确认模型</div><div class="m-detail">主动确认、自动确认、提出争议的处理逻辑</div></div>
-    <div class="model-card"><div class="m-name">争议/退款模型</div><div class="m-detail">待释放冻结、已释放售后、剩余资金退款、退款计价</div></div>
-    <div class="model-card"><div class="m-name">资金执行模型</div><div class="m-detail">标准指令 Release/Debit/Freeze/Refund，上层不直接接触资金</div></div>
-    <div class="model-card"><div class="m-name">清分模型</div><div class="m-detail">总部、门店、教练/技师、渠道、服务商之间的资金分配</div></div>
+  <div class="converge">
+    <div class="cv-text">六个场景最终只会汇聚成两类资金动作：<br><b>钱已经在受控状态 → 履约后 Release</b>　｜　<b>钱尚未支付 → 履约后 Debit</b></div>
+    <div class="cv-next">→ 下一页：两种资金模式并行</div>
   </div>
 </section>
 
-<section class="slide" id="s9"><div class="section-num">09 / 14</div>
-  <div class="sec-head"><span class="sec-num">06</span><h2>两种资金模式并行</h2></div>
+<section class="slide" id="s7"><div class="section-num">07 / 11</div>
+  <div class="sec-head"><span class="sec-num">05</span><h2>两种资金模式并行</h2></div>
   <div class="grid g2">
     <div class="mode a">
       <h4>模式A · 预付资金受控释放</h4>
@@ -463,10 +516,9 @@ td{color:#bfd0df}
 </div>
 <div class="notice danger" style="margin-top:18px"><b>边界：</b>“存管释放 ≠ 分账”。先判断商户已履约应得多少，再处理总部、门店、教练/技师、渠道、服务商之间的清分。拉卡拉输出规则与指令，不以自身过渡户长期归集后再向下游分配。</div>
 </section>
-</section>
 
-<section class="slide" id="s10"><div class="section-num">10 / 14</div>
-  <div class="sec-head"><span class="sec-num">07</span><h2>BRD关键结论摘要</h2></div>
+<section class="slide" id="s8"><div class="section-num">08 / 11</div>
+  <div class="sec-head"><span class="sec-num">06</span><h2>BRD关键结论摘要</h2></div>
   <h4>按资金行为分场景（不按行业粗分）</h4>
   <div class="tbl-wrap">
     <table>
@@ -495,8 +547,8 @@ td{color:#bfd0df}
   </div>
 </section>
 
-<section class="slide" id="s11"><div class="section-num">11 / 14</div>
-  <div class="sec-head"><span class="sec-num">08</span><h2>产品路线图</h2></div>
+<section class="slide" id="s9"><div class="section-num">09 / 11</div>
+  <div class="sec-head"><span class="sec-num">07</span><h2>产品路线图</h2></div>
   <div class="tbl-wrap">
     <table>
       <thead><tr><th>阶段</th><th>核心建设</th><th>目标</th><th>关键验收</th></tr></thead>
@@ -516,8 +568,8 @@ td{color:#bfd0df}
   </div>
 </section>
 
-<section class="slide" id="s12"><div class="section-num">12 / 14</div>
-  <div class="sec-head"><span class="sec-num">09</span><h2>商业模式</h2></div>
+<section class="slide" id="s10"><div class="section-num">10 / 11</div>
+  <div class="sec-head"><span class="sec-num">08</span><h2>商业模式</h2></div>
   <div class="tbl-wrap">
     <table>
       <thead><tr><th>收入项</th><th>计费逻辑</th><th>定位</th></tr></thead>
@@ -534,8 +586,8 @@ td{color:#bfd0df}
   <div class="callout">年度收入 = 存管/履约GMV × 有效变现率 + 账户/平台年费 + 清分/对账服务费 + 项目实施费 + 合作分润。做监管项目、商业项目、SaaS嵌入三类报价敏感性测试，不沿用"1%"单一费率。</div>
 </section>
 
-<section class="slide" id="s13"><div class="section-num">13 / 14</div>
-  <div class="sec-head"><span class="sec-num">10</span><h2>风险与行动</h2></div>
+<section class="slide" id="s11"><div class="section-num">11 / 11</div>
+  <div class="sec-head"><span class="sec-num">09</span><h2>风险与行动</h2></div>
   <h4>四条核心风险</h4>
   <div class="risk"><div class="rt">教培机构付费意愿不足</div><div class="rd">如果机构没有付费意愿，产品将是纯成本中心</div><div class="ra">访谈5-10家目标教培机构，确认合规意愿和预算 → 置信度中</div></div>
   <div class="risk"><div class="rt">银行开放度不确定</div><div class="rd">银行是否愿意为拉卡拉开放专用存款账户体系的对接能力未经验证</div><div class="ra">与2-3家银行（上海/北京/深圳分行）沟通合作模式 → 置信度中</div></div>
@@ -571,7 +623,6 @@ td{color:#bfd0df}
 </div>
 <div class="quote" style="margin-top:22px">最终不是“卖一套银行存管账户”，而是形成一套<em>多监管模式下的履约资金控制平台</em>。</div>
 <p class="footer-note">资料口径：截至 2026-09-21；正式规则、指导文件、司法解释、平台实践均分层展示，实际商用前仍需银行/监管/法务逐项确认。</p>
-</section>
 </section>
 
 <div class="modal" id="modal">
