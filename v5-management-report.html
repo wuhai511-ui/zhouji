@@ -1,0 +1,636 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>预付资金受控与履约清分平台｜总架构汇报 V5（V2.0+V4融合版）</title>
+<style>
+
+:root{
+  --bg:#07111f; --panel:#0d1b2d; --panel2:#10233a; --line:#24405f;
+  --text:#eef5ff; --muted:#9fb2c8; --blue:#4da3ff; --cyan:#35d0d0;
+  --green:#55d38a; --yellow:#ffc857; --orange:#ff9f43; --red:#ff6b6b; --purple:#a88bff;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--bg)}
+body{margin:0;font-family:Inter,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--text);
+background:
+radial-gradient(circle at 20% 0%,rgba(77,163,255,.12),transparent 28%),
+radial-gradient(circle at 90% 20%,rgba(53,208,208,.09),transparent 26%),var(--bg);}
+a{color:#8bc7ff}
+nav{position:fixed;left:20px;top:50%;transform:translateY(-50%);z-index:20;
+background:rgba(9,24,41,.82);backdrop-filter:blur(14px);border:1px solid #1c3550;border-radius:18px;padding:10px}
+nav a{display:block;width:34px;height:34px;line-height:34px;text-align:center;margin:4px 0;border-radius:10px;
+text-decoration:none;color:#a9bdd2;font-size:12px}
+nav a:hover{background:#17324d;color:#fff}
+.slide{min-height:100vh;padding:64px 72px 56px 82px;display:flex;flex-direction:column;justify-content:center;position:relative}
+.slide:after{content:"";position:absolute;left:72px;right:40px;bottom:24px;height:1px;background:linear-gradient(90deg,#24405f,transparent)}
+.eyebrow{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#71c7ff;font-weight:700;margin-bottom:12px}
+h1{font-size:46px;line-height:1.12;margin:0 0 16px;max-width:1100px}
+h2{font-size:30px;margin:0 0 20px}
+h3{font-size:19px;margin:0 0 10px}
+p{color:#c1d0df;line-height:1.7}
+.lead{font-size:18px;max-width:1050px;color:#d7e6f5}
+.kicker{font-size:14px;color:#9fb2c8}
+.badge{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:999px;border:1px solid #294a69;background:#10263d;color:#cfe8ff;font-size:12px}
+.grid{display:grid;gap:16px}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-2{grid-template-columns:repeat(2,1fr)}
+.card{background:linear-gradient(180deg,rgba(18,38,61,.94),rgba(10,24,40,.94));border:1px solid #203b57;border-radius:18px;padding:18px;box-shadow:0 16px 40px rgba(0,0,0,.18)}
+.card.clickable{cursor:pointer;transition:.22s transform,.22s border-color,.22s background}
+.card.clickable:hover{transform:translateY(-4px);border-color:#4b7eac;background:#102942}
+.metric{font-size:32px;font-weight:800;margin-bottom:3px}
+.metric small{font-size:12px;font-weight:600;color:#a9bdd2}
+.muted{color:var(--muted)}
+.quote{font-size:26px;line-height:1.55;font-weight:700;max-width:1080px}
+.quote em{font-style:normal;color:#77c8ff}
+.notice{border-left:4px solid var(--yellow);background:#2b2413;padding:15px 18px;border-radius:10px;color:#ffedbd}
+.danger{border-left-color:var(--red);background:#2e171d}
+.policy-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.policy-head .n{font-size:21px;font-weight:800}
+.policy-list{margin-top:12px;color:#bdcada;font-size:13px;line-height:1.65}
+.policy-list b{color:white}
+.hr{height:1px;background:#203850;margin:16px 0}
+.layers{display:flex;flex-direction:column;gap:9px}
+.layer{display:grid;grid-template-columns:190px 1fr;gap:14px;align-items:stretch}
+.layer-title{border-radius:14px;padding:14px 16px;font-weight:800;display:flex;align-items:center;justify-content:center;text-align:center}
+.layer-body{border:1px solid #24415f;background:rgba(13,30,49,.9);border-radius:14px;padding:13px 15px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.chip{padding:8px 10px;border-radius:9px;background:#152d46;border:1px solid #294a69;color:#dceafb;font-size:12px}
+.layer.delivery .layer-title{background:#12365a;color:#8fc9ff}
+.layer.core .layer-title{background:#123d38;color:#78e3bc}
+.layer.mode .layer-title{background:#3d2a12;color:#ffd17a}
+.layer.dual .layer-title{background:#411d2b;color:#ff9ab3}
+.layer.fund .layer-title{background:#2b2351;color:#c3b1ff}
+.layer.legal .layer-title{background:#183c4b;color:#7ae2e2}
+.gate{margin-bottom:12px;padding:12px 16px;border-radius:14px;border:1px solid #375a78;background:linear-gradient(90deg,#102a43,#103639);font-size:14px;color:#d5f0ff}
+.arrow{text-align:center;color:#5c87ad;font-size:20px}
+.dual-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.flow{padding:16px;border-radius:16px;border:1px solid #254360;background:#0c1d30}
+.flow h3{display:flex;align-items:center;gap:10px}
+.flow .step{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed #263d53;font-size:13px;color:#c6d4e2}
+.flow .step:last-child{border:0}
+.dot{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:#173b5a;color:#9ed4ff;font-size:11px;font-weight:800;flex:0 0 auto}
+.table-wrap{overflow:auto;border:1px solid #25425f;border-radius:14px}
+table{border-collapse:collapse;width:100%;min-width:900px;background:#0b1c2d}
+th,td{padding:11px 12px;border-bottom:1px solid #21384d;vertical-align:top;font-size:12px;line-height:1.5}
+th{position:sticky;top:0;background:#112a42;color:#eaf5ff;text-align:left}
+td{color:#bfd0df}
+.tag{font-size:11px;padding:4px 7px;border-radius:999px;border:1px solid #355873;color:#bcd9f1;white-space:nowrap}
+.section-num{position:absolute;right:42px;top:30px;font-size:12px;color:#57748e}
+.scenario-card{min-height:180px}
+.scenario-card .model{font-weight:700;color:#dff5ff;margin:7px 0}
+.scenario-card .summary{font-size:13px;line-height:1.58;color:#b8c9d8}
+.colorbar{height:4px;border-radius:99px;margin:-18px -18px 14px}
+.blue{background:#4da3ff} .green{background:#55d38a} .pink{background:#ff7aaa}
+.orange{background:#ff9f43} .purple{background:#a88bff} .red{background:#ff6b6b}
+.rule-chain{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.rule-box{border:1px solid #2b4b67;background:#0d2136;padding:16px;border-radius:14px}
+.rule-box .idx{font-size:11px;color:#6faed9;margin-bottom:6px}
+.rule-box strong{display:block;margin-bottom:6px}
+.modal{display:none;position:fixed;inset:0;background:rgba(3,9,16,.78);z-index:99;align-items:center;justify-content:center;padding:26px}
+.modal.open{display:flex}
+.modal-card{width:min(1000px,94vw);max-height:88vh;overflow:auto;background:#0b1b2d;border:1px solid #31506b;border-radius:20px;padding:22px;box-shadow:0 35px 90px #0009}
+.modal-top{display:flex;justify-content:space-between;align-items:center;gap:16px;position:sticky;top:-22px;background:#0b1b2d;padding:8px 0 12px;z-index:2}
+.close{border:1px solid #385875;background:#10263d;color:#d7e9fa;border-radius:10px;padding:8px 12px;cursor:pointer}
+.detail-item{padding:14px 0;border-top:1px solid #233b52}
+.detail-item ul{margin:8px 0 6px 18px;color:#bfd0df;line-height:1.6}
+.source{font-size:11px;color:#8299ad}
+.footer-note{font-size:11px;color:#6f889d;margin-top:14px}
+@media(max-width:1000px){
+  nav{display:none} .slide{padding:42px 24px;min-height:auto} h1{font-size:34px}
+  .grid-4,.grid-3,.grid-2,.dual-grid,.rule-chain{grid-template-columns:1fr}
+  .layer{grid-template-columns:1fr} .layer-title{justify-content:flex-start;text-align:left}
+}
+@media print{
+  nav,.modal{display:none!important} .slide{page-break-after:always;min-height:100vh}
+  body{background:#07111f;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+
+/* V2.0 场景卡片适配深色主题 */
+.scene{border-left:3px solid var(--gold);background:rgba(13,30,49,.9);border-radius:0 12px 12px 0;padding:16px 20px;margin:16px 0}
+.scene-head{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.scene-num{font-family:var(--font-mono);font-size:13px;font-weight:700;color:var(--gold);background:rgba(193,154,75,.1);padding:3px 10px;border-radius:20px}
+.scene-num.teal{background:var(--teal);color:#fff}
+.scene-num.gold{background:var(--gold);color:#fff}
+.scene-num.teal2{background:var(--teal-2);color:#fff}
+.scene-num.red{background:var(--red);color:#fff}
+.scene-title{font-weight:700;font-size:15px;color:var(--text)}
+.scene-desc{font-size:13.5px;color:var(--muted);margin-bottom:10px}
+.scene-body{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:10px}
+.scene-col h5{margin:0 0 6px}
+.step{display:flex;gap:8px;align-items:flex-start;margin:6px 0;font-size:13.5px;color:var(--muted)}
+.step-num{flex:none;width:22px;height:22px;border-radius:50%;background:#173b5a;color:#9ed4ff;font-size:11px;font-weight:700;display:grid;place-items:center;margin-top:1px}
+.abstract{background:var(--panel);color:#e9eef3;border-radius:14px;padding:24px;margin:16px 0;border:1px solid var(--line)}
+.abstract h4{color:var(--gold-2);margin:0 0 10px;font-size:14px}
+.abstract .fb{font-family:var(--font-mono);font-size:13px;color:#9fb5c8;line-height:2.0}
+.abstract .fb b{color:var(--gold-2)}
+.models{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:16px 0}
+.model-card{background:rgba(13,30,49,.9);border:1px solid var(--line);border-radius:10px;padding:14px;text-align:center}
+.model-card .m-name{font-weight:700;font-size:13px;color:var(--text);margin-bottom:4px}
+.model-card .m-detail{font-size:12px;color:var(--muted)}
+.card{background:linear-gradient(180deg,rgba(18,38,61,.94),rgba(10,24,40,.94));border:1px solid #203b57;color:#eef5ff}
+.card p,.card div,.card li{color:#c1d0df}
+.card .d-text{color:#c1d0df}
+.card .d-title{color:#eef5ff}
+.risk{border-left:3px solid var(--gold);background:rgba(13,30,49,.9);color:#c1d0df}
+.risk .rt{color:#eef5ff}
+.risk .rd{color:#c1d0df}
+.risk .ra{color:#78e3bc}
+.act{background:rgba(13,30,49,.9);border-color:#203b57;color:#c1d0df}
+.act span{color:#c1d0df}
+.act b{color:#eef5ff}
+.mode{background:rgba(13,30,49,.9);border-color:#203b57;color:#eef5ff}
+.mode li{color:#c1d0df}
+.mode h4{color:#eef5ff}
+.mode .sub{color:#9fb2c8}
+@media(max-width:900px){.scene-body{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<nav>
+  <a href="#s1">01</a>  <a href="#s2">02</a>  <a href="#s3">03</a>  <a href="#s4">04</a>
+  <a href="#s5">05</a>  <a href="#s6">06</a>  <a href="#s7">07</a>  <a href="#s8">08</a>
+  <a href="#s9">09</a>  <a href="#s10">10</a>  <a href="#s11">11</a>  <a href="#s12">12</a>
+  <a href="#s13">13</a>
+</nav>
+<header class="hero">
+<div class="eyebrow">Prepaid Funds Control · Architecture Review</div>
+<h1 class="hero-title">预付资金受控与履约清分平台<br>总架构汇报 V4</h1>
+<p class="lead">从“做一个存管账户产品”升级为：<b>监管规则驱动 + 履约证据驱动 + 多资金底座适配</b>的技术基础设施。重点修正两点：<b>补齐养老强监管场景</b>，以及让合同/退款逻辑服从<b>全国司法硬基线</b>，不再由商户规则任意定义。</p>
+<div class="grid grid-4" style="margin-top:24px">
+  <div class="card"><div class="metric">6<small> 类核心场景</small></div><div class="muted">游泳 / 健身 / 美业 / 物业 / 按摩 / 养老</div></div>
+  <div class="card"><div class="metric">2<small> 种资金模式</small></div><div class="muted">预付受控释放 / 先享后付授权扣款</div></div>
+  <div class="card"><div class="metric">2<small> 条资金线路</small></div><div class="muted">收单结算线 / 存管释放线必须物理隔离</div></div>
+  <div class="card"><div class="metric">1<small> 套规则引擎</small></div><div class="muted">全国硬基线 + 地方/行业规则 + 合同参数</div></div>
+</div>
+<div class="notice danger" style="margin-top:20px"><b>红线：</b>支付机构备付金只能服务支付结算，不应承担长期预付资金存管与“按履约逐笔释放”的资金池角色；拉卡拉定位是规则、信息、指令和清分技术服务。</div>
+</header>
+
+<section class="slide" id="s1">
+<div class="section-num">01 / 14</div>
+<div class="eyebrow">National Baseline</div>
+<h2>先把“真实合同规则”放到司法与监管硬基线下面</h2>
+<div class="quote">平台规则优先级应变成：<em>司法/监管硬约束 ＞ 行业/地方正式规则 ＞ 合同约定 ＞ 商户配置</em>。</div>
+<div class="rule-chain" style="margin-top:22px">
+  <div class="rule-box"><div class="idx">01 · 冷静期</div><strong>7日无理由退款</strong><span class="muted">适用于司法解释覆盖的生活消费预付式消费，法定例外除外。</span></div>
+  <div class="rule-box"><div class="idx">02 · 退款责任</div><strong>先判断“谁的原因”</strong><span class="muted">非消费者原因：已履约部分原则按折扣价/优惠比例；消费者原因：原则按打折前价格。</span></div>
+  <div class="rule-box"><div class="idx">03 · 本金/赠送</div><strong>必须拆账</strong><span class="muted">实付本金、赠送金、赠送项目需要独立记录，退款按司法规则与合同共同计算。</span></div>
+  <div class="rule-box"><div class="idx">04 · 证据责任</div><strong>消费记录要可举证</strong><span class="muted">次数、金额、余额、履约凭证、触达记录都必须留痕，不能只存一个“余额”。</span></div>
+</div>
+<div class="grid grid-2" style="margin-top:18px">
+  <div class="card">
+    <h3>合同仍需真实调研，但它解决的是“参数”</h3>
+    <p>退款折算、手续费/违约金、有效期/延期、赠送金、停课/转让/转店/冻结等仍需拿真实合同校准；但合同不能越过司法和监管硬线。</p>
+  </div>
+  <div class="card">
+    <h3>产品数据模型必须同步改变</h3>
+    <p>新增 <b>refund_reason、original_price、discount_price、principal_balance、bonus_balance、evidence_bundle、rule_source</b> 等核心字段，才能重算与举证。</p>
+  </div>
+</div>
+<p class="footer-note">全国司法基线：最高人民法院法释〔2025〕4号，自 2025-05-01 施行。</p>
+</section>
+
+<section class="slide" id="s2">
+<div class="section-num">02 / 14</div>
+<div class="eyebrow">Policy Map</div>
+<h2>重点区域政策汇总｜点击卡片查看各地明细</h2>
+<p class="kicker">同一“预付”问题，现实中存在全额托管、比例存管、消费者钱包、服务信托、公证提存、数币智能合约等多条技术路线。</p>
+<div class="grid grid-3" id="regionGrid" style="margin-top:18px"></div>
+<div class="notice" style="margin-top:18px"><b>产品结论：</b>监管规则必须是运行时决策层，而不是写死在某一账户产品里。输入：地区 × 行业 × 客群 × 商户类型 × 金额 × 期限/次数 × 底座/保障方式；输出：是否可售、监管比例、账户要求、确认/退款、释放条件。</div>
+</section>
+
+<section class="slide" id="s3"><div class="section-num">03 / 14</div>
+  <div class="sec-head"><span class="sec-num">01</span><h2>核心结论：三条红线不可越</h2></div>
+  <p class="sec-desc">项目在P0层面成立，但合规路径唯一。"预付资金受控释放＋按履约进度清分"与当前监管方向高度一致，落地必须走银行专用存款账户存管＋持牌机构按指令清分。</p>
+  <div class="grid g3">
+    <div class="card" style="border-top:4px solid #c0392b"><div class="num" style="color:#c0392b">红线 01</div><div class="d-text" style="margin-top:6px">支付机构备付金账户<b>不得用于长期存管</b>。备付金属短期中转、100%集中存管人民银行，预收资金须进银行专户或信托专户。</div></div>
+    <div class="card" style="border-top:4px solid #c0392b"><div class="num" style="color:#c0392b">红线 02</div><div class="d-text" style="margin-top:6px">资金<b>不得先归集到平台账户再分配</b>，平台不得自行清算或截留商户资金。划转由银行或持牌机构执行，不做二清。</div></div>
+    <div class="card" style="border-top:4px solid #c19a4b"><div class="num" style="color:#c19a4b">硬约束 03</div><div class="d-text" style="margin-top:6px">各行业/地区的<b>存管比例与收费上限是硬指标</b>。教培"3月/60课时/5000元"、北京存管≥20%、上海40%专户、养老保证金≥10%。</div></div>
+  </div>
+</section>
+
+<section class="slide" id="s4"><div class="section-num">04 / 14</div>
+  <div class="sec-head"><span class="sec-num">02</span><h2>行业对比：五个赛道，五种打法</h2></div>
+  <p class="sec-desc">监管强度与跑路风险大致正相关——教培和养老监管最严；健身次之，上海全国最精细；美业因分类模糊，风险反而被市场低估。</p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>行业</th><th>监管强度</th><th>市场规模</th><th>跑路风险特征</th><th>存管规则水平</th><th>优先级</th></tr></thead>
+      <tbody>
+        <tr><td><b>教培（含体育）</b></td><td style="color:#c0392b;font-weight:700">最硬</td><td>2024年约2000亿元；2025年纯素质教育约4279亿元</td><td>高发：中体威博(2024.8)、童程童美(2025.1)</td><td>最高：全国统一底线+北京≥20%+上海40%+全国平台全流程</td><td><span style="color:#c19a4b;font-weight:700">P0</span></td></tr>
+        <tr><td><b>健身</b></td><td>较强</td><td>2025年3827亿元；健身俱乐部38523家；倒闭率约40%</td><td>高发：梵音瑜伽、一兆韦德等明星连锁</td><td>上海最细：三限分类+30%~50%；北京≥20%</td><td><span style="color:#c19a4b;font-weight:700">P0+</span></td></tr>
+        <tr><td><b>美业/按摩</b></td><td>最弱</td><td>2025年约4459亿元；年增6%+</td><td>中高：大额充值诱导、服务缩水、职业闭店人</td><td>最低：商务部9号令覆盖部分，地方差异大</td><td><span style="color:#c19a4b;font-weight:700">P2</span></td></tr>
+        <tr><td><b>物业</b></td><td>较弱</td><td>2024年物业管理行业收入约1.5万亿元</td><td>中：预收物业费、停车费、增值服务</td><td>参照单用途卡规则；地方细则差异大</td><td><span style="color:#c19a4b;font-weight:700">P1</span></td></tr>
+        <tr><td><b>养老</b></td><td>新但很严</td><td>2024年突破12.1万亿元；60岁以上老人3.23亿人(22.3%)</td><td>特殊：金额巨大+老人弱势+易伪装成非法集资</td><td>全国统一：12月周期+12倍押金上限+风险保证金≥20%</td><td><span style="color:#c19a4b;font-weight:700">P1</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="slide" id="s5"><div class="section-num">05 / 14</div>
+  <div class="sec-head"><span class="sec-num">03</span><h2>典型场景：先看业务，再抽象规则</h2></div>
+  <p class="sec-desc">平台不从账户能力出发，而从真实业务场景出发。六个典型场景覆盖预付式消费的主要形态，每个场景的问题清单和规则结论是规则引擎设计的直接输入。</p>
+
+  <!-- 场景一：游泳课时包 -->
+  <div class="scene">
+    <div class="scene-head"><span class="scene-num">S1</span><span class="scene-title">游泳课时包</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式A · 按次履约 + 逐次释放</span></div>
+    <div class="scene-desc">消费者购买20节游泳课共4,000元，一次性支付全款进入受控状态。每完成一节课，由SaaS/教练系统产生履约记录，消费者确认后释放本次课时资金，未消费部分随时可退。</div>
+    <div class="scene-body">
+      <div>
+        <h5>关键设计点</h5>
+        <p>履约凭证：扫码/签到/SaaS核销/教练确认（多方式可配）<br>自动确认：商户可配置N天（平台设上限，如N≤7天）<br>退款计价：按套餐单价或重算规则，签约时固化<br>争议处理：窗口内冻结当前课时金额，不冻结整个合同</p>
+      </div>
+      <div>
+        <h5>标准流程</h5>
+        <div class="step"><span class="step-num">1</span><span>签约购课 → 全额支付</span></div>
+        <div class="step"><span class="step-num">2</span><span>资金进入受控余额</span></div>
+        <div class="step"><span class="step-num">3</span><span>预约上课 → 履约/核销生成消费记录</span></div>
+        <div class="step"><span class="step-num">4</span><span>消费者确认/自动确认 → 本次课时金额释放</span></div>
+        <div class="step"><span class="step-num">5</span><span>剩余资金继续受控 → 未消费部分支持退款</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 场景二：健身年卡 -->
+  <div class="scene">
+    <div class="scene-head"><span class="scene-num teal">S2</span><span class="scene-title">健身年卡</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式A · 时间周期履约 + 周期释放</span></span></div>
+    <div class="scene-desc">消费者购买12个月健身年卡共3,600元，一次付款进入受控状态。按自然月/固定周期释放，支持跨门店履约（总部统一合同），暂停会籍可顺延服务期限。</div>
+    <div class="scene-body">
+      <div>
+        <h5>关键设计点</h5>
+        <p>释放方式：自然月、固定周期、按次（商户可配置）<br>暂停处理：会籍暂停+释放暂停+服务期顺延（按合同规则）<br>跨门店：总部统一会员体系，按实际履约门店清分<br>停业/闭店：强监管项目停止后续释放进退款流程</p>
+      </div>
+      <div>
+        <h5>标准流程</h5>
+        <div class="step"><span class="step-num">1</span><span>购买年卡 → 全额支付</span></div>
+        <div class="step"><span class="step-num">2</span><span>资金受控 → 周期履约</span></div>
+        <div class="step"><span class="step-num">3</span><span>消费者确认/自动确认</span></div>
+        <div class="step"><span class="step-num">4</span><span>按实际履约门店清分 → 剩余资金继续受控</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 场景三：美业项目包 -->
+  <div class="scene">
+    <div class="scene-head"><span class="scene-num gold">S3</span><span class="scene-title">美业项目包</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式A · 项目履约 + 动态计价</span></span></div>
+    <div class="scene-desc">消费者支付5,000元购买组合美容套餐（护理、美甲、美容项目、需多次完成的疗程），各项目结算金额不同。支持跨门店消费、临时升级、按次或全部完成后释放。</div>
+    <div class="scene-body">
+      <div>
+        <h5>关键设计点</h5>
+        <p>项目计价：商户提前配置每个项目的结算价格<br>退款规则：签约时配置退款计价规则，系统自动计算<br>跨门店：总部统一管理合同和会员，按实际履约门店清分<br>升级补差：优先使用套餐余额，不足部分补差并与原合同关联</p>
+      </div>
+      <div>
+        <h5>标准流程</h5>
+        <div class="step"><span class="step-num">1</span><span>购买组合套餐 → 全额支付</span></div>
+        <div class="step"><span class="step-num">2</span><span>资金受控 → 门店履约 → 计算结算金额</span></div>
+        <div class="step"><span class="step-num">3</span><span>消费者确认 → 释放项目资金</span></div>
+        <div class="step"><span class="step-num">4</span><span>总部、门店等进一步清分 → 剩余资金继续受控</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 场景四：物业预缴 -->
+  <div class="scene">
+    <div class="scene-head"><span class="scene-num" style="background:var(--teal-2);color:#fff">S4</span><span class="scene-title">物业预缴</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式A · 持续履约 + 多资金子余额</span></span></div>
+    <div class="scene-desc">消费者选择季度/半年/年度预缴物业费（含物业费、停车费、增值服务），各费用形成独立资金子项，每个子余额拥有独立的履约规则、释放规则和争议状态。</div>
+    <div class="scene-body">
+      <div>
+        <h5>关键设计点</h5>
+        <p>资金子余额：物业费/停车费/增值服务各自独立，独立履约/释放/退款规则<br>投诉分流：如停车位争议只冻结停车费子余额，基础物业费继续正常处理<br>房屋出售/退租：支持剩余资金退款或权益转移（根据合同规则）<br>月末自动确认：展示本期服务及金额，无异议自动确认</p>
+      </div>
+      <div>
+        <h5>标准流程</h5>
+        <div class="step"><span class="step-num">1</span><span>选择预缴套餐 → 签署合同 → 支付</span></div>
+        <div class="step"><span class="step-num">2</span><span>周期触发履约 → 消费者查看本期服务</span></div>
+        <div class="step"><span class="step-num">3</span><span>无异议自动确认 → 对应子余额释放</span></div>
+        <div class="step"><span class="step-num">4</span><span>剩余余额继续受控</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 场景五：小额按摩先享后付 -->
+  <div class="scene">
+    <div class="scene-head"><span class="scene-num" style="background:var(--red);color:#fff">S5</span><span class="scene-title">小额按摩先享后付</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式B · 先履约 + 后扣款</span></span></div>
+    <div class="scene-desc">消费者首次进入门店签署先享后付授权，完成一笔198元按摩服务，不需要事先充值。服务完成后系统产生应付账单并向消费者扣款，扣款失败自动重试并通知补缴。</div>
+    <div class="scene-body">
+      <div>
+        <h5>关键设计点</h5>
+        <p>授权模式：单次授权/长期授权/额度型授权<br>账户能力：支付宝安心付、银行信用付、其他授权代扣产品<br>争议分流：未扣款→暂停扣款进争议；已扣款→不进回滚，进售后退款流程<br>扣款失败：自动重试 + 通知补缴，超限进欠款/风险处置流程</p>
+      </div>
+      <div>
+        <h5>标准流程</h5>
+        <div class="step"><span class="step-num">1</span><span>消费者授权</span></div>
+        <div class="step"><span class="step-num">2</span><span>商户服务 → 履约完成 → 生成应付账单</span></div>
+        <div class="step"><span class="step-num">3</span><span>判断是否需要二次确认 → 扣款</span></div>
+        <div class="step"><span class="step-num">4</span><span>扣款成功 → 商户结算/清分</span></div>
+      </div>
+    </div>
+  
+  <!-- 场景六：养老机构 -->
+  <div class="scene">
+    <div class="scene-head"><span class="scene-num red">S6</span><span class="scene-title">养老机构</span><span style="font-size:12px;color:var(--muted);margin-left:auto">模式A · 强监管多资金Bucket</span></div>
+    <div class="scene-desc">养老必须补入总架构，不能用一个"预付余额"概括：服务费、押金、会员费具有不同期限、账户和支取规则。涉及高息返利、预售床位、承诺保本的机构应作为高风险准入/拒绝合作场景。</div>
+    <div class="scene-body">
+      <div>
+        <h5>关键设计点</h5>
+        <p>服务费预收≤12个月、押金≤月床位费12倍<br>押金/会员费进入银行第三方存管专户<br>未入住及时全额退款；已入住扣除消费金额原路退<br>风险保证金≥近三年会员费总额10%且≥账户余额20%</p>
+      </div>
+      <div>
+        <h5>标准流程</h5>
+        <div class="step"><span class="step-num">1</span><span>选择入住套餐 → 签署合同</span></div>
+        <div class="step"><span class="step-num">2</span><span>支付押金/服务费 → 进入银行存管专户</span></div>
+        <div class="step"><span class="step-num">3</span><span>按月释放服务费 → 退住时结算剩余</span></div>
+        <div class="step"><span class="step-num">4</span><span>风险保证金留存 → 异常监测预警</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s6"><div class="section-num">06 / 14</div>
+  <div class="sec-head"><span class="sec-num">04</span><h2>从六类场景抽象统一业务链路</h2></div>
+  <p class="sec-desc">行业并不是平台真正的底层区别。真正变化的是：什么时候收费、什么算履约、如何计价、谁确认、什么时候释放/扣款、发生争议怎么办。</p>
+  <div class="abstract">
+    <h4>设计路径</h4>
+    <div class="fb">
+      真实场景 → 明确业务问题 → 确定业务规则 → 抽象统一流程<br>
+      → 抽象核心模型 → 模式编排 → 资金底座执行<br><br>
+      <b>签约/下单 → 收款/授权 → 履约事件 → 计价 → 消费者确认/自动确认/争议 → 资金释放/扣款 → 商户清分 → 退款/售后/对账</b>
+    </div>
+  </div>
+</section>
+
+<section class="slide" id="s7">
+<div class="section-num">07 / 14</div>
+<div class="eyebrow">Contract × Evidence × Pricing</div>
+<h2>业务内核真正的难点：不是“事件从哪来”，而是“能不能信、怎么算、能不能退”</h2>
+<div class="grid grid-3">
+  <div class="card">
+    <h3>合同规则中心</h3>
+    <p>真实合同用于校准有效期、暂停/转让/转店、违约金、项目原价/优惠价、赠送权益。但<b>司法/监管硬基线优先</b>。</p>
+    <div class="hr"></div><span class="badge">合同版本固化</span> <span class="badge">规则来源留痕</span>
+  </div>
+  <div class="card">
+    <h3>履约证据中心</h3>
+    <p>扫码、人脸、闸机、SaaS课消、消费者确认、设备记录都不是天然可信。需要做<b>可信等级 + 反套现风控</b>。</p>
+    <div class="hr"></div><span class="badge">集中核销</span> <span class="badge">非营业时段</span> <span class="badge">批量异常</span>
+  </div>
+  <div class="card">
+    <h3>计价与退款重算</h3>
+    <p>支持固定/按次/按周期/按项目/套餐分摊/动态补差，并能根据<b>退款原因</b>切换原价、优惠价、赠送比例等计算路径。</p>
+    <div class="hr"></div><span class="badge">本金/赠送拆分</span> <span class="badge">可追溯重算</span>
+  </div>
+</div>
+<div class="notice danger" style="margin-top:18px"><b>不再成立的旧表述：</b>“退款计价由商户配置即可”。正确口径是：<b>商户可配置，但必须受司法/监管规则约束</b>；系统先识别退款责任与适用规则，再调用合同参数。</div>
+
+<div class="hr"></div>
+<h2>总架构：规则横向治理，六层纵向落地</h2>
+<div class="gate"><b>横向监管规则决策层（Policy Gate）</b>｜地区 × 行业 × 客群 × 商户类型 × 金额 × 期限/次数 × 规则效力 → 输出准入、限额、存管比例、账户要求、自动确认、退款/清退、可选增信方式</div>
+<div class="layers">
+  <div class="layer delivery"><div class="layer-title">产品交付层</div><div class="layer-body"><span class="chip">商户运营后台</span><span class="chip">消费者小程序/H5</span><span class="chip">监管/银行工作台</span><span class="chip">SaaS / ISV API</span><span class="chip">合同/权益查询</span><span class="chip">对账报表/SFTP</span></div></div>
+  <div class="arrow">↓</div>
+  <div class="layer core"><div class="layer-title">统一业务内核</div><div class="layer-body"><span class="chip">合同规则</span><span class="chip">权益/资金Bucket</span><span class="chip">履约证据中心</span><span class="chip">计价引擎</span><span class="chip">确认/争议/退款</span><span class="chip">风险预警</span><span class="chip">资金指令</span><span class="chip">清分/对账</span><span class="chip">审计留痕</span></div></div>
+  <div class="arrow">↓</div>
+  <div class="layer mode"><div class="layer-title">模式编排</div><div class="layer-body"><span class="chip">模式A：预付资金受控释放</span><span class="chip">A1 全额托管</span><span class="chip">A2 比例存管</span><span class="chip">A3 消费者钱包</span><span class="chip">模式B：先享后付授权扣款</span></div></div>
+  <div class="arrow">↓</div>
+  <div class="layer dual"><div class="layer-title">双线资金层</div><div class="layer-body"><span class="chip">线① 标准收单结算</span><span class="chip">线② 存管/受控资金释放</span><span class="chip">物理隔离</span><span class="chip">独立账务</span><span class="chip">独立对账</span></div></div>
+  <div class="arrow">↓</div>
+  <div class="layer fund"><div class="layer-title">资金底座</div><div class="layer-body"><span class="chip">银行专用存款/托管账户</span><span class="chip">银行个人Ⅱ/Ⅲ类受控账户</span><span class="chip">服务信托/受托账户</span><span class="chip">公证提存账户</span><span class="chip">数字人民币智能合约钱包</span><span class="chip">外部信用/代扣渠道</span></div></div>
+  <div class="arrow">↓</div>
+  <div class="layer legal"><div class="layer-title">法律 / 增信层</div><div class="layer-body"><span class="chip">服务信托</span><span class="chip">公证提存</span><span class="chip">履约保证保险</span><span class="chip">银行保函</span><span class="chip">保证金</span><span class="chip">监管认定/项目协议</span></div></div>
+</div>
+</section>
+</section>
+
+<section class="slide" id="s8"><div class="section-num">08 / 14</div>
+  <div class="sec-head"><span class="sec-num">05</span><h2>七大核心模型</h2></div>
+  <p class="sec-desc">所有行业最终统一到这七个模型，每个模型是一个可配置的技术模块。场景决定规则，规则驱动履约，履约触发资金动作。</p>
+  <div class="models">
+    <div class="model-card"><div class="m-name">合同模型</div><div class="m-detail">套餐/项目/价格/期限/退款/暂停/跨店/自动确认等规则，签约时固化</div></div>
+    <div class="model-card"><div class="m-name">履约模型</div><div class="m-detail">统一产生 Fulfillment Event（扫码/签到/API/SaaS/时间周期触发）</div></div>
+    <div class="model-card"><div class="m-name">计价模型</div><div class="m-detail">计算本次履约对应金额（固定/按次/按周期/按项目/动态/套餐分摊/补差等）</div></div>
+    <div class="model-card"><div class="m-name">确认模型</div><div class="m-detail">主动确认、自动确认、提出争议的处理逻辑</div></div>
+    <div class="model-card"><div class="m-name">争议/退款模型</div><div class="m-detail">待释放冻结、已释放售后、剩余资金退款、退款计价</div></div>
+    <div class="model-card"><div class="m-name">资金执行模型</div><div class="m-detail">标准指令 Release/Debit/Freeze/Refund，上层不直接接触资金</div></div>
+    <div class="model-card"><div class="m-name">清分模型</div><div class="m-detail">总部、门店、教练/技师、渠道、服务商之间的资金分配</div></div>
+  </div>
+</section>
+
+<section class="slide" id="s9"><div class="section-num">09 / 14</div>
+  <div class="sec-head"><span class="sec-num">06</span><h2>两种资金模式并行</h2></div>
+  <div class="grid g2">
+    <div class="mode a">
+      <h4>模式A · 预付资金受控释放</h4>
+      <div class="sub">自建（V1支付账户→V2银行内部户→数币远期）</div>
+      <ul>
+        <li>资金状态：已划转、托管冻结、按履约进度释放</li>
+        <li>商家应收：形成应收账款、可周转</li>
+        <li>C端体验：需预付全款、有压力</li>
+        <li>合规背书：银行托管、监管认可</li>
+        <li>主要覆盖：游泳课时、健身年卡、美业套餐、物业预缴</li>
+      </ul>
+    </div>
+    <div class="mode b">
+      <h4>模式B · 信用授权按次扣款</h4>
+      <div class="sub">借力支付宝安心付/银行信用付</div>
+      <ul>
+        <li>资金状态：未划转、授信/代扣、服务后扣款</li>
+        <li>商家应收：未形成应收、周转弱</li>
+        <li>C端体验：先享后付、无压力</li>
+        <li>合规背书：依赖支付宝/银行信用体系</li>
+        <li>主要覆盖：小额按摩、小额即时服务、高频低客单</li>
+      </ul>
+    </div>
+  </div>
+  <div class="callout">双模式并行：需资金托管/合规背书→模式A；要"无预付压力/锁客"→模式B。模式编排层按场景路由，对商户屏蔽底层差异。</div>
+
+<div class="hr"></div>
+<h2>双线资金模型：支付结算与存管释放必须分开</h2>
+<div class="dual-grid">
+  <div class="flow">
+    <h3><span class="badge">线①</span> 标准收单结算线</h3>
+    <div class="step"><span class="dot">1</span><div>消费者支付 / 微信支付宝银行卡等</div></div>
+    <div class="step"><span class="dot">2</span><div>拉卡拉按支付业务规则完成收单与清算</div></div>
+    <div class="step"><span class="dot">3</span><div>资金按支付结算路径进入约定商户结算账户</div></div>
+    <div class="step"><span class="dot">4</span><div><b>不能把备付金变成长周期预付存管池</b></div></div>
+  </div>
+  <div class="flow">
+    <h3><span class="badge">线②</span> 存管 / 受控资金释放线</h3>
+    <div class="step"><span class="dot">1</span><div>资金进入银行专户 / 信托 / 公证 / 数币钱包等合规底座</div></div>
+    <div class="step"><span class="dot">2</span><div>履约证据 + 监管/合同规则 → 形成标准资金指令</div></div>
+    <div class="step"><span class="dot">3</span><div>银行/受托方/钱包执行 Release / Freeze / Refund</div></div>
+    <div class="step"><span class="dot">4</span><div>释放后形成已履约商户应收，再做总部/门店/渠道清分</div></div>
+  </div>
+</div>
+<div class="notice danger" style="margin-top:18px"><b>边界：</b>“存管释放 ≠ 分账”。先判断商户已履约应得多少，再处理总部、门店、教练/技师、渠道、服务商之间的清分。拉卡拉输出规则与指令，不以自身过渡户长期归集后再向下游分配。</div>
+</section>
+</section>
+
+<section class="slide" id="s10"><div class="section-num">10 / 14</div>
+  <div class="sec-head"><span class="sec-num">07</span><h2>BRD关键结论摘要</h2></div>
+  <h4>按资金行为分场景（不按行业粗分）</h4>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>资金行为</th><th>典型场景</th><th>触发器</th><th>资金动作</th><th>主要风险</th></tr></thead>
+      <tbody>
+        <tr><td><b>一课一销/一次一销</b></td><td>教培课时、美容单次项目、按摩</td><td>实际到课/核销事件</td><td>服务完成事件 + 消费者确认/规则确认</td><td>争议举证复杂</td></tr>
+        <tr><td><b>按月/按周期释放</b></td><td>健身年卡、物业费、订阅服务</td><td>自然月/合同周期</td><td>定时释放/周期扣款</td><td>规则标准化程度高</td></tr>
+        <tr><td><b>按项目/金额释放</b></td><td>美业套餐、护理项目</td><td>项目完成</td><td>项目码/订单事件</td><td>单次金额差异大</td></tr>
+        <tr><td><b>先享后付/授信扣款</b></td><td>固定周期服务、信用用户</td><td>先服务后扣款</td><td>授权代扣/信用支付</td><td>支付失败和坏账</td></tr>
+        <tr><td><b>持续履约+多子余额</b></td><td>养老机构、物业</td><td>时间周期</td><td>按周期释放/风险保证金留存</td><td>老人弱势群体+非法集资风险</td></tr>
+        <tr><td><b>混合型</b></td><td>连锁教培/健身/美业</td><td>时间 + 核销 + 人工凭证</td><td>组合条件</td><td>最需要规则引擎</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h4>资金底座六模式与"1 + 1 + 1 + N"路线</h4>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>路线</th><th>含义</th></tr></thead>
+      <tbody>
+        <tr><td><b>1套规则引擎</b></td><td>把按课/次/月/项目、确认、自动释放、争议冻结、退款等规则抽象出来，可复用核心</td></tr>
+        <tr><td><b>1个主资金底座</b></td><td>优先选择银行内部户/监管专户或"支付 + 银行联合存管"作为对外商用主线</td></tr>
+        <tr><td><b>1个法律隔离增强层</b></td><td>对政府监管、高风险项目引入信托/受托结构，经法务确认后方可对外主张</td></tr>
+        <tr><td><b>N个适配器</b></td><td>支付账户用于PoC；支付宝/其他先享后付作为渠道补充；数币智能合约作为后续能力</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="slide" id="s11"><div class="section-num">11 / 14</div>
+  <div class="sec-head"><span class="sec-num">08</span><h2>产品路线图</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>阶段</th><th>核心建设</th><th>目标</th><th>关键验收</th></tr></thead>
+      <tbody>
+        <tr><td class="num">阶段0</td><td>规则引擎最小模型、支付账户沙箱/模拟账、订单台账、按月/按次释放、退款</td><td>内部逻辑跑通，不对外宣称正式存管</td><td>1–2个典型场景流程可全链路演示</td></tr>
+        <tr><td class="num">阶段1</td><td>银行内部户/监管专户、消费者H5、商户后台、对账、争议冻结、连锁基础能力</td><td>形成可商用版本</td><td>2–3家锚点客户真实交易；退款和对账闭环</td></tr>
+        <tr><td class="num">阶段2</td><td>信托/受托结构、监管接口、规则模板库、SaaS开放API</td><td>进入政府/高风险项目</td><td>取得可引用的法务意见；落地1个监管类样板</td></tr>
+        <tr><td class="num">阶段3</td><td>先享后付合作通道、数币智能合约、金融增值、更多行业模板</td><td>扩大场景与收入来源</td><td>SaaS批量接入与多底座切换</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <h4>首期P0能力清单</h4>
+  <div class="grid g3">
+    <div class="card"><div class="d-text">订单台账、规则模板（按次/按月/按项目）、资金适配（至少一个银行底座+内部模拟）</div></div>
+    <div class="card"><div class="d-text">退款、争议（冻结/凭证/SLA/外部路由）、消费者端（查询/确认/异议/退款进度）</div></div>
+    <div class="card"><div class="d-text">商户端（核销/释放申请/对账/异常列表）、连锁（总部/门店/商户号/会员映射）、审计留痕</div></div>
+  </div>
+</section>
+
+<section class="slide" id="s12"><div class="section-num">12 / 14</div>
+  <div class="sec-head"><span class="sec-num">09</span><h2>商业模式</h2></div>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>收入项</th><th>计费逻辑</th><th>定位</th></tr></thead>
+      <tbody>
+        <tr><td><b>收单收入</b></td><td>消费者支付产生的收单手续费</td><td>保留（稳定基本盘）</td></tr>
+        <tr><td><b>存管/规则服务费</b></td><td>按GMV、订单数、账户数或套餐收取，可场景差异化</td><td><span style="color:#c19a4b;font-weight:700">核心</span></td></tr>
+        <tr><td><b>清分/账户服务费</b></td><td>机构分账、跨主体清分、开户/账户维护、对账API</td><td>增强</td></tr>
+        <tr><td><b>项目/实施费</b></td><td>监管平台、银行联调、行业SaaS定制交付</td><td>项目型</td></tr>
+        <tr><td><b>生态合作分润</b></td><td>银行/信托/授信/保险等合作分润</td><td>可选</td></tr>
+        <tr><td>沉淀相关收益</td><td>若账户结构、监管政策和银行协议允许</td><td style="color:#c0392b">非核心，不作为立项前提</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="callout">年度收入 = 存管/履约GMV × 有效变现率 + 账户/平台年费 + 清分/对账服务费 + 项目实施费 + 合作分润。做监管项目、商业项目、SaaS嵌入三类报价敏感性测试，不沿用"1%"单一费率。</div>
+</section>
+
+<section class="slide" id="s13"><div class="section-num">13 / 14</div>
+  <div class="sec-head"><span class="sec-num">10</span><h2>风险与行动</h2></div>
+  <h4>四条核心风险</h4>
+  <div class="risk"><div class="rt">教培机构付费意愿不足</div><div class="rd">如果机构没有付费意愿，产品将是纯成本中心</div><div class="ra">访谈5-10家目标教培机构，确认合规意愿和预算 → 置信度中</div></div>
+  <div class="risk"><div class="rt">银行开放度不确定</div><div class="rd">银行是否愿意为拉卡拉开放专用存款账户体系的对接能力未经验证</div><div class="ra">与2-3家银行（上海/北京/深圳分行）沟通合作模式 → 置信度中</div></div>
+  <div class="risk"><div class="rt">健身SaaS对接未打通</div><div class="rd">没有SaaS对接则入场数据获取困难，清分触发无依据</div><div class="ra">与三体云动/青橙科技BD接触，探明合作模式 → 置信度中</div></div>
+  <div class="risk"><div class="rt">信托异地落地可行性低</div><div class="rd">服务信托在太原尚未落地，仅在上海/济南/苏州等试点</div><div class="ra">咨询信托公司太原业务可行性，结论后直接回填 → 置信度低</div></div>
+  <h4>六项立即行动</h4>
+  <div class="act"><span class="act-num">01</span><span><b>补齐监管细则</b>：山西/深圳/江苏监管细则（定点联系当地主管部门/律师协会）</span></div>
+  <div class="act"><span class="act-num">02</span><span><b>验证付费意愿</b>：访谈5-10家目标教培机构，确认合规意愿和预算</span></div>
+  <div class="act"><span class="act-num">03</span><span><b>银行对接</b>：与2-3家银行沟通专用存款账户体系对接（开户/冻结/解冻/退款/监管报送）</span></div>
+  <div class="act"><span class="act-num">04</span><span><b>SaaS对接</b>：与三体云动/青橙科技BD接触，探明健身SaaS合作模式</span></div>
+  <div class="act"><span class="act-num">05</span><span><b>法务确认</b>：咨询法务+信托公司，明确服务信托对拉卡拉的商业模式影响</span></div>
+  <div class="act"><span class="act-num">06</span><span><b>跑通PoC</b>：完成阶段0——1-2个典型场景全链路内部演示</span></div>
+
+<div class="hr"></div>
+<h2>汇报结论：产品要从“账户方案”转成“规则 + 证据 + 资金执行适配”</h2>
+<div class="grid grid-2">
+  <div class="card">
+    <h3>产品定位</h3>
+    <p><b>不做资金池，不做服务质量裁判。</b><br>做监管规则、合同/权益、履约证据、计价、确认/退款、资金指令、清分对账的技术基础设施。</p>
+  </div>
+  <div class="card">
+    <h3>场景切入</h3>
+    <p><b>教培/体育 P0、健身 P0+、养老 P1、美业/按摩 P2。</b><br>物业作为多子余额/持续履约能力验证；小额按摩作为模式B验证。</p>
+  </div>
+  <div class="card">
+    <h3>MVP前置 Gate</h3>
+    <p>银行是否支持 Release / Freeze / Refund；账户法律属性；二清边界；地方监管认可；真实合同样本；SaaS履约数据可信度。</p>
+  </div>
+  <div class="card">
+    <h3>可复制壁垒</h3>
+    <p><b>规则引擎 + 履约证据中心 + 多底座适配 + 连锁清分</b>。换银行、换信托、换数币或外部信用渠道，上层业务内核不重做。</p>
+  </div>
+</div>
+<div class="quote" style="margin-top:22px">最终不是“卖一套银行存管账户”，而是形成一套<em>多监管模式下的履约资金控制平台</em>。</div>
+<p class="footer-note">资料口径：截至 2026-09-21；正式规则、指导文件、司法解释、平台实践均分层展示，实际商用前仍需银行/监管/法务逐项确认。</p>
+</section>
+</section>
+
+<div class="modal" id="modal">
+  <div class="modal-card">
+    <div class="modal-top"><div><div class="eyebrow" id="modalEyebrow">DETAIL</div><h2 id="modalTitle" style="margin:0"></h2></div>
+
+<script>
+
+const REGIONS = {"全国": {"summary": "全国底线不是“一条统一预付费法规”，而是司法硬基线 + 行业专项规则 + 单用途预付卡规则并行。", "items": [{"title": "最高人民法院｜预付式消费司法解释（2025-05-01施行）", "status": "司法硬基线", "points": ["生活消费领域预付式消费：付款后7日无理由退款（法定例外除外）。", "非消费者原因退款：已履约部分原则按折扣价/优惠比例计算；消费者自身原因退款：原则按打折前价格计算。", "本金与赠送权益必须可拆分、可重算；经营者应保留消费次数、金额、余额等证据。", "产品含义：退款原因必须成为核心字段，商户合同配置不能突破司法硬基线。"], "url": "https://gongbao.court.gov.cn/Details/415add6e9c15736f2fbd871bdb1538.html"}, {"title": "中小学生非学科类校外培训", "status": "全国行业硬规则", "points": ["单次预收费≤5000元；≤3个月或≤60课时。", "预收费全额纳入监管；指定银行、专用账户、专款管理；可采用银行托管或风险保证金。", "产品含义：游泳/体育培训进入强监管模板，销售前必须做金额、期限/课时、资金监管校验。"], "url": "https://www.moe.gov.cn/srcsite/A29/202212/t20221229_1036959.html"}, {"title": "单用途商业预付卡", "status": "全国行业底线", "points": ["规模发卡企业存管比例≥20%；集团≥30%；品牌≥40%。", "保证保险、银行保函可冲抵全部或部分存管资金。", "仅适用于办法覆盖主体，不能把20/30/40%外推到全部健身、美业、教培、养老。"], "url": "https://www.mofcom.gov.cn/zfxxgk/zc/gz/art/2021/art_82805c1937a64a4186ea15c23fc675c5.html"}, {"title": "养老机构预收费", "status": "全国专项", "points": ["养老服务费预收周期≤12个月；押金≤月床位费12倍。", "押金、会员费进入银行专用存款账户；风险保证金要求需按专项规则及地方细则执行。", "退费、停业清退和异常资金监测要求明显严于一般生活服务。"], "url": "https://www.gov.cn/lianbo/bumen/202405/content_6952678.htm"}]}, "京津冀": {"summary": "北京形成通用预付卡备案/存管框架；河北强化银行存管；天津养老参数最严之一。", "items": [{"title": "北京｜单用途预付卡备案及预收资金管理", "status": "地方正式规则", "points": ["预收资金余额达到20万元触发强制备案/存管。", "一般≥20%；集团≥30%；品牌≥40%。", "消费/退卡交易报送后，5个工作日无异议可及时拨付。", "产品含义：自动确认期限必须按地区/规则命中，不可全国统一。"], "url": "https://www.beijing.gov.cn/zhengce/zhengcefagui/202605/t20260514_4651091.html"}, {"title": "河北｜一般单用途预付凭证", "status": "地方正式规则", "points": ["记名单张≤5000元；不记名单张≤1000元。", "经营者在商业银行开立预收款资金存管账户，并公示资金总量和使用情况。", "鼓励履约保证保险。"], "url": "https://scjg.hebei.gov.cn/info/6056"}, {"title": "天津｜养老机构预收费", "status": "地方正式规则", "points": ["养老服务费预收≤5个月。", "押金≤月床位费12倍且≤2万元；会员费原则不得收取，符合条件才可收。", "押金及符合条件的会员费100%进入银行第三方存管专户。"], "url": "https://tj.people.com.cn/n2/2025/0507/c375366-41219511.html"}]}, "长三角": {"summary": "这里的政策形态最丰富：全额托管、比例存管、服务信托、公证提存、自动确认并存。", "items": [{"title": "上海｜体育健身预付监管", "status": "地方正式规则", "points": ["会籍、课时、储值分类限额；会籍≤5000元/≤24个月，课时≤20000元/≤60次，储值≤5000元。", "按场景分档实行30%/50%存管，开业前发行可到100%。", "保险/保函可冲抵，鼓励公证提存。", "产品含义：健身必须是“分类资金池 + 时间/事件双触发”。"], "url": "https://tyj.sh.gov.cn/zcfg/20250116/da9c2903a724427dae94a7515c8bdd9c.html"}, {"title": "江苏｜体育健身", "status": "地方正式规则", "points": ["全部预收资金先进入存管专用账户，再按比例保留。", "余额≤100万≥20%；100万-5000万≥30%；>5000万≥40%。", "结合投诉/处罚可动态调节，区间可扩展至10%-100%。", "产品含义：必须区分“消费者履约余额”和“监管存管余额”。"], "url": "https://jsstyj.jiangsu.gov.cn/art/2023/11/10/art_88134_11070107.html"}, {"title": "无锡｜单用途预付卡", "status": "地方正式规则", "points": ["服务信托、公证提存、保证保险、银行保函等均可作为第三方监管/担保工具。", "第三方监管或担保资金不低于50%；100%监管称全额监管。", "监管机构需提供账户独立性、不被冻结/扣划的法律依据。", "产品含义：资金底座与法律/增信层必须解耦组合。"], "url": "https://www.wuxi.gov.cn/doc/2026/02/09/4731698.shtml"}, {"title": "杭州｜校外培训", "status": "地方正式规则", "points": ["预收费进入托管专户，按课消进度拨付。", "完成授课并履行告知义务后，学员超过7日未确认视为确认。", "产品含义：auto_confirm_days来自政策/合同，不得产品拍脑袋。"], "url": "https://zfgb.hangzhou.gov.cn/11/105220253/t116220253054/518156.shtml"}, {"title": "合肥｜预付宝", "status": "平台实践", "points": ["公开实践为“银行托管 + 信托保障”，资金100%受监管。", "按“消费一笔、扣款一笔、到账一笔”实现履约释放。", "产品含义：可验证“银行资金执行 + 信托法律增强 + 逐笔履约释放”。"], "url": "https://ah.people.com.cn/n2/2026/0720/c374164-41643917.html"}]}, "珠三角": {"summary": "广东青少年体育全额监管；广州突出数币智能合约；深圳更适合作为“规则引擎”样本。", "items": [{"title": "广东｜体育类校外培训", "status": "地方正式规则", "points": ["唯一预收费资金托管专用账户，预收费全部进入专户。", "叠加全国≤5000元、≤3个月或≤60课时底线。", "产品含义：青少年游泳应自动识别为体育类校外培训，而非成人健身。"], "url": "https://tyj.gd.gov.cn/sjzw_zcfg/content/post_4014027.html"}, {"title": "广州｜民办职业培训", "status": "地方正式规则", "points": ["培训时长>30日项目触发专项监管。", "“广信预”暂按20%以数字人民币方式存管。", "课程结束经学员确认后划转。", "产品含义：比例监管 + 数币智能合约可按行业/时长命中。"], "url": "https://rsj.gz.gov.cn/ywzt/jycy/zynljs/tzgg/content/post_10593954.html"}, {"title": "广州｜广信预", "status": "平台实践", "points": ["资金可保留在消费者数字人民币钱包，由智能合约控制。", "购买、核销、退款、一笔一清、实时清算。", "产品含义：预付资金控制不一定要求集中进入商户侧监管主户。"], "url": "https://www.gz.gov.cn/ysgz/xwdt/ysdt/content/post_10481208.html"}, {"title": "深圳｜预付式经营合规指引", "status": "地方指导文件", "points": ["通用场景按商户成立年限给出建议金额/期限；全额资金监管时可不受部分建议限制。", "体育行业建议存管比例不低于40%，并给出会籍/课时/储值金额与期限建议。", "明确属于指导文件，不作为执法依据。", "产品含义：rule_status必须区分强制/指导/试点。"], "url": "https://amr.sz.gov.cn/attachment/1/1578/1578944/12159037.pdf"}]}, "川渝": {"summary": "四川/重庆的青少年培训已形成强监管模板；成都和重庆分别提供“先学后付、银行存管、公证提存”等现实样本。", "items": [{"title": "四川｜青少年体育类校外培训", "status": "地方正式规则", "points": ["省平台售课缴费，预收费全额监管。", "叠加全国≤5000元、≤3个月或≤60课时。", "产品含义：游泳课时包走强监管模板，一课一消/一课一释放。"], "url": "https://tyj.sc.gov.cn/sctyj/zxdt/2023/3/28/7502e4bf8b704213933e16bb342a4b1c.shtml"}, {"title": "成都｜天府通先学后付", "status": "平台实践", "points": ["家长资金可冻结在个人银行Ⅱ类账户，确认上课后再划给培训机构。", "形成“一课一消、一课一付”的消费者侧资金受控模式。", "产品含义：Mode B/消费者账户受控可以和预付托管并行。"], "url": "https://news.chengdu.cn/2026/0121/6970a28255808711169d0695.shtml"}, {"title": "成都｜预付保", "status": "平台实践", "points": ["政府牵头 + 专业运营 + 银行存管，部分区域叠加保险。", "公开案例出现余额30%存管，但不能外推为全成都统一法定比例。", "产品含义：试点参数和正式规则必须严格分层。"], "url": "https://news.chengdu.cn/2026/0121/6970a28255808711169d0695.shtml"}, {"title": "重庆｜养老机构预收费", "status": "地方正式规则", "points": ["养老服务费原则按月，特殊情况预收≤6个月。", "押金/会员费全部进入商业银行第三方存管专户，并分科目管理。", "预收超过2个月的服务费，由存管银行按月支付给机构。", "产品含义：养老不是一个余额，要拆服务费/押金/会员费多个资金Bucket。"], "url": "https://mzj.cq.gov.cn/zwgk_218/zfxxgkml/zcwj_166256/xzgfxwj1/202501/t20250109_14107205.html"}]}};
+const SCENARIOS = [{"name": "游泳课时包", "tag": "教培/体育 · P0", "tone": "blue", "model": "模式 A｜全额监管 + 按课释放", "summary": "20课/4000元示例本身可行，但若属于中小学生体育类校外培训，必须优先命中“≤5000元、≤3个月或60课时、全额监管”硬规则。", "facts": ["履约：扫码/签到/SaaS课消/教练确认等证据 → 消费者确认或政策允许的自动确认 → 本课金额Release。", "退费：不能再写成“商户自由配置”。先判断退款原因，再按司法硬基线处理；合同只能在允许范围内细化。", "争议：确认窗口内冻结当前课时金额，不冻结整份合同；已释放后进入售后/退款，不回滚历史状态。", "证据：履约凭证可信度与反套现风控是资金释放前置条件。"]}, {"name": "健身年卡", "tag": "成人健身 · P0+", "tone": "green", "model": "模式 A｜比例/全额受控 + 时间释放", "summary": "健身的核心不是“到店一次释放一次”，而是会籍时间驱动 + 私教课事件驱动并存；上海/江苏证明存管比例也可能动态变化。", "facts": ["年卡：自然月/固定周期释放；暂停会籍要同步暂停资金释放计时。", "私教：按课核销；进场/闸机/SaaS数据是关键履约证据。", "退款：适用司法硬基线时，按退款责任区分原价/优惠价；合同需记录开卡、激活、赠送等真实规则。", "账务：消费者剩余权益余额 ≠ 监管要求必须留存的存管余额。"]}, {"name": "美业项目包", "tag": "美容/SPA · P2", "tone": "pink", "model": "模式 A/B｜按项目释放或先享后付", "summary": "美业最难的不是技术，而是行业分类、赠送金、项目升级和退费折算；先做合规识别，再做资金控制。", "facts": ["必须拆本金/赠送金/赠送项目，不能只记录一个“可用余额”。", "项目结算价、原价、优惠价、退款原因都要可追溯；司法基线优先于商户合同配置。", "跨店履约：总部合同、实际履约门店清分；品牌统一收款再自行向加盟店分配要审查二清风险。", "小额单次按摩更适合模式B；大额套餐更适合模式A。"]}, {"name": "物业预缴", "tag": "物业/社区", "tone": "orange", "model": "模式 A｜持续履约 + 多子余额", "summary": "物业不是教培的简单翻版。一个合同可能包含物业费、停车费、增值服务，各子项独立计费、争议和释放。", "facts": ["按月/周期释放；投诉只冻结对应争议子项，不默认冻结整份合同。", "退租/产权转移支持退款或权益转移，具体依据合同及属地物业规则。", "司法解释中的生活消费预付式消费规则不可未经确认直接套用到物业费场景。", "产品要支持一个合同下多个资金Bucket和不同监管属性。"]}, {"name": "小额按摩先享后付", "tag": "本地生活", "tone": "purple", "model": "模式 B｜先履约后授权扣款", "summary": "不形成长期预付余额，履约完成后生成应付账单；低额可按授权免二次确认，高额/高风险交易追加确认。", "facts": ["履约来源可配置，但必须经过凭证可信度/风控判断。", "立即/定时扣款可配置；失败自动重试 + 通知补缴。", "未扣款争议：暂停当笔Debit；已扣款争议：进入售后退款。", "支持单次/长期/额度型授权，实际能力取决于外部渠道。"]}, {"name": "养老机构", "tag": "养老 · P1", "tone": "red", "model": "模式 A｜强监管多资金Bucket", "summary": "养老必须补入总架构，而且不能用一个“预付余额”概括：服务费、押金、会员费具有不同期限、账户和支取规则。", "facts": ["全国专项：服务费预收≤12个月、押金≤月床位费12倍；地方可更严，如重庆≤6个月、天津≤5个月。", "押金/会员费通常进入银行第三方存管专户；服务费可能进入基本户并按月拨付，具体看属地规则。", "未入住/退住/停业清退规则必须做成强监管模板；禁止用格式条款不合理限制退费。", "涉及高息返利、预售床位、承诺保本的机构应作为高风险准入/拒绝合作场景。"]}];
+
+function esc(s){return String(s).replace(/[&<>"]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m]))}
+const regionGrid=document.getElementById('regionGrid');
+Object.entries(REGIONS).forEach(([name,data])=>{
+  const card=document.createElement('div');
+  card.className='card clickable';
+  card.innerHTML=`<div class="policy-head"><div class="n">${esc(name)}</div><span class="tag">${data.items.length} 项明细</span></div>
+  <div class="policy-list">${esc(data.summary)}</div><div class="hr"></div><span class="source">点击查看政策条款与来源 ↗</span>`;
+  card.onclick=()=>showRegion(name);
+  regionGrid.appendChild(card);
+});
+
+const scenarioGrid=document.getElementById('scenarioGrid');
+SCENARIOS.forEach((s,idx)=>{
+  const card=document.createElement('div');
+  card.className='card clickable scenario-card';
+  card.innerHTML=`<div class="colorbar ${s.tone}"></div><div class="policy-head"><h3>${esc(s.name)}</h3><span class="tag">${esc(s.tag)}</span></div>
+  <div class="model">${esc(s.model)}</div><div class="summary">${esc(s.summary)}</div><div class="hr"></div><span class="source">点击查看业务规则 →</span>`;
+  card.onclick=()=>showScenario(idx);
+  scenarioGrid.appendChild(card);
+});
+
+function showRegion(name){
+  const d=REGIONS[name];
+  document.getElementById('modalEyebrow').innerText='REGIONAL POLICY';
+  document.getElementById('modalTitle').innerText=name+'｜政策明细';
+  let body=`<p>${esc(d.summary)}</p>`;
+  d.items.forEach(it=>{
+    body+=`<div class="detail-item"><div class="policy-head"><h3>${esc(it.title)}</h3><span class="tag">${esc(it.status)}</span></div><ul>`;
+    it.points.forEach(p=>body+=`<li>${esc(p)}</li>`);
+    body+=`</ul><a href="${it.url}" target="_blank" rel="noopener">查看官方/公开来源 ↗</a></div>`;
+  });
+  document.getElementById('modalBody').innerHTML=body;
+  document.getElementById('modal').classList.add('open');
+}
+function showScenario(idx){
+  const s=SCENARIOS[idx];
+  document.getElementById('modalEyebrow').innerText='SCENARIO';
+  document.getElementById('modalTitle').innerText=s.name;
+  let body=`<div class="card" style="margin-bottom:14px"><b>${esc(s.model)}</b><p>${esc(s.summary)}</p></div><div class="detail-item"><h3>已确认 / 修正后的关键规则</h3><ul>`;
+  s.facts.forEach(p=>body+=`<li>${esc(p)}</li>`);
+  body+=`</ul></div>`;
+  document.getElementById('modalBody').innerHTML=body;
+  document.getElementById('modal').classList.add('open');
+}
+function closeModal(){document.getElementById('modal').classList.remove('open')}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal') closeModal()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape') closeModal()});
+
+</script>
+</body>
+</html>
